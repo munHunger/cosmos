@@ -4,10 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent }  from './app.component';
 
 import { Navbar } from './component/navbar.component';
+import { VideoItemCard } from './component/video-item.component';
+
 
 @NgModule({
   imports: [ BrowserModule ],
-  declarations: [ AppComponent, Navbar ],
-  bootstrap: [ AppComponent, Navbar ]
+  declarations: [ AppComponent, Navbar, VideoItemCard ],
+  bootstrap: [ AppComponent, Navbar, VideoItemCard ]
 })
 export class AppModule { }
