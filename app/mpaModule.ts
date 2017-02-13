@@ -1,3 +1,4 @@
+/*
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,3 +37,4 @@ import { LexiconComponent } from './components/lexicon/lexicon.component';
 })
 export class AppModule {
 }
+*/
