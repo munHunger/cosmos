@@ -12,5 +12,12 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.16.1'
-    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.25.1'
+    compile group: 'com.sun.jersey', name:"jersey-core", version: '1.10'
+    compile group: 'com.sun.jersey.contribs', name:"jersey-simple-server", version: '1.10'
+}
+
+task startServer(type: JavaExec, dependsOn: ':classes') {
+    main = 'se.munhunger.folderscraper.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-ea']
 }
