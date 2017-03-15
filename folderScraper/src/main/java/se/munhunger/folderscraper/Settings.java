@@ -16,18 +16,19 @@ import java.util.List;
 @Path("/scraper/settings")
 public class Settings
 {
-	private static SettingValues values = new SettingValues();
+	public static SettingValues values = new SettingValues();
+	private static Database db = new Database();
 
 	static
 	{
 		try
 		{
-			Database.createTable(SettingValues.class);
-			List<Object> settingList = Database.getObject(SettingValues.class, null);
+			db.createTable(SettingValues.class);
+			List<Object> settingList = db.getObject(SettingValues.class, null);
 			if(settingList.size() > 0)
 				values = (SettingValues) settingList.get(0);
 			else
-				Database.insertObject(values);
+				db.insertObject(values);
 		}
 		catch(Exception e)
 		{
@@ -47,7 +48,7 @@ public class Settings
 	public Response update(String json) throws Exception
 	{
 		values = new Gson().fromJson(json, SettingValues.class);
-		Database.saveObject(values);
+		db.saveObject(values);
 		return Response.noContent().build();
 	}
 }

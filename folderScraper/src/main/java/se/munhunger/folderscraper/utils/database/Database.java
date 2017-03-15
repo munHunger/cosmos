@@ -6,10 +6,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Database handler that saves and loads objects.
+ * It maps object to sql dynamically based on object signature
  * Created by marcu on 2017-02-16.
  */
 public class Database
 {
+
+	private String dbPath = "database.db";
+
+	/**
+	 * Sets the path to the local database to use.
+	 * Note that if pointed to a database file that doesn't exist one will be created.
+	 *
+	 * @param dbPath
+	 */
+	public void setDbPath(String dbPath)
+	{
+		this.dbPath = dbPath;
+	}
+
+	/**
+	 * Gets the path to the local database
+	 *
+	 * @return
+	 */
+	public String getDbPath()
+	{
+		return dbPath;
+	}
+
 	/**
 	 * Gets a connection to the database
 	 *
@@ -17,12 +43,12 @@ public class Database
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static Connection getConnection() throws ClassNotFoundException, SQLException
+	public Connection getConnection() throws ClassNotFoundException, SQLException
 	{
 		try
 		{
 			Class.forName("org.sqlite.JDBC");
-			return DriverManager.getConnection("jdbc:sqlite:database.db");
+			return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 		}
 		catch(ClassNotFoundException | SQLException e)
 		{
@@ -30,7 +56,15 @@ public class Database
 		}
 	}
 
-	public static List<Object> getObject(Class c, String whereStatement) throws Exception
+	/**
+	 * Gets all objects of type c that matches the where statement
+	 *
+	 * @param c              the type to search for
+	 * @param whereStatement an sql statement begining after the "where"
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Object> getObject(Class c, String whereStatement) throws Exception
 	{
 		List<Object> result = new ArrayList<Object>();
 		Field[] fields = c.getDeclaredFields();
@@ -40,7 +74,8 @@ public class Database
 		String tableName = tableAnnotation.name();
 		try(Connection conn = getConnection())
 		{
-			PreparedStatement stmt = conn.prepareStatement("SELECT *, ROWID FROM " + tableName + ((whereStatement == null || whereStatement.isEmpty()) ? "" : (" WHERE " + whereStatement)));
+			String sql = "SELECT *, ROWID FROM " + tableName + ((whereStatement == null || whereStatement.isEmpty()) ? "" : (" WHERE " + whereStatement));
+			PreparedStatement stmt = conn.prepareStatement(sql);
 			ResultSet res = stmt.executeQuery();
 			while(res.next())
 			{
@@ -52,9 +87,9 @@ public class Database
 						String className = f.getType().getName();
 						if(className.equals("java.lang.String"))
 							f.set(o, res.getString(f.getName()));
-						else if(className.equals("int") || className.equals("java.lang.Integer"))
+						else if(className.equals("int"))
 							f.setInt(o, res.getInt(f.getName()));
-						else if(className.equals("boolean") || className.equals("java.lang.Boolean"))
+						else if(className.equals("boolean"))
 							f.setBoolean(o, res.getBoolean(f.getName()));
 						else
 							throw new IllegalArgumentException(String.format("Input was of type:%s. Only String, Integer, and Boolean are accepted", f.getType().getName()));
@@ -73,15 +108,25 @@ public class Database
 	 * The class must have a #TableName annotation and it should have a databaseID int.
 	 *
 	 * @param c
-	 * @return true if a new table was created, false otherwise
+	 * @return true iff a new table was created, false otherwise
 	 * @throws Exception
 	 */
-	public static boolean createTable(Class c) throws Exception
+	public boolean createTable(Class c) throws Exception
 	{
 		Field[] fields = c.getDeclaredFields();
 		TableName tableAnnotation = (TableName) c.getAnnotation(TableName.class);
 		if(tableAnnotation == null)
 			throw new IllegalArgumentException("Input object must have a TableName annotion");
+
+		try
+		{
+			if(c.getDeclaredField("databaseID").getType().getName() != "int")
+				throw new IllegalArgumentException("databaseID must be of type int");
+		}
+		catch(NoSuchFieldException e)
+		{
+			throw new IllegalArgumentException("Class must have have a databaseID field of type int");
+		}
 		String tableName = tableAnnotation.name();
 		try(Connection conn = getConnection())
 		{
@@ -103,9 +148,9 @@ public class Database
 						int fieldLength = lengthAnnotation.length();
 						sqlBuilder.append(f.getName()).append(" VARCHAR(").append("" + fieldLength).append("),");
 					}
-					else if(className.equals("int") || className.equals("java.lang.Integer"))
+					else if(className.equals("int"))
 						sqlBuilder.append(f.getName()).append(" INT,");
-					else if(className.equals("boolean") || className.equals("java.lang.Boolean"))
+					else if(className.equals("boolean"))
 						sqlBuilder.append(f.getName()).append(" BOOLEAN,");
 					else
 						throw new IllegalArgumentException(String.format("Input was of type:%s. Only String, Integer, and Boolean are accepted", f.getType().getName()));
@@ -125,7 +170,7 @@ public class Database
 	 * @return true iff successfull
 	 * @throws Exception
 	 */
-	public static boolean insertObject(Object o) throws Exception
+	public boolean insertObject(Object o) throws Exception
 	{
 		Field[] fields = o.getClass().getDeclaredFields();
 		TableName tableAnnotation = (TableName) o.getClass().getAnnotation(TableName.class);
@@ -158,10 +203,10 @@ public class Database
 				{
 					String className = f.getType().getName();
 					if(className.equals("java.lang.String"))
-						stmt.setString(index, f.get(o).toString());
-					else if(className.equals("int") || className.equals("java.lang.Integer"))
+						stmt.setString(index, f.get(o) != null ? f.get(o).toString() : "");
+					else if(className.equals("int"))
 						stmt.setInt(index, f.getInt(o));
-					else if(className.equals("boolean") || className.equals("java.lang.Boolean"))
+					else if(className.equals("boolean"))
 						stmt.setBoolean(index, f.getBoolean(o));
 					else
 						throw new IllegalArgumentException(String.format("Input was of type:%s. Only String, Integer, and Boolean are accepted", f.getType().getName()));
@@ -171,6 +216,7 @@ public class Database
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -183,7 +229,7 @@ public class Database
 	 * @return true if successfull
 	 * @throws Exception
 	 */
-	public static boolean saveObject(Object o) throws Exception
+	public boolean saveObject(Object o) throws Exception
 	{
 		Field[] fields = o.getClass().getDeclaredFields();
 		TableName tableAnnotation = (TableName) o.getClass().getAnnotation(TableName.class);
@@ -217,10 +263,10 @@ public class Database
 				{
 					String className = f.getType().getName();
 					if(className.equals("java.lang.String"))
-						stmt.setString(index, f.get(o).toString());
-					else if(className.equals("int") || className.equals("java.lang.Integer"))
+						stmt.setString(index, f.get(o) != null ? f.get(o).toString() : "");
+					else if(className.equals("int"))
 						stmt.setInt(index, f.getInt(o));
-					else if(className.equals("boolean") || className.equals("java.lang.Boolean"))
+					else if(className.equals("boolean"))
 						stmt.setBoolean(index, f.getBoolean(o));
 					else
 						throw new IllegalArgumentException(String.format("Input was of type:%s. Only String, Integer, and Boolean are accepted", f.getType().getName()));
