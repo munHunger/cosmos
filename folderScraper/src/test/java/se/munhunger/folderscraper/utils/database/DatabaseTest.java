@@ -20,12 +20,12 @@ public class DatabaseTest
 		describe("Database", () ->
 		{
 			Database db = new Database();
-			before(() ->
+			beforeEach(() ->
 			{
 				db.setDbPath("testDatabase.db");
 				new File("testDatabase.db").delete();
 			});
-			after(() ->
+			afterEach(() ->
 			{
 				new File("testDatabase.db").delete();
 			});
@@ -34,11 +34,11 @@ public class DatabaseTest
 				describe("Can set path", () ->
 				{
 					String dbPath = "test";
-					before(() ->
+					beforeEach(() ->
 					{
 						db.setDbPath(dbPath);
 					});
-					it("Path should be updated", () ->
+					it("updated a path", () ->
 					{
 						expect(db.getDbPath()).toEqual(dbPath);
 					});
@@ -50,62 +50,216 @@ public class DatabaseTest
 				{
 					describe("Throws exceptions on faulty tables", () ->
 					{
-						it("Missing databaseID field", () ->
+						it("throws on missing databaseID field", () ->
 						{
 							new ExceptionMatcher(() ->
 							{
 								db.createTable(MissingID.class);
 							}).toThrow(IllegalArgumentException.class);
 						});
-						it("databaseID field is not int", () ->
+						it("throws on databaseID field not being int", () ->
 						{
 							new ExceptionMatcher(() ->
 							{
 								db.createTable(WrongIDType.class);
 							}).toThrow(IllegalArgumentException.class);
 						});
-						it("Missing MaxLength attribute", () ->
+						it("throws on missing MaxLength attribute", () ->
 						{
 							new ExceptionMatcher(() ->
 							{
 								db.createTable(MissingLength.class);
 							}).toThrow(IllegalArgumentException.class);
 						});
-						it("Missing TableName attribute", () ->
+						it("throws on missing TableName attribute", () ->
 						{
 							new ExceptionMatcher(() ->
 							{
 								db.createTable(MissingTableName.class);
 							}).toThrow(IllegalArgumentException.class);
 						});
+						it("throws on unsupported field", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.createTable(IllegalType.class);
+							}).toThrow(IllegalArgumentException.class);
+						});
+						it("throws on missing empty constructor", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.createTable(MissingConstructor.class);
+							}).toThrow(IllegalArgumentException.class);
+						});
 					});
-					boolean wasCreated = db.createTable(ValidObject.class);
-					it("Table was created", () ->
+					it("created a table", () ->
 					{
-						expect(wasCreated).toBeTrue();
+						expect(db.createTable(ValidObject.class)).toBeTrue();
 					});
 					describe("Table is not repeatedly created", () ->
 					{
-						it("Table was not created", () ->
+						beforeEach(() ->
+						{
+							db.createTable(ValidObject.class);
+						});
+						it("did not create table", () ->
 						{
 							expect(db.createTable(ValidObject.class)).toBeFalse();
 						});
 					});
-					describe("Can insert object", () ->
+				});
+				describe("Can insert object", () ->
+				{
+					describe("Throws exceptions on illegal objects", () ->
 					{
-						ValidObject testObject = new ValidObject(53, true, "testvalue");
-						boolean wasInserted = db.insertObject(testObject);
-						it("Object was created", () ->
+						it("throws on objects with unsupported fields", () ->
 						{
-							expect(wasInserted).toBeTrue();
-						});
-						describe("Object is not repeatedly created", () ->
-						{
-							it("Object was not created", () ->
+							new ExceptionMatcher(() ->
 							{
-								expect(db.insertObject(testObject)).toBeFalse();
-							});
+								db.insertObject(new IllegalType(-1, true, null));
+							}).toThrow(IllegalArgumentException.class);
 						});
+						it("throws on objects with uninitialized tables", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.insertObject(new DifferentTable(-1, true, null));
+							}).toThrow(IllegalStateException.class);
+						});
+						it("throws on objects without tablename annotation", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.insertObject(new MissingTableName(-1, true, null));
+							}).toThrow(IllegalArgumentException.class);
+						});
+					});
+					ValidObject testObject = new ValidObject(53, true, "testvalue");
+					beforeEach(() ->
+					{
+						db.createTable(ValidObject.class);
+					});
+					it("created an object", () ->
+					{
+						expect(db.insertObject(testObject)).toBeTrue();
+					});
+					describe("Object is not repeatedly created", () ->
+					{
+						beforeEach(() ->
+						{
+							db.insertObject(testObject);
+						});
+						it("it did not create object again", () ->
+						{
+							expect(db.insertObject(testObject)).toBeFalse();
+						});
+					});
+				});
+				describe("Can save an object", () ->
+				{
+					ValidObject testObject = new ValidObject(3, true, null);
+					beforeEach(() ->
+					{
+						db.createTable(testObject.getClass());
+						db.insertObject(testObject);
+					});
+					describe("Throws exceptions on faulty input", () ->
+					{
+						it("throws on objects with unsupported fields", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								IllegalType illegalObject = new IllegalType(-1, true, "");
+								illegalObject.databaseID = testObject.databaseID;
+								db.saveObject(illegalObject);
+							}).toThrow(IllegalArgumentException.class);
+						});
+						it("throws on objects with uninitialized tables", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.saveObject(new DifferentTable(-1, true, null));
+							}).toThrow(IllegalStateException.class);
+						});
+						it("throws on objects without tablename annotation", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.saveObject(new MissingTableName(-1, true, null));
+							}).toThrow(IllegalArgumentException.class);
+						});
+						it("throws on objects without databaseID field", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.saveObject(new MissingID(-1, true, null));
+							}).toThrow(IllegalArgumentException.class);
+						});
+						it("throws on objects that has not yet been inserted", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.saveObject(new ValidObject(4, true, null));
+							}).toThrow(IllegalStateException.class);
+						});
+					});
+					describe("Doesn't save an object that has a databaseID that does not exist in the database(deleted)", () ->
+					{
+						beforeEach(() ->
+						{
+							testObject.databaseID = 99;
+						});
+						it("does not save an object", () ->
+						{
+							expect(db.saveObject(testObject)).toBeFalse();
+						});
+					});
+					it("saved an object", () ->
+					{
+						expect(db.saveObject(testObject)).toBeTrue();
+					});
+				});
+				describe("Can get object", () ->
+				{
+					beforeEach(() ->
+					{
+						db.createTable(ValidObject.class);
+						db.insertObject(new ValidObject(5, true, null));
+						db.insertObject(new ValidObject(10, false, null));
+						db.insertObject(new ValidObject(15, true, "a"));
+					});
+					describe("Throws exceptions on faulty input", () ->
+					{
+						it("throws on objects without tablename annotation", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.getObject(MissingTableName.class, "");
+							}).toThrow(IllegalArgumentException.class);
+						});
+						it("throws on objects witch table is not yet initialized", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.getObject(DifferentTable.class, null);
+							}).toThrow(IllegalStateException.class);
+						});
+						it("throws on objects with illegal fields", () ->
+						{
+							new ExceptionMatcher(() ->
+							{
+								db.getObject(IllegalType.class, null);
+							}).toThrow(IllegalArgumentException.class);
+						});
+					});
+					it("gets all objects", () ->
+					{
+						expect(db.getObject(ValidObject.class, "").size()).toEqual(3);
+					});
+					it("gets some objects with simple where statement", () ->
+					{
+						expect(db.getObject(ValidObject.class, "intVal >= 10").size()).toEqual(2);
 					});
 				});
 			});

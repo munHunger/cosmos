@@ -21,4 +21,9 @@ public class WrongIDType
 		this.boolValue = boolValue;
 		this.stringValue = stringValue;
 	}
+
+	public WrongIDType()
+	{
+
+	}
 }

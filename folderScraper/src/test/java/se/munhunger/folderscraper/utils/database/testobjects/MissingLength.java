@@ -19,4 +19,9 @@ public class MissingLength
 		this.boolValue = boolValue;
 		this.stringValue = stringValue;
 	}
+
+	public MissingLength()
+	{
+
+	}
 }

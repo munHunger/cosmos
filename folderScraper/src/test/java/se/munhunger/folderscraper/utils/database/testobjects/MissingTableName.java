@@ -19,4 +19,9 @@ public class MissingTableName
 		this.boolValue = boolValue;
 		this.stringValue = stringValue;
 	}
+
+	public MissingTableName()
+	{
+
+	}
 }

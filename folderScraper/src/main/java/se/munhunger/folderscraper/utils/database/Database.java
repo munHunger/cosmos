@@ -45,15 +45,8 @@ public class Database
 	 */
 	public Connection getConnection() throws ClassNotFoundException, SQLException
 	{
-		try
-		{
-			Class.forName("org.sqlite.JDBC");
-			return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-		}
-		catch(ClassNotFoundException | SQLException e)
-		{
-			throw e;
-		}
+		Class.forName("org.sqlite.JDBC");
+		return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 	}
 
 	/**
@@ -74,6 +67,8 @@ public class Database
 		String tableName = tableAnnotation.name();
 		try(Connection conn = getConnection())
 		{
+			if(!tableExists(conn, tableName))
+				throw new IllegalStateException("The supplied object does not yet have a table attached. Run createTable before get");
 			String sql = "SELECT *, ROWID FROM " + tableName + ((whereStatement == null || whereStatement.isEmpty()) ? "" : (" WHERE " + whereStatement));
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			ResultSet res = stmt.executeQuery();
@@ -120,6 +115,14 @@ public class Database
 
 		try
 		{
+			c.getConstructor();
+		}
+		catch(Exception e)
+		{
+			throw new IllegalArgumentException("Input class must have an empty constructor");
+		}
+		try
+		{
 			if(c.getDeclaredField("databaseID").getType().getName() != "int")
 				throw new IllegalArgumentException("databaseID must be of type int");
 		}
@@ -130,9 +133,7 @@ public class Database
 		String tableName = tableAnnotation.name();
 		try(Connection conn = getConnection())
 		{
-			DatabaseMetaData md = conn.getMetaData();
-			ResultSet rs = md.getTables(null, null, tableName, null);
-			if(rs.next())
+			if(tableExists(conn, tableName))
 				return false;
 
 			StringBuilder sqlBuilder = new StringBuilder("CREATE TABLE ").append(tableName).append("(");
@@ -157,14 +158,15 @@ public class Database
 				}
 			String sql = sqlBuilder.toString();
 			sql = sql.substring(0, sql.length() - 1) + ");";
-			System.out.println(sql);
-			return conn.prepareStatement(sql).execute();
+			conn.prepareStatement(sql).execute();
 		}
+		return true;
 	}
 
 	/**
 	 * Inserts an object into the database.
 	 * Note that the table noted by the #TableName must exist before this call
+	 * This function will update the databaseID of the object to reflect the ID of the newly created one
 	 *
 	 * @param o the object to create
 	 * @return true iff successfull
@@ -179,6 +181,14 @@ public class Database
 		String tableName = tableAnnotation.name();
 		try(Connection conn = getConnection())
 		{
+			if(!tableExists(conn, tableName))
+				throw new IllegalStateException("The supplied object does not yet have a table attached. Run createTable before insert");
+			if(o.getClass().getField("databaseID").getInt(o) >= 0)
+			{
+				PreparedStatement stmt = conn.prepareStatement("SELECT ROWID FROM " + tableName);
+				if(stmt.executeQuery().next())
+					return false;
+			}
 			StringBuilder sqlBuilder = new StringBuilder("INSERT INTO ").append(tableName).append("(");
 			boolean first = true;
 			for(Field f : fields)
@@ -212,12 +222,11 @@ public class Database
 						throw new IllegalArgumentException(String.format("Input was of type:%s. Only String, Integer, and Boolean are accepted", f.getType().getName()));
 					index++;
 				}
-			return stmt.execute();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw e;
+			boolean updated = stmt.executeUpdate() > 0;
+			ResultSet idSet = conn.prepareStatement("SELECT MAX(ROWID) FROM " + tableName).executeQuery();
+			if(idSet.next())
+				o.getClass().getField("databaseID").setInt(o, idSet.getInt(1));
+			return updated;
 		}
 	}
 
@@ -240,6 +249,8 @@ public class Database
 		try
 		{
 			rowID = o.getClass().getDeclaredField("databaseID").getInt(o);
+			if(rowID == -1)
+				throw new IllegalStateException("Object is not in database and cannot be saved.");
 		}
 		catch(NoSuchFieldException e)
 		{
@@ -247,6 +258,8 @@ public class Database
 		}
 		try(Connection conn = getConnection())
 		{
+			if(!tableExists(conn, tableName))
+				throw new IllegalStateException("The supplied object does not yet have a table attached. Run createTable and insert before save");
 			StringBuilder sqlBuilder = new StringBuilder("UPDATE ").append(tableName).append(" SET ");
 			boolean first = true;
 			for(Field f : fields)
@@ -273,11 +286,22 @@ public class Database
 					index++;
 				}
 			stmt.setInt(index, rowID);
-			return stmt.execute();
+			return stmt.executeUpdate() > 0;
 		}
-		catch(Exception e)
-		{
-			throw e;
-		}
+	}
+
+	/**
+	 * Checks the database metadata to check if the table exists
+	 *
+	 * @param conn      a connection to the database
+	 * @param tableName the tablename to check
+	 * @return true iff the table exists in the database the connection is connected to
+	 * @throws Exception
+	 */
+	private boolean tableExists(Connection conn, String tableName) throws Exception
+	{
+		DatabaseMetaData md = conn.getMetaData();
+		ResultSet rs = md.getTables(null, null, tableName, null);
+		return rs.next();
 	}
 }
