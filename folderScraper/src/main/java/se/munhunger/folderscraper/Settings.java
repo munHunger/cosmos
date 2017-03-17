@@ -2,8 +2,8 @@ package se.munhunger.folderscraper;
 
 
 import com.google.gson.Gson;
-import se.munhunger.folderscraper.utils.SettingValues;
 import se.munhunger.folderscraper.utils.database.Database;
+import se.munhunger.folderscraper.utils.model.SettingValues;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

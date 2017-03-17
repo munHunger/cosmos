@@ -1,4 +1,4 @@
-package se.munhunger.folderscraper.utils;
+package se.munhunger.folderscraper.utils.model;
 
 import se.munhunger.folderscraper.utils.database.MaxLength;
 import se.munhunger.folderscraper.utils.database.TableName;

@@ -1,4 +1,4 @@
-package se.munhunger.folderscraper.utils;
+package se.munhunger.folderscraper.utils.model;
 
 import se.munhunger.folderscraper.utils.database.MaxLength;
 import se.munhunger.folderscraper.utils.database.TableName;
@@ -18,4 +18,13 @@ public class FileObject
 	public boolean isMovie = false;
 	public boolean isTV = false;
 	public int externalID = -1;
+
+	public FileObject()
+	{
+	}
+
+	public FileObject(String filePath)
+	{
+		this.filePath = filePath;
+	}
 }

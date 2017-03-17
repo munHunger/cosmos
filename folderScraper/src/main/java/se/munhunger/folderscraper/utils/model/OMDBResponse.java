@@ -1,4 +1,4 @@
-package se.munhunger.folderscraper.utils;
+package se.munhunger.folderscraper.utils.model;
 
 /**
  * Created by marcu on 2017-02-25.
