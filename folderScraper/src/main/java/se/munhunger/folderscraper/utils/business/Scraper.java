@@ -1,16 +1,11 @@
 package se.munhunger.folderscraper.utils.business;
 
-import com.google.gson.Gson;
 import se.munhunger.folderscraper.Settings;
 import se.munhunger.folderscraper.utils.database.Database;
 import se.munhunger.folderscraper.utils.model.FileObject;
 import se.munhunger.folderscraper.utils.model.OMDBResponse;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +61,7 @@ public class Scraper
 	public FileObject searchMetaData(FileObject o) throws Exception
 	{
 		String url = "http://www.omdbapi.com/?t=";
-		String name = o.filePath.substring(o.filePath.lastIndexOf("\\"), o.filePath.length());
+		String name = o.filePath.substring(Math.max(0, Math.max(o.filePath.lastIndexOf("\\"), o.filePath.lastIndexOf("/"))), o.filePath.length());
 		String[] nameComponents = name.split("\\ |\\.");
 		for(int i = nameComponents.length; i > 0; i--)
 		{
@@ -79,27 +74,12 @@ public class Scraper
 						builder.append(nameComponents[n + j]).append(".");
 				}
 				String search = url + builder.toString();
-				HttpURLConnection con = (HttpURLConnection) new URL(search).openConnection();
-				con.setRequestMethod("GET");
-				if(con.getResponseCode() == 200)
+				OMDBResponse res = (OMDBResponse) HttpRequest.getRequest(search, OMDBResponse.class);
+				if(res.Response.toUpperCase().equals("TRUE"))
 				{
-					try(BufferedReader in = new BufferedReader(
-							new InputStreamReader(con.getInputStream())))
-					{
-						String inputLine;
-						StringBuffer response = new StringBuffer();
-
-						while((inputLine = in.readLine()) != null)
-						{
-							response.append(inputLine);
-						}
-						OMDBResponse res = new Gson().fromJson(response.toString(), OMDBResponse.class);
-						if(res.Response.equals("True"))
-						{
-							o.isTV = res.Type.equals("series");
-							return o;
-						}
-					}
+					o.isTV = res.Type.toUpperCase().equals("SERIES");
+					o.isMovie = res.Type.toUpperCase().equals("MOVIE");
+					return o;
 				}
 			}
 		}
