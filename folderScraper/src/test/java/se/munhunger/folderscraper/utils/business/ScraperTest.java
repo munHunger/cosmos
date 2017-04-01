@@ -1,7 +1,9 @@
 package se.munhunger.folderscraper.utils.business;
 
+import com.mscharhag.oleaster.matcher.matchers.ExceptionMatcher;
 import com.mscharhag.oleaster.runner.OleasterRunner;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -11,18 +13,16 @@ import se.munhunger.folderscraper.utils.model.FileObject;
 import se.munhunger.folderscraper.utils.model.OMDBResponse;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mscharhag.oleaster.matcher.Matchers.expect;
-import static com.mscharhag.oleaster.runner.StaticRunnerSupport.after;
 import static com.mscharhag.oleaster.runner.StaticRunnerSupport.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Testing the business logic of the folder scraper
@@ -38,6 +38,68 @@ public class ScraperTest
 		describe("Scraper", () ->
 		{
 			Scraper underTest = new Scraper();
+
+			describe("Moving an object", () ->
+			{
+				FileObject object = new FileObject();
+				describe("Object is not completed", () ->
+				{
+					beforeEach(() ->
+							object.isComplete = false);
+					it("throws IllegalArgumentException", () ->
+							new ExceptionMatcher(() ->
+									underTest.moveObject(object)).toThrow(IllegalArgumentException.class));
+				});
+				describe("Object is completed", () ->
+				{
+					beforeEach(() ->
+							object.isComplete = true);
+					describe("Object is not a movie or a tv-show", () ->
+					{
+						beforeEach(() ->
+						{
+							object.isMovie = false;
+							object.isTV = false;
+						});
+						it("throws IllegalArgumentException", () ->
+								new ExceptionMatcher(() ->
+										underTest.moveObject(object)).toThrow(IllegalArgumentException.class));
+					});
+					describe("Object is both a movie and a tv-show", () ->
+					{
+						beforeEach(() ->
+						{
+							object.isTV = true;
+							object.isMovie = true;
+							mockStatic(Files.class);
+						});
+						it("throws IllegalArgumentException", () ->
+								new ExceptionMatcher(() ->
+										underTest.moveObject(object)).toThrow(IllegalArgumentException.class));
+					});
+					describe("Object is a TV-show", () ->
+					{
+						beforeEach(() ->
+						{
+							object.isTV = true;
+							object.isMovie = false;
+							mockStatic(Files.class);
+						});
+						it("Calls Files.move", () ->
+								verifyStatic(times(1)));
+					});
+					describe("Object is a Movie", () ->
+					{
+						beforeEach(() ->
+						{
+							object.isMovie = true;
+							mockStatic(Files.class);
+						});
+						it("Calls Files.move", () ->
+								verifyStatic(times(1)));
+					});
+				});
+			});
 			describe("Checking folderstatus", () ->
 			{
 				File fileMock = mock(File.class);
@@ -89,7 +151,7 @@ public class ScraperTest
 						it("calls the insert operation of the database on all objects", () ->
 								verify(dbMock, times(2)).insertObject(any()));
 						after(() ->
-								reset(dbMock));
+								Mockito.reset(dbMock));
 					});
 					describe("Object is already in the database", () ->
 					{
@@ -104,7 +166,7 @@ public class ScraperTest
 						it("calls the save operation of the database on all objects", () ->
 								verify(dbMock, times(2)).saveObject(any()));
 						after(() ->
-								reset(dbMock));
+								Mockito.reset(dbMock));
 					});
 				});
 			});
@@ -119,8 +181,8 @@ public class ScraperTest
 					{
 						OMDBResponse response = new OMDBResponse();
 						response.Response = "False";
-						PowerMockito.mockStatic(HttpRequest.class);
-						PowerMockito.when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(response);
+						mockStatic(HttpRequest.class);
+						when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(response);
 					});
 					it("Doesn't change the object", () ->
 							expect(underTest.searchMetaData(toSearchFor)).toEqual(toSearchFor));
@@ -131,8 +193,8 @@ public class ScraperTest
 					beforeEach(() ->
 					{
 						response.Response = "true";
-						PowerMockito.mockStatic(HttpRequest.class);
-						PowerMockito.when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(response);
+						mockStatic(HttpRequest.class);
+						when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(response);
 					});
 					describe("Object is a tv-show", () ->
 					{

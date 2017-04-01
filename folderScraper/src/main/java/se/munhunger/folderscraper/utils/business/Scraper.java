@@ -6,6 +6,10 @@ import se.munhunger.folderscraper.utils.model.FileObject;
 import se.munhunger.folderscraper.utils.model.OMDBResponse;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +42,30 @@ public class Scraper
 		for(FileObject o : result)
 		{
 			o.isComplete = isDone(o);
+			if(o.isComplete && (o.isTV || o.isMovie))
+				moveObject(o);
 			searchMetaData(o);
 			db.saveObject(o);
 		}
 		return result;
+	}
+
+	public String moveObject(FileObject o) throws IOException
+	{
+		if(!o.isComplete)
+			throw new IllegalArgumentException("FileObject must be completed before moving");
+		String destination;
+		if(o.isMovie && o.isTV)
+			throw new IllegalArgumentException("FileObject is both movie and tv-show");
+		else if(o.isMovie)
+			destination = Settings.values.moviePath;
+		else if(o.isTV)
+			destination = Settings.values.tvPath;
+		else
+			throw new IllegalArgumentException("FileObject has not been classified as either a TV-Show or a Movie");
+		destination = destination + o.filePath.substring(Math.max(0, Math.max(o.filePath.lastIndexOf("\\"), o.filePath.lastIndexOf("/"))));
+		Files.move(Paths.get(o.filePath), Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
+		return destination;
 	}
 
 	public boolean isDone(FileObject o)
