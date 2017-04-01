@@ -18,6 +18,49 @@ import java.util.List;
  */
 public class Scraper
 {
+	public static Thread watchThread;
+
+	private static Thread createWatcher()
+	{
+		return new Thread(() ->
+		{
+			while(true)
+			{
+				try
+				{
+					new Scraper().getFolderStatus();
+					Thread.sleep(Settings.values.updateDelay * 1000);
+				}
+				catch(Exception e)
+				{
+					System.err.println("Error while running watcher");
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public static boolean isRunningWatcher()
+	{
+		if(watchThread == null)
+			watchThread = createWatcher();
+		return watchThread.isAlive();
+	}
+
+	public static void startWatcher()
+	{
+		if(watchThread != null && watchThread.isAlive())
+			throw new IllegalArgumentException("Watcher already running");
+		watchThread = createWatcher();
+		watchThread.start();
+	}
+
+	public static void stopWatcher()
+	{
+		watchThread.interrupt();
+		watchThread = null;
+	}
+
 	public List<FileObject> getFolderStatus() throws Exception
 	{
 		Database db = new Database();

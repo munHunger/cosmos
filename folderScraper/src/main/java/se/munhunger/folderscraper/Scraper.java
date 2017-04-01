@@ -21,4 +21,30 @@ public class Scraper
 	{
 		return Response.ok(new Gson().toJson(new se.munhunger.folderscraper.utils.business.Scraper().getFolderStatus())).build();
 	}
+
+	@Path("/watcherstatus")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getWatcherStatus() throws Exception
+	{
+		return Response.ok("{'status':" + (se.munhunger.folderscraper.utils.business.Scraper.isRunningWatcher() ? "\"running\"" : "\"stopped\"") + "}").build();
+	}
+
+	@Path("/startwatcher")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response startWatcher() throws Exception
+	{
+		se.munhunger.folderscraper.utils.business.Scraper.startWatcher();
+		return Response.noContent().build();
+	}
+
+	@Path("/stopwatcher")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response stopWatcher() throws Exception
+	{
+		se.munhunger.folderscraper.utils.business.Scraper.stopWatcher();
+		return Response.noContent().build();
+	}
 }

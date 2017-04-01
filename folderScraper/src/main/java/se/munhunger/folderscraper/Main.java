@@ -5,7 +5,6 @@ import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.net.httpserver.HttpServer;
-import se.munhunger.folderscraper.utils.business.Scraper;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.net.URI;
  */
 public class Main
 {
-
 	private static final int PORT_NUMBER = 8080;
 
 	public static void main(String[] args) throws IOException
@@ -25,27 +23,6 @@ public class Main
 		HttpServer httpServer = createHttpServer();
 		httpServer.start();
 		System.out.println("Started scraper server successfully!");
-		startWatcher();
-	}
-
-	private static void startWatcher()
-	{
-		new Thread((Runnable) () ->
-		{
-			while(true)
-			{
-				try
-				{
-					new Scraper().getFolderStatus();
-					Thread.sleep(Settings.values.updateDelay * 1000);
-				}
-				catch(Exception e)
-				{
-					System.err.println("Error while running watcher");
-					e.printStackTrace();
-				}
-			}
-		}).start();
 	}
 
 	private static HttpServer createHttpServer() throws IOException
