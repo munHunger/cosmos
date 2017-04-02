@@ -1,4 +1,4 @@
-group 'se.mulander.scraper'
+group 'se.mulander.cosmos'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -14,7 +14,7 @@ repositories {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId 'se.mulander.scraper'
+            groupId 'se.mulander.cosmos'
             artifactId 'common'
             version '1.0'
 

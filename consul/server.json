@@ -1,0 +1,14 @@
+{
+    "bind_addr": "0.0.0.0",
+    "client_addr": "0.0.0.0",
+    "server": true,
+    "data_dir": "build/server",
+    "advertise_addr": "127.0.0.1",
+    "start_join": ["127.0.0.1"],
+    "ui": true,
+    "bootstrap": true,
+    "ports": {
+        "http": 8500,
+        "server": 8300
+    }
+}

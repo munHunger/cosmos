@@ -1,4 +1,4 @@
-group 'se.mulander.scraper'
+group 'se.mulander.cosmos'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -20,16 +20,15 @@ dependencies {
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-module-junit4-rule', version: '1.6.6'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.16.1'
-    compile group: 'com.sun.jersey', name: "jersey-core", version: '1.10'
-    compile group: 'com.sun.jersey.contribs', name: "jersey-simple-server", version: '1.10'
+    compile group: 'com.sun.jersey', name: "jersey-core", version: '1.19.3'
+    compile group: 'com.sun.jersey.contribs', name: "jersey-simple-server", version: '1.19.3'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-    compile group: 'se.mulander.scraper', name: 'common', version: '1.0'
-
+    compile group: 'se.mulander.cosmos', name: 'common', version: '1.0'
 }
 
 task startServer(type: JavaExec, dependsOn: ':classes') {
-    main = 'se.munhunger.folderscraper.Main'
+    main = 'se.mulander.cosmos.folderscraper.Main'
     classpath = sourceSets.main.runtimeClasspath
     jvmArgs = ['-ea']
 }
