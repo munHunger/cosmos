@@ -20,6 +20,13 @@ public class Scraper
 {
 	public static Thread watchThread;
 
+	/**
+	 * Creates a new Thread that watches the watchFolder and updates the status of the FileObjects.
+	 * Note that it is an infinite thread that during normal operations never terminates.
+	 *
+	 * @return a new thread that watches the watchPath for new files.
+	 * @see #getFolderStatus()
+	 */
 	private static Thread createWatcher()
 	{
 		return new Thread(() ->
@@ -40,6 +47,13 @@ public class Scraper
 		});
 	}
 
+	/**
+	 * Checks if the watcher is running.
+	 * If the watchThread is null, a new Thread will be created.
+	 * Note that the new Thread will not be started.
+	 *
+	 * @return true iff the thread is running
+	 */
 	public static boolean isRunningWatcher()
 	{
 		if(watchThread == null)
@@ -47,20 +61,42 @@ public class Scraper
 		return watchThread.isAlive();
 	}
 
-	public static void startWatcher()
+	/**
+	 * Starts the watcher thread.
+	 *
+	 * @throws IllegalStateException If the watchThread is already running
+	 */
+	public static void startWatcher() throws IllegalStateException
 	{
-		if(watchThread != null && watchThread.isAlive())
-			throw new IllegalArgumentException("Watcher already running");
-		watchThread = createWatcher();
+		if(isRunningWatcher())
+			throw new IllegalStateException("Watcher already running");
 		watchThread.start();
 	}
 
-	public static void stopWatcher()
+
+	/**
+	 * Stops the watcher thread if is running.
+	 * If watchThread is null, nothing happens.
+	 *
+	 * @throws IllegalStateException If watchThread is not running or null
+	 */
+	public static void stopWatcher() throws IllegalStateException
 	{
+		if(!isRunningWatcher())
+			throw new IllegalStateException("Watcher is not running");
 		watchThread.interrupt();
 		watchThread = null;
 	}
 
+	/**
+	 * Searches the watchPath as found in the Settings for files and directories.
+	 * All top level files and directories will be converted to FileObjects and searched for using the OMDB api.
+	 * If a FileObject is found that is completed, it will attempt to move it to it's corresponding location.
+	 *
+	 * @return a list of all FileObjects found in the watchPath.
+	 * @throws Exception
+	 * @see #searchMetaData(FileObject) {@link #moveObject(FileObject)}
+	 */
 	public List<FileObject> getFolderStatus() throws Exception
 	{
 		Database db = new Database();
@@ -93,7 +129,15 @@ public class Scraper
 		return result;
 	}
 
-	public String moveObject(FileObject o) throws IOException
+	/**
+	 * Moves the object to the corresponding location as noted by the Settings variables.
+	 *
+	 * @param o The FileObject to move.
+	 * @return The new path for the FileObject
+	 * @throws IOException              If the move fails.
+	 * @throws IllegalArgumentException If the object is not completed, both a movie and a tv-show or neither.
+	 */
+	public String moveObject(FileObject o) throws IOException, IllegalArgumentException
 	{
 		if(!o.isComplete)
 			throw new IllegalArgumentException("FileObject must be completed before moving");
@@ -111,6 +155,14 @@ public class Scraper
 		return destination;
 	}
 
+	/**
+	 * Checks if the FileObject is done downloading.
+	 * This is determined by searching for files ending with .part
+	 * i.e. the downloader must be configured to use .part files for incomplete downloads.
+	 *
+	 * @param o the FileObject to check
+	 * @return true iff the FileObject is done downloading. i.e. no .part files found.
+	 */
 	public boolean isDone(FileObject o)
 	{
 		if(new File(o.filePath).isDirectory())
@@ -125,6 +177,16 @@ public class Scraper
 			return !new File(o.filePath + ".part").exists();
 	}
 
+	/**
+	 * Searches OMDB for the item represented by the FileObject.
+	 * It uses the path in the FileObject to get an idea of what the title might be.
+	 * Once found the FileObject will be updated with corresponding flags from the OMDB response
+	 *
+	 * @param o The file object to use in search.
+	 * @return The object o, edited only if an OMDB response was found, otherwise unedited.
+	 * Note that the return is the same object as the param.
+	 * @throws Exception
+	 */
 	public FileObject searchMetaData(FileObject o) throws Exception
 	{
 		String url = "http://www.omdbapi.com/?t=";
