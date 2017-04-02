@@ -4,3 +4,5 @@ l**/.idea/
 *.jar
 **/tmp
 *.db
+**/maven/
+**/build/
