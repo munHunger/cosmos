@@ -5,18 +5,8 @@ import { ShortMovieViewComponent } from '../short-movie-view/short-movie-view.co
 
 @Component({
   selector: 'movie-list',
-  template: `
-    <div id="movie-list">
-      <short-movie-view *ngFor="let movie of movielist"
-      [movie]="movie" class="arrange-horizontally">
-      </short-movie-view>
-    </div>
-  `,
-  styles: [`
-   short-movie-view {
-     display: inline-block;
-    }
-  `],
+  templateUrl: './movie-list.component.html',
+  styleUrls: ['./movie-list.component.css'],
   providers: [MovieService]
 })
 
