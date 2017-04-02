@@ -3,5 +3,6 @@
 *.class
 *.jar
 **/tmp
-*.js
 *.db
+**/maven/
+**/build/
