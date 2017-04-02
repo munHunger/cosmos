@@ -1,0 +1,49 @@
+<link href="navbar.component.css" rel="stylesheet">
+<div>
+<div id="wrapper" [ngClass]="{'toggled': hidden}">
+
+  <!-- Sidebar -->
+  <div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+      <li class="sidebar-brand">
+        <a href="#">
+          <img src="./app/images/icon.png" style="width:30px;" />
+          Munhunger
+        </a>
+      </li>
+      <li>
+        <a href="#"><span class="glyphicon glyphicon-lock"></span>&nbsp;Stuck</a>
+      </li>
+      <li>
+        <a href="#"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;Current</a>
+      </li>
+      <li>
+        <a href="#"><span class="glyphicon glyphicon-equalizer"></span>&nbsp;Statistics</a>
+      </li>
+      <li>
+        <a href="#"><span class="glyphicon glyphicon-flag"></span>&nbsp;New</a>
+      </li>
+    </ul>
+    <span id="minimize-menu" class="pull-right glyphicon glyphicon-menu-left" (click)="hidden = !hidden" style="font-size:30px; vertical-align: middle"></span>
+  </div>
+  <div *ngIf="hidden">
+    <span class="glyphicon glyphicon-menu-hamburger" (click)="hidden = !hidden" style="font-size:30px;"></span>
+  </div>
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div *ngFor="let videoItem of stuckItems">
+            <video-item></video-item>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
