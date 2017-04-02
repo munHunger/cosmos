@@ -1,7 +1,6 @@
-**/.idea/
+l**/.idea/
 **/.gradle/
 *.class
 *.jar
 **/tmp
-*.js
 *.db
