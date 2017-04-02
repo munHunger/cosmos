@@ -1,0 +1,16 @@
+{
+    "bind_addr": "127.0.0.1",
+    "client_addr": "0.0.0.0",
+    "data_dir": "build/client",
+    "advertise_addr": "127.0.0.1",
+    "start_join": ["127.0.0.1"],
+    "ui": true,
+    "ports": {
+        "dns": 8600,
+        "http": 8500,
+        "rpc": 8400,
+        "serf_lan": 8301,
+        "serf_wan": 8302,
+        "server": 8300
+    }
+}
