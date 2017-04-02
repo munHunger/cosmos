@@ -1,4 +1,4 @@
-group 'se.munhunger'
+group 'se.munhunger.scraper'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
