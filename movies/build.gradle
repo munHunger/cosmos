@@ -25,3 +25,9 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     compile group: 'se.mulander.cosmos', name: 'common', version: '1.0'
 }
+
+task startServer(type: JavaExec, dependsOn: ':classes') {
+    main = 'se.mulander.cosmos.movies.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ['-ea']
+}
