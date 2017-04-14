@@ -9,17 +9,19 @@ import se.mulander.cosmos.common.business.HttpRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Business end of the folder scraper.
+ * This manages getting statuses of the watched folder, moving completed downloads and starting/stopping the watchthread.
+ *
  * Created by marcu on 2017-03-17.
  */
 public class Scraper
 {
-	public static Thread watchThread;
+	private static Thread watchThread;
 
 	/**
 	 * Creates a new Thread that watches the watchFolder and updates the status of the FileObjects.
@@ -95,39 +97,87 @@ public class Scraper
 	 * If a FileObject is found that is completed, it will attempt to move it to it's corresponding location.
 	 *
 	 * @return a list of all FileObjects found in the watchPath.
-	 * @throws Exception
+	 * @throws Exception if shit goes wrong
 	 * @see #searchMetaData(FileObject) {@link #moveObject(FileObject)}
 	 */
 	public List<FileObject> getFolderStatus() throws Exception
 	{
+		return getFolderStatus(Settings.values.watchPath);
+	}
+
+	/**
+	 * Searches the supplied folder path for files and directories.
+	 * All top level files and directories will be converted to FileObjects and searched for using the OMDB api.
+	 * If a FileObject is found that is completed, it will attempt to move it to it's corresponding location.
+	 *
+	 * @return a list of all FileObjects found in the folder
+	 * @throws Exception if shit goes wrong
+	 * @see #searchMetaData(FileObject) {@link #moveObject(FileObject)}
+	 */
+	public List<FileObject> getFolderStatus(String folder) throws Exception
+	{
 		Database db = new Database();
-		File[] files = new File(Settings.values.watchPath).listFiles();
+		File[] files = new File(folder).listFiles();
 		db.createTable(FileObject.class);
 		List<FileObject> result = new ArrayList<>();
-		for(File f : files)
+		if(files != null)
 		{
-			if(f.getPath().endsWith("ignore") || f.getPath().endsWith("part"))
-				continue;
-			List<Object> dbStatus = db.getObject(FileObject.class, String.format("filePath = '%s'", f.getPath().replaceAll("'", "/'")));
-			if(dbStatus.size() > 0)
-				result.add((FileObject) dbStatus.get(0));
-			else
+			for(File f : files)
 			{
-				FileObject newObject = new FileObject();
-				newObject.filePath = f.getPath();
-				db.insertObject(newObject);
-				result.add(newObject);
+				if(f.isDirectory())
+				{
+					cleanDirectory(f);
+					continue;
+				}
+				if(f.getPath().endsWith("ignore"))
+				{
+					if(!f.delete())
+						throw new Exception("Could not delete ignore file:" + f.getPath());
+					continue;
+				}
+				if(f.getPath().endsWith("part"))
+					continue;
+				List<Object> dbStatus = db.getObject(FileObject.class, String.format("filePath = '%s'", f.getPath().replaceAll("'", "/'")));
+				if(dbStatus.size() > 0)
+					result.add((FileObject) dbStatus.get(0));
+				else
+				{
+					FileObject newObject = new FileObject();
+					newObject.filePath = f.getPath();
+					db.insertObject(newObject);
+					result.add(newObject);
+				}
 			}
 		}
 		for(FileObject o : result)
 		{
 			o.isComplete = isDone(o);
+			searchMetaData(o);
 			if(o.isComplete && (o.isTV || o.isMovie))
 				moveObject(o);
-			searchMetaData(o);
 			db.saveObject(o);
 		}
 		return result;
+	}
+
+	/**
+	 * Cleans a directory.
+	 * i.e. recursively removes all .ignore files and empty directories
+	 * @param directory the directory to clean
+	 */
+	private void cleanDirectory(File directory)
+	{
+		if(!directory.isDirectory())
+			throw new IllegalArgumentException("Argument was not a directory");
+		for(File sub : directory.listFiles())
+		{
+			if(sub.isDirectory())
+				cleanDirectory(sub);
+			else if(sub.getPath().endsWith("ignore"))
+				sub.delete();
+		}
+		if(directory.listFiles().length == 0)
+			directory.delete();
 	}
 
 	/**
@@ -138,7 +188,7 @@ public class Scraper
 	 * @throws IOException              If the move fails.
 	 * @throws IllegalArgumentException If the object is not completed, both a movie and a tv-show or neither.
 	 */
-	public String moveObject(FileObject o) throws IOException, IllegalArgumentException
+	private String moveObject(FileObject o) throws IOException, IllegalArgumentException
 	{
 		if(!o.isComplete)
 			throw new IllegalArgumentException("FileObject must be completed before moving");
@@ -148,12 +198,44 @@ public class Scraper
 		else if(o.isMovie)
 			destination = Settings.values.moviePath;
 		else if(o.isTV)
-			destination = Settings.values.tvPath;
+			destination = Settings.values.tvPath + "\\" + o.title;
 		else
 			throw new IllegalArgumentException("FileObject has not been classified as either a TV-Show or a Movie");
 		destination = destination + o.filePath.substring(Math.max(0, Math.max(o.filePath.lastIndexOf("\\"), o.filePath.lastIndexOf("/"))));
-		Files.move(Paths.get(o.filePath), Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
+		copyDirectory(new File(o.filePath), new File(destination));
 		return destination;
+	}
+
+	/**
+	 * Moves a directory and any sub files/directories
+	 * @param sourceDir
+	 * @param targetDir
+	 * @throws IOException
+	 */
+	private static void copyDirectory(File sourceDir, File targetDir)
+			throws IOException {
+		if (sourceDir.isDirectory()) {
+			copyDirectoryRecursively(sourceDir, targetDir);
+		} else if(sourceDir.exists()){
+			Files.move(sourceDir.toPath(), targetDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		}
+	}
+
+	/**
+	 * Copies a directory recursively
+	 * @param source
+	 * @param target
+	 * @throws IOException
+	 */
+	private static void copyDirectoryRecursively(File source, File target)
+			throws IOException {
+		if (!target.exists()) {
+			target.mkdir();
+		}
+
+		for (String child : source.list()) {
+			copyDirectory(new File(source, child), new File(target, child));
+		}
 	}
 
 	/**
@@ -209,6 +291,7 @@ public class Scraper
 				{
 					o.isTV = res.Type.toUpperCase().equals("SERIES");
 					o.isMovie = res.Type.toUpperCase().equals("MOVIE");
+					o.title = res.Title;
 					return o;
 				}
 			}
