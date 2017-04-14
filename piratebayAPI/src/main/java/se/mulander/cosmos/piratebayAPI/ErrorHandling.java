@@ -1,4 +1,4 @@
-package jpa;
+package se.mulander.cosmos.piratebayAPI;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

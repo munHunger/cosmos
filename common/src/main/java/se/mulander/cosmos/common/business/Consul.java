@@ -1,7 +1,5 @@
 package se.mulander.cosmos.common.business;
 
-import se.mulander.cosmos.common.model.ConsulDeregister;
-import se.mulander.cosmos.common.model.ConsulRegister;
 import se.mulander.cosmos.common.model.ConsulService;
 
 import java.net.InetAddress;
@@ -14,6 +12,7 @@ public class Consul
 {
 	private static final int CONSUL_AGENT_PORT = 8500;
 	private static final String WINDOWS_CONSUL_START_PATH = "../consul/windows/runClient.bat";
+
 	public static void startAgent() throws Exception
 	{
 		if(HttpRequest.portIsAvailable(CONSUL_AGENT_PORT))

@@ -1,4 +1,4 @@
-package jpa;
+package se.mulander.cosmos.piratebayAPI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,17 +12,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import jpa.Query;
-import jpa.Torrent;
-
 public class Jpa {
 
 	public static ArrayList<Torrent> Search (Query query) throws IOException {		
 		ArrayList<Torrent> result = new ArrayList<Torrent>();
 		
 			Jsoup.connect(Constants.Url);
-		
-			Document doc = Jsoup.connect(query.TranslateToUrl())
+
+		    String url = query.TranslateToUrl();
+			Document doc = Jsoup.connect(url)
 					.userAgent(Constants.UserAgent)
 					.timeout(5000)
 					.get();

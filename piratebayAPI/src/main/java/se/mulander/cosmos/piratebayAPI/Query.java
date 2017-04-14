@@ -1,8 +1,7 @@
-package jpa;
+package se.mulander.cosmos.piratebayAPI;
 
-import jpa.Constants;
-import jpa.QueryOrder;
-import jpa.TorrentCategory;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class Query {
 
@@ -63,19 +62,25 @@ public class Query {
     	String url = new String();
     	
     	if (!Mode48h) {
-    		url = Constants.Url + 
-    			"/search/" +
-    			Term + "/" +
-    			Integer.toString(Page) + "/" +
-    			Integer.toString(Order.getValue()) + "/" +
-    			Integer.toString(Category);
-    	}
+			try
+			{
+				url = Constants.Url +
+						"/search/" +
+						URLEncoder.encode(Term, "UTF-8") + "/" +
+						Integer.toString(Page) + "/" +
+						Integer.toString(Order.getValue()) + "/" +
+						Integer.toString(Category);
+			}
+			catch(Exception e)
+			{
+				return null;
+			}
+		}
     	else {
-    		url = Constants.Url +
+			url = Constants.Url +
     				"/top/" +
     				Term;
-    	}
-    	
-    	return url;
+		}
+		return url;
     }
 }

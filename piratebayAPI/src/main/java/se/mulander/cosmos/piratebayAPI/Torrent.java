@@ -1,4 +1,4 @@
-package jpa;
+package se.mulander.cosmos.piratebayAPI;
 
 public class Torrent {
     public String Name;

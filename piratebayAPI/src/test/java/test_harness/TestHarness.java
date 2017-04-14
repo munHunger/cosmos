@@ -3,10 +3,10 @@ package test_harness;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import jpa.Query;
-import jpa.Torrent;
-import jpa.TorrentCategory;
-import jpa.Jpa;
+import se.mulander.cosmos.piratebayAPI.Query;
+import se.mulander.cosmos.piratebayAPI.Torrent;
+import se.mulander.cosmos.piratebayAPI.TorrentCategory;
+import se.mulander.cosmos.piratebayAPI.Jpa;
 
 public class TestHarness {
 
@@ -14,6 +14,7 @@ public class TestHarness {
 		ArrayList<Torrent> torrents = new ArrayList<Torrent>();
 
 		try {
+			torrents = Jpa.Search(new Query("Rick and morty", 0));
 			// search for the total top 100 category
 			torrents = Jpa.Search(new Query(TorrentCategory.Top100));
 		}	

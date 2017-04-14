@@ -1,4 +1,4 @@
-package jpa;
+package se.mulander.cosmos.piratebayAPI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
