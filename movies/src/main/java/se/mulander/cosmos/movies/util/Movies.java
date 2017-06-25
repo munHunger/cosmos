@@ -30,7 +30,7 @@ public class Movies
 		return Arrays.asList(response.results).stream().map(tmdb ->
 		{
 			String year = tmdb.release_date.trim().substring(0, 4);
-			return new Movie(tmdb.poster_path, tmdb.title, year.matches("\\d+") ? Integer.parseInt(year) : -1).addRating(new Rating("The Movie Database", tmdb.vote_average));
+			return new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path, tmdb.title, year.matches("\\d+") ? Integer.parseInt(year) : -1).addRating(new Rating("The Movie Database", tmdb.vote_average));
 		}).collect(Collectors.toList());
 	}
 }

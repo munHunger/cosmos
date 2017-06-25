@@ -8,6 +8,7 @@ import java.net.InetAddress;
  * Interface against consul agent
  * Created by marcu on 2017-04-02.
  */
+@Deprecated
 public class Consul
 {
 	private static final int CONSUL_AGENT_PORT = 8500;
