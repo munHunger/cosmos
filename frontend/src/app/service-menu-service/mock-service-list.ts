@@ -1,1 +1,0 @@
-export const SERVICES: string[] = ["Movie list", "Non-existing-service"];

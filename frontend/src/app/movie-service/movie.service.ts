@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Movie } from '../movie/movie';
-import { MOVIES } from './mock-movie';
+/**
+ * Created by falapen on 2017-06-25.
+ */
+
+import {Injectable} from "@angular/core";
+import {Movie} from "../movie/movie.component";
+import {MOVIES} from "./mock-movies";
+import {MovieObject} from "../movie-model/movie.model";
 
 @Injectable()
 export class MovieService {
-getShortMovieInfo(): Movie {
-   return MOVIES[0];
- }
-getShortMovieInfoList(): Movie[] {
-  return MOVIES;
-}
-
+  getMovies(): Promise<MovieObject[]> {
+    return Promise.resolve(MOVIES);
+  }
 }

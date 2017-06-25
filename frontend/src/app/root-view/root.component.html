@@ -1,3 +1,5 @@
-<div id="root-block" class="container">
-    <service-menu>Loading the service-view nigglet!</service-menu>
+<div id="root-block" >
+    <div *ngFor="let mov of movies">
+      <movie [movieObject]="mov"></movie>
+    </div>
 </div>

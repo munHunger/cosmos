@@ -6,17 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var core_1 = require("@angular/core");
-var mock_service_list_1 = require("./mock-service-list");
-var ServiceMenuService = (function () {
-    function ServiceMenuService() {
+var AppComponent = (function () {
+    function AppComponent() {
+        this.name = 'Angular';
     }
-    ServiceMenuService.prototype.getAvailServices = function () {
-        return mock_service_list_1.SERVICES;
-    };
-    return ServiceMenuService;
+    return AppComponent;
 }());
-ServiceMenuService = __decorate([
-    core_1.Injectable()
-], ServiceMenuService);
-exports.ServiceMenuService = ServiceMenuService;
-//# sourceMappingURL=service-menu.service.js.map
+AppComponent = __decorate([
+    core_1.Component({
+        selector: 'my-app',
+        template: "\n    <root-view>Loading the next nigga....</root-view>\n  ",
+    })
+], AppComponent);
+exports.AppComponent = AppComponent;
+//# sourceMappingURL=app.component.js.map

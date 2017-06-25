@@ -1,0 +1,21 @@
+.w3-card-2 {
+  /*width: 10em;*/
+  overflow: hidden;
+
+}
+
+.movie-title {
+  margin-top: 0em;
+  margin-left: -0.5em;
+  margin-bottom: 0;
+  font-size: 1em;
+  font-weight: bold;
+  white-space: nowrap;
+
+}
+
+
+.movie-year {
+  margin-top: -0.5em;
+  margin-left:-0.5em;
+}
