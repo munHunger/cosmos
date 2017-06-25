@@ -6,14 +6,10 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.net.httpserver.HttpServer;
 import se.mulander.cosmos.common.business.Consul;
-import se.mulander.cosmos.piratebayAPI.Jpa;
-import se.mulander.cosmos.piratebayAPI.Query;
-import se.mulander.cosmos.piratebayAPI.QueryOrder;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 
 /**
  * Created by marcu on 2017-02-14.
@@ -25,7 +21,6 @@ public class Main
 
 	public static void main(String[] args) throws Exception
 	{
-		ArrayList torrents = Jpa.Search(new Query("rick and morty", 0, QueryOrder.BySeedsDescending));
 		System.out.println("Starting download HTTPServer...\n");
 		HttpServer httpServer = createHttpServer();
 		httpServer.start();

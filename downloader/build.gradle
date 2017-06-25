@@ -10,6 +10,9 @@ repositories {
     maven {
         url '../maven'
     }
+    maven {
+        url 'https://github.com/stil4m/maven-repository/raw/master/releases/'
+    }
 }
 
 dependencies {
@@ -26,6 +29,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     compile group: 'se.mulander.cosmos', name: 'common', version: '1.0'
     compile group: 'se.mulander.cosmos', name: 'piratebayAPI', version: '1.0'
+    compile group: 'nl.stil4m', name: 'transmission-rpc-java', version: '0.7.0'
 }
 
 task startServer(type: JavaExec, dependsOn: ':classes') {
