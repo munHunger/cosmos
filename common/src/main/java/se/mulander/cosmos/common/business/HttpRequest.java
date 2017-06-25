@@ -1,6 +1,7 @@
 package se.mulander.cosmos.common.business;
 
 import com.google.gson.Gson;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import se.mulander.cosmos.common.model.HttpResponse;
@@ -139,18 +140,18 @@ public class HttpRequest
 		HttpClient httpClient = new HttpClient();
 		httpClient.executeMethod(postMethod);
 		int statusCode = postMethod.getStatusCode();
-		if(statusCode == 200)
+		if(statusCode != 401)
 		{
+			Header[] responseHeaders = postMethod.getResponseHeaders();
 			String response = postMethod.getResponseBodyAsString();
 			if(returnType != null)
 			{
-				return new HttpResponse(new Gson().fromJson(response, returnType), 200);
+				return new HttpResponse(new Gson().fromJson(response, returnType), 200, responseHeaders);
 			}
-			return new HttpResponse(postMethod.getResponseBodyAsString(), 200);
+			return new HttpResponse(postMethod.getResponseBodyAsString(), 200, responseHeaders);
 		}
-		else if(statusCode == 401)
+		else
 			throw new UnauthorizedException();
-		return null;
 	}
 
 	/**

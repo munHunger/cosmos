@@ -1,4 +1,4 @@
-package se.mulander.cosmos.downloader.utils.model;
+package se.mulander.cosmos.downloader.model.transmission;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

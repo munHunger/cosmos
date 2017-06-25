@@ -1,5 +1,7 @@
 package se.mulander.cosmos.common.model;
 
+import org.apache.commons.httpclient.Header;
+
 /**
  * Created by marcu on 2017-06-25.
  */
@@ -7,11 +9,19 @@ public class HttpResponse
 {
 	public Object data;
 	public int statusCode;
+	public Header[] headers;
+
 
 	public HttpResponse(Object data, int statusCode)
 	{
+		this(data, statusCode, null);
+	}
+
+	public HttpResponse(Object data, int statusCode, Header[] headers)
+	{
 		this.data = data;
 		this.statusCode = statusCode;
+		this.headers = headers;
 	}
 
 	/**

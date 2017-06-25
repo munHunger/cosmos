@@ -1,4 +1,4 @@
-package se.mulander.cosmos.downloader.utils.model;
+package se.mulander.cosmos.downloader.model.transmission;
 
 import java.util.HashMap;
 import java.util.Map;
