@@ -1,8 +1,7 @@
-package se.mulander.cosmos.movies.utils.business;
+package se.mulander.cosmos.movies.util;
 
 import se.mulander.cosmos.common.business.HttpRequest;
-import se.mulander.cosmos.movies.Settings;
-import se.mulander.cosmos.movies.utils.model.TMDBResponse;
+import se.mulander.cosmos.movies.model.TMDBResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +11,14 @@ import java.util.List;
  */
 public class Movies
 {
+	private static String theMovieDbURL = "https://api.themoviedb.org";
+
 	public static List<TMDBResponse.Result> getRecomendations() throws Exception
 	{
 		List<TMDBResponse.Result> result = new ArrayList<>();
 		StringBuilder urlBuilder = new StringBuilder();
-		urlBuilder.append(Settings.values.theMovieDb).append("/3/discover/movie");
-		urlBuilder.append("?api_key=").append(Settings.values.apiV3Key);
+		urlBuilder.append(theMovieDbURL).append("/3/discover/movie");
+		urlBuilder.append("?api_key=").append("6559b0b40f39a093b15b3c4213bdb613");//Settings.fetchSettingStringValue("moviedb.apiV3Key"));
 		urlBuilder.append("&sort_by=popularity.desc");
 		urlBuilder.append("&include_adult=false");
 		urlBuilder.append("&include_video=false");

@@ -1,4 +1,4 @@
-package se.mulander.cosmos.folderscraper.utils.model;
+package se.mulander.cosmos.folderscraper.model;
 
 import se.mulander.cosmos.common.database.MaxLength;
 import se.mulander.cosmos.common.database.TableName;

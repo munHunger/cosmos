@@ -1,4 +1,4 @@
-package se.mulander.cosmos.movies.utils.model;
+package se.mulander.cosmos.movies.model;
 
 /**
  * Created by marcu on 2017-04-02.
@@ -7,6 +7,7 @@ public class TMDBResponse
 {
 	public int page;
 	public Result[] results;
+
 	public class Result
 	{
 		public String poster_path;

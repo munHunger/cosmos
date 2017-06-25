@@ -27,6 +27,12 @@ public class Settings
 		}
 	}
 
+	public static String fetchSettingStringValue(String name)
+	{
+		//TODO: Implement poll against settings API
+		return "TBI";
+	}
+
 	/**
 	 * Fetches an integer setting from the config.properties file.
 	 * If the key is not in the file or if it is not a number the defaultValue will be returned
