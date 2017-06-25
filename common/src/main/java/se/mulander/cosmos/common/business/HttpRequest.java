@@ -143,12 +143,14 @@ public class HttpRequest
 		if(statusCode != 401)
 		{
 			Header[] responseHeaders = postMethod.getResponseHeaders();
-			String response = postMethod.getResponseBodyAsString();
+			String response = postMethod.getResponseBodyAsString().trim();
+			if(!(response.startsWith("{") || response.startsWith("[")))
+				returnType = null;
 			if(returnType != null)
 			{
-				return new HttpResponse(new Gson().fromJson(response, returnType), 200, responseHeaders);
+				return new HttpResponse(new Gson().fromJson(response, returnType), statusCode, responseHeaders);
 			}
-			return new HttpResponse(postMethod.getResponseBodyAsString(), 200, responseHeaders);
+			return new HttpResponse(postMethod.getResponseBodyAsString(), statusCode, responseHeaders);
 		}
 		else
 			throw new UnauthorizedException();

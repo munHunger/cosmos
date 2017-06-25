@@ -2,6 +2,7 @@ package se.mulander.cosmos.downloader.business;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
@@ -16,14 +17,16 @@ import javax.ws.rs.core.Response;
  */
 @Path("/downloader")
 @Component
-@Api(value = "Downloader")
+@Api(value = "Downloader",
+	 description = "Endpoint for managing all downloads. i.e. search for magnets and send them to transmission")
 public class Downloader
 {
 	@GET
 	@Path("/download")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Download an item")
-	public Response downloadItem(@QueryParam("title") String title) throws Exception
+	@ApiOperation(value = "Download an item", notes = "Searches for the item and downloads the first suitable match")
+	public Response downloadItem(@ApiParam(value = "The name to search for") @QueryParam("title") String title) throws
+			Exception
 	{
 		boolean found = new se.mulander.cosmos.downloader.util.Downloader().downloadItem(title);
 		if(found)

@@ -38,9 +38,9 @@ public class Downloader
 					Map<String, String> headers = new HashMap<>();
 					headers.put("Authorization", "Basic " + authHeader);
 					Map<String, Object> body = new HashMap<>();
-					body.put("method", "torrent-get");
+					body.put("method", "torrent-add");
 					Map<String, Object> parameters = new HashMap<>();
-					parameters.put("fields", Arrays.asList("name"));
+					parameters.put("filename", t.Magnet);
 					body.put("arguments", parameters);
 
 					HttpResponse response = HttpRequest.postRequest(url, headers, body, TransmissionResponse.class);
@@ -52,14 +52,6 @@ public class Downloader
 					}
 					TransmissionResponse res = (TransmissionResponse) response.data;
 					break;
-
-					/*
-					String response = (String) HttpRequest.postRequest("http://192.168.1.83:9091/transmission/rpc/", TransmissionRequest.getAllTorrentsJSON(), "munhunger", "warthog", TransmissionResponse.class);
-					String xSessionID = response.substring(response.indexOf("X-Transmission-Session-Id: ") + "X-Transmission-Session-Id: ".length(), response.indexOf("</code>"));
-
-					TransmissionResponse res = (TransmissionResponse) HttpRequest.postRequest("http://192.168.1.83:9091/transmission/rpc/", TransmissionRequest.getAllTorrentsJSON(), "munhunger", "warthog", TransmissionResponse.class, new AbstractMap.SimpleEntry<>("X-Transmission-Session-Id", xSessionID));
-					System.out.println(res.result);
-					*/
 				}
 			}
 			return true;
