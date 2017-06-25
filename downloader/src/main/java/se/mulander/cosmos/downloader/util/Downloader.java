@@ -33,7 +33,7 @@ public class Downloader
 		{
 			for(Torrent t : torrents)
 			{
-				if(!t.Name.contains("CAM"))
+				if(!t.Name.toUpperCase().contains("CAM") && !t.Name.toUpperCase().contains("TS") && !t.Name.toUpperCase().contains("DVD"))
 				{
 					Map<String, String> headers = new HashMap<>();
 					headers.put("Authorization", "Basic " + authHeader);
@@ -51,10 +51,10 @@ public class Downloader
 						response = HttpRequest.postRequest(url, headers, body, TransmissionResponse.class);
 					}
 					TransmissionResponse res = (TransmissionResponse) response.data;
-					break;
+					if(res.result.trim().toUpperCase().equals("SUCCESS"))
+						return true;
 				}
 			}
-			return true;
 		}
 		return false;
 	}
