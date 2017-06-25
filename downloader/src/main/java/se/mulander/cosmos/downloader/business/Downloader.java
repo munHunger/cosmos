@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -19,11 +19,11 @@ import javax.ws.rs.core.Response;
 @Api(value = "Downloader")
 public class Downloader
 {
-	@Path("/download/{title}")
 	@GET
+	@Path("/download")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Download an item")
-	public Response downloadItem(@PathParam("title") String title) throws Exception
+	public Response downloadItem(@QueryParam("title") String title) throws Exception
 	{
 		boolean found = new se.mulander.cosmos.downloader.util.Downloader().downloadItem(title);
 		if(found)
