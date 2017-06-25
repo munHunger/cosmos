@@ -1,6 +1,7 @@
 package se.mulander.cosmos.movies.util;
 
 import se.mulander.cosmos.common.business.HttpRequest;
+import se.mulander.cosmos.movies.model.Movie;
 import se.mulander.cosmos.movies.model.TMDBResponse;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class Movies
 {
 	private static String theMovieDbURL = "https://api.themoviedb.org";
 
-	public static List<TMDBResponse.Result> getRecomendations() throws Exception
+	public static Object getRecomendations() throws Exception
 	{
 		List<TMDBResponse.Result> result = new ArrayList<>();
 		StringBuilder urlBuilder = new StringBuilder();
@@ -27,6 +28,9 @@ public class Movies
 		TMDBResponse response = (TMDBResponse) HttpRequest.getRequest(urlBuilder.toString(), TMDBResponse.class).data;
 		for(TMDBResponse.Result movie : response.results)
 			result.add(movie);
-		return result;
+		Movie m = new Movie();
+		m.internalID = "internt id";
+		return m;
+		//return result;
 	}
 }

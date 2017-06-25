@@ -3,8 +3,12 @@ package se.mulander.cosmos.movies.business;
 import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.stereotype.Component;
+import se.mulander.cosmos.movies.model.Movie;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,6 +27,9 @@ public class Movies
 	@Path("/recomendations")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
+	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+								message = "A list of movie recomendations",
+								response = Movie.class)})
 	public Response getRecomendations()
 	{
 		try
