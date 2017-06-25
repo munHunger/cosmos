@@ -101,6 +101,59 @@ public class HttpRequest
 	}
 
 	/**
+	 * Sends a POST request with headers and data as body
+	 *
+	 * @param url        the url to POST to
+	 * @param headers    a map of headers to use in the request
+	 * @param data       the data to send as body
+	 * @param returnType the class to return to.
+	 * @return A @{@link HttpResponse} object with the statuscode of the request as well as the data returned from the
+	 * server
+	 * @throws IOException
+	 * @throws UnauthorizedException
+	 */
+	public static HttpResponse postRequest(String url, Map<String, String> headers, Object data, Class returnType) throws
+			IOException, UnauthorizedException
+	{
+		PostMethod postMethod = new PostMethod(url);
+
+		for(String key : headers.keySet())
+			postMethod.setRequestHeader(key, headers.get(key));
+
+		postMethod.setRequestBody(new Gson().toJson(data));
+		return handlePostResponse(postMethod, returnType);
+	}
+
+	/**
+	 * Handles executing a post method and parsing the response
+	 *
+	 * @param postMethod
+	 * @param returnType
+	 * @return
+	 * @throws IOException
+	 * @throws UnauthorizedException
+	 */
+	private static HttpResponse handlePostResponse(PostMethod postMethod, Class returnType) throws IOException,
+			UnauthorizedException
+	{
+		HttpClient httpClient = new HttpClient();
+		httpClient.executeMethod(postMethod);
+		int statusCode = postMethod.getStatusCode();
+		if(statusCode == 200)
+		{
+			String response = postMethod.getResponseBodyAsString();
+			if(returnType != null)
+			{
+				return new HttpResponse(new Gson().fromJson(response, returnType), 200);
+			}
+			return new HttpResponse(postMethod.getResponseBodyAsString(), 200);
+		}
+		else if(statusCode == 401)
+			throw new UnauthorizedException();
+		return null;
+	}
+
+	/**
 	 * Sends a POST request
 	 *
 	 * @param url        the url to request
@@ -173,8 +226,6 @@ public class HttpRequest
 	public static HttpResponse postForm(String url, Map<String, String> headers, Map<String, String> form,
 										Class returnType) throws IOException, UnauthorizedException
 	{
-
-		HttpClient httpClient = new HttpClient();
 		PostMethod postMethod = new PostMethod(url);
 		for(String key : form.keySet())
 			postMethod.addParameter(key, form.get(key));
@@ -182,20 +233,7 @@ public class HttpRequest
 		for(String key : headers.keySet())
 			postMethod.setRequestHeader(key, headers.get(key));
 
-		httpClient.executeMethod(postMethod);
-		int statusCode = postMethod.getStatusCode();
-		if(statusCode == 200)
-		{
-			String response = postMethod.getResponseBodyAsString();
-			if(returnType != null)
-			{
-				return new HttpResponse(new Gson().fromJson(response, returnType), 200);
-			}
-			return new HttpResponse(postMethod.getResponseBodyAsString(), 200);
-		}
-		else if(statusCode == 401)
-			throw new UnauthorizedException();
-		return null;
+		return handlePostResponse(postMethod, returnType);
 	}
 
 	/**

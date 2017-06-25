@@ -23,7 +23,7 @@ public class Movies
 		urlBuilder.append("&include_video=false");
 		urlBuilder.append("&page=1");
 		urlBuilder.append("&primary_release_year=2017");
-		TMDBResponse response = (TMDBResponse)HttpRequest.getRequest(urlBuilder.toString(), TMDBResponse.class);
+		TMDBResponse response = (TMDBResponse) HttpRequest.getRequest(urlBuilder.toString(), TMDBResponse.class).data;
 		for(TMDBResponse.Result movie : response.results)
 			result.add(movie);
 		return result;

@@ -1,10 +1,10 @@
 package se.mulander.cosmos.folderscraper.utils.business;
 
+import se.mulander.cosmos.common.business.HttpRequest;
+import se.mulander.cosmos.common.database.Database;
 import se.mulander.cosmos.folderscraper.Settings;
 import se.mulander.cosmos.folderscraper.utils.model.FileObject;
 import se.mulander.cosmos.folderscraper.utils.model.OMDBResponse;
-import se.mulander.cosmos.common.database.Database;
-import se.mulander.cosmos.common.business.HttpRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -204,7 +204,7 @@ public class Scraper
 						builder.append(nameComponents[n + j]).append(".");
 				}
 				String search = url + builder.toString();
-				OMDBResponse res = (OMDBResponse) HttpRequest.getRequest(search, OMDBResponse.class);
+				OMDBResponse res = (OMDBResponse) HttpRequest.getRequest(search, OMDBResponse.class).data;
 				if(res.Response.toUpperCase().equals("TRUE"))
 				{
 					o.isTV = res.Type.toUpperCase().equals("SERIES");

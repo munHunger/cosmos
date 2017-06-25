@@ -10,6 +10,7 @@ import java.util.List;
  * It maps object to sql dynamically based on object signature
  * Created by marcu on 2017-02-16.
  */
+@Deprecated
 public class Database
 {
 
@@ -59,7 +60,7 @@ public class Database
 	 */
 	public List<Object> getObject(Class c, String whereStatement) throws Exception
 	{
-		List<Object> result = new ArrayList<Object>();
+		List<Object> result = new ArrayList<>();
 		Field[] fields = c.getDeclaredFields();
 		TableName tableAnnotation = (TableName) c.getAnnotation(TableName.class);
 		if(tableAnnotation == null)

@@ -8,10 +8,11 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import se.mulander.cosmos.folderscraper.utils.model.FileObject;
-import se.mulander.cosmos.folderscraper.utils.model.OMDBResponse;
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.Database;
+import se.mulander.cosmos.common.model.HttpResponse;
+import se.mulander.cosmos.folderscraper.utils.model.FileObject;
+import se.mulander.cosmos.folderscraper.utils.model.OMDBResponse;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -158,7 +159,7 @@ public class ScraperTest
 					{
 						beforeEach(() ->
 						{
-							List<Object> returnList = new ArrayList<Object>();
+							List<Object> returnList = new ArrayList<>();
 							returnList.add(mock(FileObject.class));
 							when(dbMock.getObject(any(Class.class), any(String.class))).thenReturn(returnList);
 						});
@@ -183,7 +184,7 @@ public class ScraperTest
 						OMDBResponse response = new OMDBResponse();
 						response.Response = "False";
 						mockStatic(HttpRequest.class);
-						when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(response);
+						when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(new HttpResponse(response, 200));
 					});
 					it("Doesn't change the object", () ->
 							expect(underTest.searchMetaData(toSearchFor)).toEqual(toSearchFor));
@@ -195,7 +196,7 @@ public class ScraperTest
 					{
 						response.Response = "true";
 						mockStatic(HttpRequest.class);
-						when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(response);
+						when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(new HttpResponse(response, 200));
 					});
 					describe("Object is a tv-show", () ->
 					{
