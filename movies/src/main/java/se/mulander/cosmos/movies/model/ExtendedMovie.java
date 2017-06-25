@@ -22,4 +22,14 @@ public class ExtendedMovie
 	@ApiModelProperty(name = "poster_url", value = "An absolute link to a poster image")
 	@SerializedName("poster_url")
 	public String posterURL;
+
+	public ExtendedMovie()
+	{
+	}
+
+	public ExtendedMovie(String description, String posterURL)
+	{
+		this.description = description;
+		this.posterURL = posterURL;
+	}
 }

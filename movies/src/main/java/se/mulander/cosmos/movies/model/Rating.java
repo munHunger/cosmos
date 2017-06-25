@@ -13,4 +13,14 @@ public class Rating
 	public String provider;
 	@ApiModelProperty(value = "The rating from the provider. The scale is not normalized and can not be compared across providers")
 	public double rating;
+
+	public Rating()
+	{
+	}
+
+	public Rating(String provider, double rating)
+	{
+		this.provider = provider;
+		this.rating = rating;
+	}
 }

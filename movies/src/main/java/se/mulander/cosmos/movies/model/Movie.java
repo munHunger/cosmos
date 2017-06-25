@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by marcu on 2017-06-25.
@@ -13,7 +14,7 @@ import java.util.List;
 @ApiModel(value = "Movie", description = "A movie object containing all relevant information about a particular movie")
 public class Movie
 {
-	@ApiModelProperty(name = "internal_id", value = "The unique identifier used by the cosmos movie system")
+	@ApiModelProperty(name = "internal_id", value = "The unique identifier used by the cosmos system")
 	@SerializedName("internal_id")
 	public String internalID;
 	@ApiModelProperty(name = "image_url", value = "An absolute link to a thumbnail image")
@@ -29,4 +30,22 @@ public class Movie
 					  value = "More details about the movie. This can be info such as a description an what actors are in it")
 	@SerializedName("extended_movie")
 	public ExtendedMovie extendedMovie;
+
+	public Movie()
+	{
+	}
+
+	public Movie(String imageURL, String title, int year)
+	{
+		this.internalID = UUID.randomUUID().toString();
+		this.imageURL = imageURL;
+		this.title = title;
+		this.year = year;
+	}
+
+	public Movie addRating(Rating r)
+	{
+		this.rating.add(r);
+		return this;
+	}
 }
