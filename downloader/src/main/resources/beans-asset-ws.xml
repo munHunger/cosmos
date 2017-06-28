@@ -20,7 +20,7 @@
 		<property name="resourcePackage" value="se.mulander.cosmos"/>
 		<property name="version" value="0.0.1"/>
 		<property name="host" value=""/>
-		<property name="basePath" value="/api"/>
+		<property name="basePath" value="/downloader/api"/>
 		<property name="title" value="Service for cosmos"/>
 		<property name="description" value="A service for managing part or parts of cosmos"/>
 		<property name="contact" value="marcusmunger@hotmail.com"/>
