@@ -33,7 +33,7 @@ public class Downloader
 		{
 			for(Torrent t : torrents)
 			{
-				if(!t.Name.toUpperCase().contains("CAM") && !t.Name.toUpperCase().contains("TS") && !t.Name.toUpperCase().contains("DVD"))
+				if(filter(t, title))
 				{
 					Map<String, String> headers = new HashMap<>();
 					headers.put("Authorization", "Basic " + authHeader);
@@ -57,5 +57,25 @@ public class Downloader
 			}
 		}
 		return false;
+	}
+
+	private boolean filter(Torrent t, String title)
+	{
+		title = title.toUpperCase();
+		String torrentTitle = t.Name.toUpperCase();
+		List<String> badQualities = Arrays.asList("CAM", "TS", "DVD");
+		boolean hasBadQualities = badQualities.stream().filter(q -> torrentTitle.contains(q)).count() > 0;
+		List<String> acceptedQualities = Arrays.asList("720P", "1080P");
+		boolean hasAcceptedQualities = acceptedQualities.stream().filter(q -> torrentTitle.contains(q)).count() > 0;
+
+		String[] parts = title.split(" ");
+		StringBuilder builder = new StringBuilder(".*");
+		for(String part : parts)
+			builder.append(part + ".");
+		builder.append("*");
+
+		boolean matchesRegex = torrentTitle.matches(builder.toString());
+
+		return matchesRegex && hasAcceptedQualities && !hasBadQualities;
 	}
 }
