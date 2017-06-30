@@ -20,8 +20,7 @@ public class Movies
 
 	public static Object getRecomendations() throws Exception
 	{
-		GenreList res = (GenreList) HttpRequest.getRequest(theMovieDbURL + "/3/genre/movie/list?api_key=" + apiKey, GenreList.class).data;
-
+		GenreList genreList = getGenres();
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(theMovieDbURL).append("/3/discover/movie");
 		urlBuilder.append("?api_key=").append(apiKey);//Settings.fetchSettingStringValue("moviedb.apiV3Key"));
@@ -34,13 +33,17 @@ public class Movies
 
 		return Arrays.asList(response.results).stream().map(tmdb ->
 		{
-
 			String year = tmdb.release_date.trim().substring(0, 4);
 			Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path, tmdb.title, year.matches("\\d+") ? Integer.parseInt(year) : -1).addRating(new Rating("The Movie Database", tmdb.vote_average));
 			tmdb.genre_ids.stream().map(id ->
-					res.genres.stream().filter(genre -> genre.id == id).findFirst().get().name
+					genreList.genres.stream().filter(genre -> genre.id == id).findFirst().get().name
 			).forEach(name -> m.addGenre(name));
 			return m;
 		}).collect(Collectors.toList());
+	}
+
+	private static GenreList getGenres() throws Exception
+	{
+		return (GenreList) HttpRequest.getRequest(theMovieDbURL + "/3/genre/movie/list?api_key=" + apiKey, GenreList.class).data;
 	}
 }
