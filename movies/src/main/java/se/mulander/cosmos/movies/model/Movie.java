@@ -30,9 +30,16 @@ public class Movie
 					  value = "More details about the movie. This can be info such as a description an what actors are in it")
 	@SerializedName("extended_movie")
 	public ExtendedMovie extendedMovie;
+	@ApiModelProperty(value = "A list of strings noting what genre the movie is part of")
+	public List<String> genre = new ArrayList<>();
 
 	public Movie()
 	{
+	}
+
+	public void addGenre(String genre)
+	{
+		this.genre.add(genre);
 	}
 
 	public Movie(String imageURL, String title, int year)

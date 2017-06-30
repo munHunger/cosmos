@@ -1,5 +1,7 @@
 package se.mulander.cosmos.movies.model;
 
+import java.util.List;
+
 /**
  * Created by marcu on 2017-04-02.
  */
@@ -14,7 +16,7 @@ public class TMDBResponse
 		public boolean adult;
 		public String overview;
 		public String release_date;
-		public int[] genre_ids;
+		public List<Integer> genre_ids;
 		public int id;
 		public String original_title;
 		public String original_language;
