@@ -1,16 +1,10 @@
 package se.mulander.cosmos.downloader.business;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -34,16 +28,19 @@ public class Downloader
 		if(found)
 			return Response.noContent().build();
 		else
-			return Response.status(HttpServletRespone.SC_NOT_FOUND).build();
+			return Response.status(HttpServletResponse.SC_NOT_FOUND).build();
 	}
 
 	@GET
 	@Path("/status")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Get download status of an item", notes = "Searches for the item and checks the status of it.")
-	@ApiResponses({@ApiResponse(code = HttpServletRespone.SC_OK, message = "Item was found"), @ApiResponse(code = HttpServletRespone.SC_NOT_FOUND, message = "Could not find the item")})
+	@ApiOperation(value = "Get download status of an item",
+				  notes = "Searches for the item and checks the status of it.")
+	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+								message = "Item was found"), @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
+																		  message = "Could not find the item")})
 	public Response getStatus(@ApiParam(value = "Id of the created torrent") @QueryParam("id") String id)
 	{
-		return Response.status(HttpServletRespone.SC_NOT_YET_IMPLEMENTED).build();
+		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
 	}
 }
