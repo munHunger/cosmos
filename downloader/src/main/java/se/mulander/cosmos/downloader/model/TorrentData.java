@@ -1,6 +1,6 @@
-package se.mulander.downloader.model;
+package se.mulander.cosmos.downloader.model;
 
 public class TorrentData
 {
-    
+
 }
