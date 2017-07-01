@@ -30,9 +30,19 @@ public class Settings
 	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
 								message = "A object full of the settings related to the category group")})
 	public Response getSettingsGroup(
-			@ApiParam(value = "The group to search for", example = "download") @QueryParam("group") String group)
+			@ApiParam(value = "The setting id", example = "9f970027-8a06-4145-9f6d-57f2898efc0b") @QueryParam("id")
+					String id) throws
+			Exception
 	{
-		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		List setting = Database.getObjects("from Setting WHERE id = :id", param);
+		if(setting.isEmpty())
+			return Response.status(HttpServletResponse.SC_NOT_FOUND).entity(new ErrorMessage("Could not get group", "There is no group with that ID")).build();
+		Setting s = (Setting) setting.get(0);
+		if(s.type.toUpperCase().equals("GROUP"))
+			return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(new ErrorMessage("Could not get group", "The setting with the supplied ID was not a group type")).build();
+		return Response.ok(s).build();
 	}
 
 	@GET
@@ -51,8 +61,9 @@ public class Settings
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Registers a new setting", notes = "Registers a new setting and how to parse it")
-	public Response createSetting() //TODO: create registration object
+	public Response createSetting(Setting s) //TODO: create registration object
 	{
+		Database.saveObject(s);
 		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
 	}
 

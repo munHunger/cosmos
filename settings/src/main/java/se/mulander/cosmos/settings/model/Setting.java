@@ -34,7 +34,7 @@ public class Setting
 	public String regex;
 
 	@ApiModelProperty(value = "A group of child settings. This only applies to settings where type=group")
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "setting",
 			   joinColumns = {@JoinColumn(name = "parent_id")},
 			   inverseJoinColumns = {@JoinColumn(name = "id")})
