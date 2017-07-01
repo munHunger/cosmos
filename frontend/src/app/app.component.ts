@@ -2,9 +2,28 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'cosmos',
-  template: `
-    <root-view>Loading the next nigga....</root-view>
-  `,
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 
-export class AppComponent  { name = 'Angular'; }
+export class AppComponent  {
+  name = 'Angular';
+
+  visible = false;
+  getSideBarDisplayStyle(): any {
+    if(this.visible) {
+      return "block";
+    }
+    else {
+      return "none";
+    }
+  }
+  getViewWindowStyle(): any {
+    if(this.visible) {
+      return '200px';
+    }
+    else {
+      return '0';
+    }
+  }
+}

@@ -11,11 +11,13 @@ export class MovieObject {
     provider: string,
       rating: number
   }];
-  long_info: {
-    description: string,
-      actors: [string],
-      director: [string],
-      writer: [string],
-      poster_url: string
-  };
+
+  // long_info: {
+  //   description: string,
+  //     actors: [string],
+  //     director: [string],
+  //     writer: [string],
+  //     poster_url: string
+  // };
+
 }

@@ -1,3 +1,18 @@
-<h1>
-  {{title}}
-</h1>
+<div class="cosmos-orange" id="topMenu">
+  <button class="w3-button  w3-xlarge w3-hide-large" (click)="visible = !visible">&#9776;</button>
+  <div id="title">Cosmos</div>
+</div>
+
+<div class="w3-animate-left w3-sidebar w3-bar-block w3-collapse w3-card-4 cosmos-grey"
+     [style.display]="getSideBarDisplayStyle()"
+     id="sideBar">
+  <a href="#" class="w3-bar-item w3-button">Movies</a>
+  <a href="#" class="w3-bar-item w3-button">TV-Shows</a>
+  <a href="#" class="w3-bar-item w3-button">Transmission</a>
+</div>
+
+<div class="w3-main" id="main-view">
+  <div>
+    <movie-view>Loading the next nigga....</movie-view>
+  </div>
+</div>

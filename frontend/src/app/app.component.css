@@ -1,0 +1,42 @@
+#topMenu {
+  position: fixed;
+  top: 0px;
+  width:100%;
+  height:52px;
+}
+
+#title {
+  font-family: Lobster;
+  font-size: xx-large;
+  display: inline;
+  vertical-align: middle;
+  color: #CCCCCC;
+}
+
+#sideBar {
+  width:200px;
+  position: fixed;
+}
+
+#main-view {
+  margin-top: 52px;
+  height:100%;
+}
+
+@media screen and (min-width: 990px) {
+  #main-view {
+    margin-left:200px;
+  }
+
+  #title {
+    margin-left:52px;
+  }
+}
+
+a {
+  color: #CCCCCC;
+  font-size: 1.5em;
+  font-family: 'Khula', sans-serif;
+  font-weight: bolder;
+  text-align: center;
+}

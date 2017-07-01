@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { RootView } from './root-view/root.component';
+import { RootView } from './movie-view/movie-view.component';
 import {Movie} from "./movie/movie.component";
 
 

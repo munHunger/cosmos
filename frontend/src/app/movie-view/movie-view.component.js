@@ -14,9 +14,9 @@ var RootView = (function () {
 RootView = __decorate([
     core_1.Component({
         selector: 'root-view',
-        templateUrl: './root.component.html',
-        styleUrls: ['./root.component.css']
+        templateUrl: './movie-view.component.html',
+        styleUrls: ['./movie-view.component.css']
     })
 ], RootView);
 exports.RootView = RootView;
-//# sourceMappingURL=root.component.js.map
+//# sourceMappingURL=movie-view.component.js.mapjs.map

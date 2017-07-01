@@ -1,7 +1,6 @@
 .w3-card-2 {
-  /*width: 10em;*/
+  /*float: none;*/
   overflow: hidden;
-
 }
 
 .movie-title {
