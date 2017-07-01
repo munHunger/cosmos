@@ -3,6 +3,7 @@ package se.mulander.cosmos.settings.business;
 import io.swagger.annotations.*;
 import org.springframework.stereotype.Component;
 import se.mulander.cosmos.common.database.jpa.Database;
+import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.settings.model.Setting;
 
 import javax.servlet.http.HttpServletResponse;
@@ -67,9 +68,18 @@ public class Settings
 		param.put("id", id);
 		List dbRes = Database.getObjects("from Setting WHERE id = :id", param);
 		if(dbRes.isEmpty())
-			return Response.status(HttpServletResponse.SC_NOT_FOUND).build();
+			return Response.status(HttpServletResponse.SC_NOT_FOUND).entity(new ErrorMessage("Could not update setting", "No setting with that ID was found")).build();
 
 		Setting s = (Setting) dbRes.get(0);
+		String regex = s.regex;
+		if(s.type.toUpperCase().equals("GROUP"))
+			return Response.status(HttpServletResponse.SC_NOT_MODIFIED).entity(new ErrorMessage("Settings not updated", "Setting is a group. Groups cannot change value")).build();
+		else if(s.type.toUpperCase().equals("BOOLEAN"))
+			regex = "(TRUE)|(FALSE)";
+		else if(s.type.toUpperCase().equals("NUMBER"))
+			regex = "\\d+";
+		if(!value.matches(regex))
+			return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(new ErrorMessage("Did not update settings", "Input did not fit pattern")).build();
 		s.value = value;
 		Database.updateObject(s);
 		return Response.status(HttpServletResponse.SC_NO_CONTENT).build();
