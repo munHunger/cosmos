@@ -7,15 +7,27 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
- * Created by marcu on 2017-06-25.
+ * Created by Marcus Münger on 2017-04-27.
  */
 public class Database
 {
 	private static SessionFactory sessionFactory;
+
+	public static void resetSessions()
+	{
+		sessionFactory = null;
+	}
 
 	private static void init()
 	{
@@ -24,9 +36,73 @@ public class Database
 		sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
 		Runtime.getRuntime().addShutdownHook(new Thread(() ->
 		{
-			System.out.println("Destroying database StandardServiceRegistryBuilder");
 			StandardServiceRegistryBuilder.destroy(registry);
 		}));
+	}
+
+	public static void runScriptFile(String scriptFile)
+	{
+		try
+		{
+			scriptFile = Database.class.getClassLoader().getResource(scriptFile).getPath();
+			scriptFile = new File(scriptFile).getCanonicalPath();
+			String scriptString = new String(Files.readAllBytes(Paths.get(scriptFile)), Charset.forName("UTF-8"));
+			if(sessionFactory == null)
+				init();
+			try(Session session = sessionFactory.openSession())
+			{
+				session.beginTransaction();
+				for(String query : scriptString.trim().split(";"))
+				{
+					Query q = session.createNativeQuery(query);
+					q.executeUpdate();
+				}
+				session.getTransaction().commit();
+			}
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void saveObjects(Map<Object, Function<Object, Object>> objects)
+	{
+		if(sessionFactory == null)
+			init();
+		try(Session session = sessionFactory.openSession())
+		{
+			session.beginTransaction();
+			for(Object o : objects.keySet())
+			{
+				if(objects.get(o) != null)
+					session.save(objects.get(o).apply(o));
+				else
+					session.save(o);
+			}
+			session.getTransaction().commit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void saveObjects(List objects)
+	{
+		if(sessionFactory == null)
+			init();
+		try(Session session = sessionFactory.openSession())
+		{
+			session.beginTransaction();
+			for(Object o : objects)
+				session.save(o);
+			session.getTransaction().commit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static void saveObject(Object obj)
@@ -37,6 +113,22 @@ public class Database
 		{
 			session.beginTransaction();
 			session.save(obj);
+			session.getTransaction().commit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void updateObject(Object obj)
+	{
+		if(sessionFactory == null)
+			init();
+		try(Session session = sessionFactory.openSession())
+		{
+			session.beginTransaction();
+			session.update(obj);
 			session.getTransaction().commit();
 		}
 		catch(Exception e)
@@ -64,12 +156,23 @@ public class Database
 		{
 			Query query = session.createQuery(hibernateQuery);
 			for(String key : parameters.keySet())
-				query.setParameter(key, parameters.get(key));
+			{
+				Object param = parameters.get(key);
+				if(param instanceof Collection)
+					query.setParameterList(key, (Collection) param);
+				else
+					query.setParameter(key, param);
+			}
 			return query.getResultList();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
-	public static void deleteObjects(Object o) throws Exception
+	public static void deleteObject(Object o) throws Exception
 	{
 		if(sessionFactory == null)
 			init();
@@ -77,6 +180,19 @@ public class Database
 		{
 			session.beginTransaction();
 			session.delete(o);
+			session.getTransaction().commit();
+		}
+	}
+
+	public static void deleteObjects(List objects) throws Exception
+	{
+		if(sessionFactory == null)
+			init();
+		try(Session session = sessionFactory.openSession())
+		{
+			session.beginTransaction();
+			for(Object o : objects)
+				session.delete(o);
 			session.getTransaction().commit();
 		}
 	}

@@ -3,11 +3,15 @@ package se.mulander.cosmos.settings.business;
 import io.swagger.annotations.*;
 import org.springframework.stereotype.Component;
 import se.mulander.cosmos.common.database.jpa.Database;
+import se.mulander.cosmos.settings.model.Setting;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marcu on 2017-04-02.
@@ -52,11 +56,22 @@ public class Settings
 	}
 
 	@PUT
-	@Path("/")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Updates the settings value", notes = "Updates and sets the setting value")
-	public Response updateSetting()
+	public Response updateSetting(
+			@ApiParam(value = "The identifier of the setting to update") @PathParam("id") String id,
+			@ApiParam(value = "The value to set on the setting") @FormParam("value") String value) throws Exception
 	{
-		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		List dbRes = Database.getObjects("from Setting WHERE id = :id", param);
+		if(dbRes.isEmpty())
+			return Response.status(HttpServletResponse.SC_NOT_FOUND).build();
+
+		Setting s = (Setting) dbRes.get(0);
+		s.value = value;
+		Database.updateObject(s);
+		return Response.status(HttpServletResponse.SC_NO_CONTENT).build();
 	}
 }
