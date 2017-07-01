@@ -1,6 +1,7 @@
 package se.mulander.cosmos.settings.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -13,6 +14,7 @@ import java.util.Collection;
 @Entity
 @Table(name = "setting")
 @ApiModel(value = "A setting object that can be a root or part of a tree structure of settings")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Setting
 {
 	@Id
@@ -37,7 +39,6 @@ public class Setting
 	public Collection<Setting> children;
 
 	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "parent_id")
-	public Setting parent;
+	@Column(name = "parent_id")
+	public String parentID;
 }

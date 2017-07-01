@@ -39,7 +39,7 @@ public class Settings
 								message = "An object describing the settings tree and how to parse it")})
 	public Response getStructure() throws Exception
 	{
-		return Response.ok(Database.getObjects("from Setting")).build();
+		return Response.ok(Database.getObjects("from Setting WHERE parentID = null")).build();
 	}
 
 	@POST
