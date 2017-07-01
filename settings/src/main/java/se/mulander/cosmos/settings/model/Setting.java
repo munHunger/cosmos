@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created by marcu on 2017-07-01.
@@ -19,6 +20,7 @@ public class Setting
 {
 	@Id
 	@Column(name = "id")
+	@ApiModelProperty(value = "The globally unique identifier for this setting")
 	public String internalID;
 	@ApiModelProperty(value = "The identifier of this setting. Note that this might not be the full identifier as the setting might have a parent that makes up parts of the identifier")
 	@Column(name = "name")
@@ -41,4 +43,13 @@ public class Setting
 	@JsonIgnore
 	@Column(name = "parent_id")
 	public String parentID;
+
+	@ApiModelProperty(value = "The setting value. This is subject to change during the applications lifecycle")
+	@Column(name = "value")
+	public String value;
+
+	public Setting()
+	{
+		this.internalID = UUID.randomUUID().toString();
+	}
 }
