@@ -2,6 +2,7 @@ package se.mulander.cosmos.settings.business;
 
 import io.swagger.annotations.*;
 import org.springframework.stereotype.Component;
+import se.mulander.cosmos.common.database.jpa.Database;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Response;
 public class Settings
 {
 	@GET
+	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get specific setting category",
 				  notes = "Get all settings that are under the specified category group. for example all downloader settings")
@@ -35,9 +37,9 @@ public class Settings
 				  notes = "Gets an object structure that identifies what all settings are and how to validate them")
 	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
 								message = "An object describing the settings tree and how to parse it")})
-	public Response getStructure()
+	public Response getStructure() throws Exception
 	{
-		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
+		return Response.ok(Database.getObjects("from Setting")).build();
 	}
 
 	@POST
@@ -50,6 +52,7 @@ public class Settings
 	}
 
 	@PUT
+	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Updates the settings value", notes = "Updates and sets the setting value")
 	public Response updateSetting()

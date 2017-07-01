@@ -24,5 +24,6 @@
 		</property>
 
 		<!-- List of XML mapping files -->
+		<mapping class="se.mulander.cosmos.settings.model.Setting"/>
 	</session-factory>
 </hibernate-configuration>

@@ -5,10 +5,5 @@ package se.mulander.cosmos.settings.util;
  */
 public class Settings
 {
-	private static String theMovieDbURL = "https://api.themoviedb.org";
 
-	public static Object getRecomendations() throws Exception
-	{
-		return null;
-	}
 }
