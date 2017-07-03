@@ -34,15 +34,12 @@ public class Setting
 	public String regex;
 
 	@ApiModelProperty(value = "A group of child settings. This only applies to settings where type=group")
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "setting",
-			   joinColumns = {@JoinColumn(name = "parent_id")},
-			   inverseJoinColumns = {@JoinColumn(name = "id")})
-	public Collection<Setting> children;
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE} ,optional = true)
+	@JoinColumn(name="parent_id")
+	public Setting parent;
 
-	@JsonIgnore
-	@Column(name = "parent_id")
-	public String parentID;
+	@OneToMany(fetch = FetchType.EAGER , mappedBy="parent")
+	public Collection<Setting> children;
 
 	@ApiModelProperty(value = "The setting value. This is subject to change during the applications lifecycle")
 	@Column(name = "value")
