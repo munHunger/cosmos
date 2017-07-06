@@ -1,6 +1,5 @@
 package se.mulander.cosmos.settings.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,12 +32,11 @@ public class Setting
 	@Column(name = "regex")
 	public String regex;
 
-	@ApiModelProperty(value = "A group of child settings. This only applies to settings where type=group")
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE} ,optional = true)
-	@JoinColumn(name="parent_id")
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "parent_id")
 	public Setting parent;
 
-	@OneToMany(fetch = FetchType.EAGER , mappedBy="parent")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", cascade = {CascadeType.ALL})
 	public Collection<Setting> children;
 
 	@ApiModelProperty(value = "The setting value. This is subject to change during the applications lifecycle")

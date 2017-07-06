@@ -54,7 +54,7 @@ public class Settings
 								message = "An object describing the settings tree and how to parse it")})
 	public Response getStructure() throws Exception
 	{
-		return Response.ok(Database.getObjects("from Setting WHERE parentID = null")).build();
+		return Response.ok(Database.getObjects("from Setting WHERE parent = null")).build();
 	}
 
 	@POST
@@ -63,8 +63,21 @@ public class Settings
 	@ApiOperation(value = "Registers a new setting", notes = "Registers a new setting and how to parse it")
 	public Response createSetting(Setting s) //TODO: create registration object
 	{
+		setParent(s);
 		Database.saveObject(s);
 		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
+	}
+
+	private void setParent(Setting parent)
+	{
+		if(parent.children != null)
+		{
+			for(Setting child : parent.children)
+			{
+				child.parent = parent;
+				setParent(child);
+			}
+		}
 	}
 
 	@PUT
