@@ -8,11 +8,14 @@ import se.mulander.cosmos.settings.model.Setting;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by marcu on 2017-04-02.
@@ -22,6 +25,8 @@ import java.util.Map;
 @Api(value = "Settings", description = "Endpoints for setting and getting settings related to all different endpoints")
 public class Settings
 {
+	private AsyncResponse asyncResponse;
+
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -43,6 +48,26 @@ public class Settings
 		if(s.type.toUpperCase().equals("GROUP"))
 			return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(new ErrorMessage("Could not get group", "The setting with the supplied ID was not a group type")).build();
 		return Response.ok(s).build();
+	}
+
+	@GET
+	@Path("/structure/poll")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Long polls the structure endpoint", notes = "Replies like the /structure endpoint if some settng is updated")
+	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK, message = "An object describing the settings tree and how to parse it")})
+	public void pollStructure(@Suspended final AsyncResponse asyncResponse) throws Exception
+	{
+		asyncResponse.setTimeout(30, TimeUnit.SECONDS);
+		this.asyncResponse = asyncResponse;
+	}
+
+	@GET
+	@Path("/structure/update")
+	public Response updateStructure()
+	{
+		if(this.asyncResponse != null)
+			this.asyncResponse.resume("{\"message\":\"Hello World!\"");
+		return Response.ok().build();
 	}
 
 	@GET
