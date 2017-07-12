@@ -12,9 +12,12 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +28,9 @@ import java.util.concurrent.TimeUnit;
 @Api(value = "Settings", description = "Endpoints for setting and getting settings related to all different endpoints")
 public class Settings
 {
-	private AsyncResponse asyncResponse;
+	private static int suspendedQueueSize = 15;
+	private static final BlockingQueue<AsyncResponse> suspended =
+			new ArrayBlockingQueue<AsyncResponse>(15);
 
 	@GET
 	@Path("/")
@@ -58,15 +63,15 @@ public class Settings
 	public void pollStructure(@Suspended final AsyncResponse asyncResponse) throws Exception
 	{
 		asyncResponse.setTimeout(30, TimeUnit.SECONDS);
-		this.asyncResponse = asyncResponse;
+		suspended.put(asyncResponse);
 	}
 
 	@GET
 	@Path("/structure/update")
-	public Response updateStructure()
+	public Response updateStructure() throws Exception
 	{
-		if(this.asyncResponse != null)
-			this.asyncResponse.resume("{\"message\":\"Hello World!\"");
+		while(suspended.remainingCapacity() < suspendedQueueSize)
+			suspended.take().resume("{\"message\":\"Hello World!\"}");
 		return Response.ok().build();
 	}
 
