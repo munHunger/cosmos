@@ -66,13 +66,15 @@ public class Settings
 		suspended.put(asyncResponse);
 	}
 
-	@GET
-	@Path("/structure/update")
-	public Response updateStructure() throws Exception
+	private void resumeSuspended() throws InterruptedException
 	{
 		while(suspended.remainingCapacity() < suspendedQueueSize)
 			suspended.take().resume("{\"message\":\"Hello World!\"}");
-		return Response.ok().build();
+	}
+
+	private List getStructureObjects() throws Exception
+	{
+		return Database.getObjects("from Setting WHERE parent = null");
 	}
 
 	@GET
@@ -84,17 +86,18 @@ public class Settings
 								message = "An object describing the settings tree and how to parse it")})
 	public Response getStructure() throws Exception
 	{
-		return Response.ok(Database.getObjects("from Setting WHERE parent = null")).build();
+		return Response.ok(getStructureObjects()).build();
 	}
 
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Registers a new setting", notes = "Registers a new setting and how to parse it")
-	public Response createSetting(Setting s) //TODO: create registration object
+	public Response createSetting(Setting s) throws InterruptedException
 	{
 		setParent(s);
 		Database.saveObject(s);
+		resumeSuspended();
 		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
 	}
 
@@ -136,6 +139,7 @@ public class Settings
 			return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(new ErrorMessage("Did not update settings", "Input did not fit pattern")).build();
 		s.value = value;
 		Database.updateObject(s);
+		resumeSuspended();
 		return Response.status(HttpServletResponse.SC_NO_CONTENT).build();
 	}
 }
