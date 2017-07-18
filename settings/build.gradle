@@ -47,7 +47,9 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
 
-    compile group: 'se.mulander.cosmos', name: 'common', version: '1.1'
+    compile('se.mulander.cosmos:common:1.1'){
+        exclude group: 'javax.ws.rs'
+    }
 }
 
 war {
