@@ -1,5 +1,6 @@
 package se.mulander.cosmos.settings.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,8 +35,10 @@ public class Setting
 
 	@ManyToOne(optional = true)
 	@JoinColumn(name = "parent_id")
+	@JsonIgnore
 	public Setting parent;
 
+	@ApiModelProperty(dataType = "java.util.ArrayList")
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", cascade = {CascadeType.ALL})
 	public Collection<Setting> children;
 
