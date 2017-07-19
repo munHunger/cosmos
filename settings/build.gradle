@@ -24,7 +24,7 @@ dependencies {
     compile('io.swagger:swagger-jersey-jaxrs:1.5.13') {
         exclude group: 'javax.ws.rs'
     }
-    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1-m09'
+    
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0-b05'
     compile group: 'org.springframework', name: 'spring-core', version: '4.3.8.RELEASE'
     compile group: 'org.springframework', name: 'spring-web', version: '4.3.8.RELEASE'
@@ -47,9 +47,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
 
-    compile('se.mulander.cosmos:common:1.1'){
-        exclude group: 'javax.ws.rs'
-    }
+    compile group: 'se.mulander.cosmos', name: 'common', version: '1.1'
 }
 
 war {
