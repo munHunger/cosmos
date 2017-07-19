@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "setting")
-@ApiModel(value = "A setting object that can be a root or part of a tree structure of settings")
+@ApiModel(description = "A setting object that can be a root or part of a tree structure of settings")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Setting
 {
