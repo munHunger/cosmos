@@ -83,7 +83,7 @@ public class Settings
 	@ApiOperation(value = "Gets the settings structure",
 				  notes = "Gets an object structure that identifies what all settings are and how to validate them")
 	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
-								message = "An object describing the settings tree and how to parse it")})
+								message = "An object describing the settings tree and how to parse it", responseContainer = "Array", response = Setting.class)})
 	public Response getStructure() throws Exception
 	{
 		return Response.ok(getStructureObjects()).build();
@@ -98,7 +98,7 @@ public class Settings
 		setParent(s);
 		Database.saveObject(s);
 		resumeSuspended();
-		return Response.status(HttpServletResponse.SC_NOT_IMPLEMENTED).build();
+		return Response.ok().build();
 	}
 
 	private void setParent(Setting parent)
