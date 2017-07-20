@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.stereotype.Component;
-import se.mulander.cosmos.common.discovery.Scanner;
 import se.mulander.cosmos.movies.model.Movie;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,14 +23,6 @@ import javax.ws.rs.core.Response;
 @Api(value = "Movies", description = "Endpoints for finding new movies and managing wishlists")
 public class Movies
 {
-	@GET
-	@Path("/discover/settings")
-	@ApiOperation(value = "Scan for settings microservice", notes = "Scans the local network for the settings microservice")
-	public Response findSettings()
-	{
-		return Response.ok(Scanner.find(8080, "/settings/api/discover")).build();
-	}
-
 	@GET
 	@Path("/recomendations")
 	@Produces(MediaType.APPLICATION_JSON)
