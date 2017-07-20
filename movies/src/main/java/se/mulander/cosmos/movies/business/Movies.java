@@ -29,6 +29,7 @@ public class Movies
 	@ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
 	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
 								message = "A list of movie recomendations",
+								responseContainer = "Array",
 								response = Movie.class)})
 	public Response getRecomendations()
 	{
