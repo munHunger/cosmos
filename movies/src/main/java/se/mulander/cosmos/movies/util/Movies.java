@@ -23,7 +23,7 @@ public class Movies
 		GenreList genreList = getGenres();
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(theMovieDbURL).append("/3/discover/movie");
-		urlBuilder.append("?api_key=").append(apiKey);//Settings.fetchSettingStringValue("moviedb.apiV3Key"));
+		urlBuilder.append("?api_key=").append(apiKey);
 		urlBuilder.append("&sort_by=popularity.desc");
 		urlBuilder.append("&include_adult=false");
 		urlBuilder.append("&include_video=false");
