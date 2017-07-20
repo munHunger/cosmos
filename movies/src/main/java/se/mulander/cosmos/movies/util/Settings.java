@@ -1,11 +1,15 @@
 package se.mulander.cosmos.movies.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import se.mulander.cosmos.common.business.HttpRequest;
-import se.mulander.cosmos.common.model.HttpResponse;
+import se.mulander.cosmos.common.discovery.Scanner;
 import se.mulander.cosmos.common.model.Setting;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -24,12 +28,19 @@ public class Settings
     private static Consumer<String> settingsUpdater = (url) -> {
         try
         {
-            HttpResponse res = HttpRequest.getRequest(url, ArrayList.class);
-            if (res.statusCode == HttpServletResponse.SC_OK)
+
+            RequestConfig.Builder requestBuilder = RequestConfig.custom();
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            builder.setDefaultRequestConfig(requestBuilder.build());
+            HttpClient client = builder.build();
+
+            org.apache.http.HttpResponse response = client.execute(new HttpGet(url));
+            if(response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK)
             {
-                List<Object> resultData = (List) res.data;
-                Optional<Setting> movieSetting = resultData.stream()
-                                                           .map(o -> (Setting) o)
+                ObjectMapper mapper = new ObjectMapper();
+                List<Setting> settings = mapper.readValue(response.getEntity().getContent(), mapper.getTypeFactory().constructCollectionType(List.class, Setting.class));
+
+                Optional<Setting> movieSetting = settings.stream()
                                                            .filter(s -> s.name.equals("movies"))
                                                            .findFirst();
                 if (movieSetting.isPresent())
@@ -48,18 +59,21 @@ public class Settings
                                                 "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
                                                 theMovieDbURL);
                     Setting dbKey = new Setting("movie_db_api_key", ".*", apiKey);
-                    Setting movies = new Setting("moves", dbKey, dbURL);
+                    Setting movies = new Setting("movies", dbKey, dbURL);
 
                     HttpRequest.postRequest(settingsURL + "/settings/register", movies, null);
                 }
             }
         }
         catch (Exception e)
-        {}
+        {
+            e.printStackTrace();
+        }
     };
 
     public static void init()
     {
+        settingsURL = Scanner.find(8080, "/settings/api/discover") + "/settings/api";
         settingsUpdater.accept(settingsURL + "/settings/structure");
         new Thread(() -> {
             while(true)

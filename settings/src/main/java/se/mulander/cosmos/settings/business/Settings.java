@@ -65,10 +65,11 @@ public class Settings
 		suspended.put(asyncResponse);
 	}
 
-	private void resumeSuspended() throws InterruptedException
+	private void resumeSuspended() throws Exception
 	{
+		List response = getStructureObjects();
 		while(suspended.remainingCapacity() < suspendedQueueSize)
-			suspended.take().resume("{\"message\":\"Hello World!\"}");
+			suspended.take().resume(response);
 	}
 
 	private List getStructureObjects() throws Exception
@@ -92,7 +93,7 @@ public class Settings
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Registers a new setting", notes = "Registers a new setting and how to parse it")
-	public Response createSetting(Setting s) throws InterruptedException
+	public Response createSetting(Setting s) throws Exception
 	{
 		setParent(s);
 		Database.saveObject(s);
