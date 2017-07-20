@@ -1,6 +1,7 @@
 package se.mulander.cosmos.movies;
 
 import se.mulander.cosmos.common.ssl.SSLManager;
+import se.mulander.cosmos.movies.util.Settings;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -16,6 +17,7 @@ public class Startup implements ServletContextListener
 		try
 		{
 			SSLManager.init();
+			Settings.init();
 		}
 		catch(Exception e)
 		{

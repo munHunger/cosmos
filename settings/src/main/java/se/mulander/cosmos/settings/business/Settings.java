@@ -4,7 +4,7 @@ import io.swagger.annotations.*;
 import org.springframework.stereotype.Component;
 import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
-import se.mulander.cosmos.settings.model.Setting;
+import se.mulander.cosmos.common.model.Setting;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -12,7 +12,6 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

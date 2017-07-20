@@ -1,7 +1,6 @@
 package se.mulander.cosmos.movies.util;
 
 import se.mulander.cosmos.common.business.HttpRequest;
-import se.mulander.cosmos.common.discovery.Scanner;
 import se.mulander.cosmos.movies.model.GenreList;
 import se.mulander.cosmos.movies.model.Movie;
 import se.mulander.cosmos.movies.model.Rating;
@@ -10,27 +9,17 @@ import se.mulander.cosmos.movies.model.TMDBResponse;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static se.mulander.cosmos.movies.util.Settings.apiKey;
+import static se.mulander.cosmos.movies.util.Settings.theMovieDbURL;
+
 /**
  * Created by marcu on 2017-03-17.
  */
 public class Movies
 {
-	private static String theMovieDbURL = "https://api.themoviedb.org";
-
-	private static String apiKey = "6559b0b40f39a093b15b3c4213bdb613";
-
-	private static String settingsURL = null;
-
-	private static void init()
-	{
-		settingsURL = Scanner.find(8080, "/settings/api/discover") + "/settings/api";
-
-	}
 
 	public static Object getRecomendations() throws Exception
 	{
-		if(settingsURL == null)
-			init();
 		GenreList genreList = getGenres();
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(theMovieDbURL).append("/3/discover/movie");
@@ -55,8 +44,6 @@ public class Movies
 
 	private static GenreList getGenres() throws Exception
 	{
-		if(settingsURL == null)
-			init();
 		return (GenreList) HttpRequest.getRequest(theMovieDbURL + "/3/genre/movie/list?api_key=" + apiKey, GenreList.class).data;
 	}
 }

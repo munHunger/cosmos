@@ -1,4 +1,4 @@
-package se.mulander.cosmos.settings.model;
+package se.mulander.cosmos.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -49,5 +50,22 @@ public class Setting
 	public Setting()
 	{
 		this.internalID = UUID.randomUUID().toString();
+	}
+
+	public Setting(String name, Setting... children)
+	{
+		this();
+		this.name = name;
+		this.type = "group";
+		this.children = Arrays.asList(children);
+	}
+
+	public Setting(String name, String regex, String value)
+	{
+		this();
+		this.name = name;
+		this.regex = regex;
+		this.type = "string";
+		this.value = value;
 	}
 }
