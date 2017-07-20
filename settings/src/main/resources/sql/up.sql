@@ -8,7 +8,3 @@ CREATE TABLE `cosmos`.`setting` (
   `value` VARCHAR(512) NULL,
   `parent_id` VARCHAR(64) NULL,
   PRIMARY KEY (`id`));
-CREATE TABLE `cosmos`.`setting_relation` (
-  `id` VARCHAR(64) NOT NULL,
-  `parent_id` VARCHAR(64) NULL,
-  PRIMARY KEY (`id`));
