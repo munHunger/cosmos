@@ -20,6 +20,7 @@ public class Movies
 
 	public static Object getRecomendations() throws Exception
 	{
+
 		GenreList genreList = getGenres();
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(theMovieDbURL).append("/3/discover/movie");
