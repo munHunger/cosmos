@@ -34,12 +34,14 @@ public class Movies
 		return Arrays.asList(response.results).stream().map(tmdb ->
 		{
 			String year = tmdb.release_date.trim().substring(0, 4);
-			Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path, tmdb.title, year.matches("\\d+") ? Integer.parseInt(year) : -1).addRating(new Rating("The Movie Database", tmdb.vote_average));
+			Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path, tmdb.title, year.matches("\\d+") ? Integer.parseInt(year) : -1).addRating(new Rating("The Movie Database", tmdb.vote_average, tmdb.vote_count));
 			tmdb.genre_ids.stream().map(id ->
 					genreList.genres.stream().filter(genre -> genre.id == id).findFirst().get().name
 			).forEach(name -> m.addGenre(name));
 			return m;
-		}).collect(Collectors.toList());
+		}).sorted((m1, m2) ->
+			 new Double(m2.rating.get(0).rating).compareTo(m1.rating.get(0).rating)
+		).collect(Collectors.toList());
 	}
 
 	private static GenreList getGenres() throws Exception

@@ -1,5 +1,6 @@
 package se.mulander.cosmos.movies.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -13,6 +14,9 @@ public class Rating
 	public String provider;
 	@ApiModelProperty(value = "The rating from the provider. The scale is not normalized and can not be compared across providers")
 	public double rating;
+	@ApiModelProperty(value = "The amount of votes from the provider")
+	@JsonProperty(value = "vote_count")
+	public int voteCount;
 
 	public Rating()
 	{
@@ -22,5 +26,12 @@ public class Rating
 	{
 		this.provider = provider;
 		this.rating = rating;
+	}
+
+	public Rating(String provider, double rating, int voteCount)
+	{
+		this.provider = provider;
+		this.rating = rating;
+		this.voteCount = voteCount;
 	}
 }
