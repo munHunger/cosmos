@@ -20,6 +20,10 @@ public class ExtendedMovie
 	@JsonIgnore
 	public String movieID;
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@PrimaryKeyJoinColumn
+	public Movie parent;
+
 	@ApiModelProperty(value = "A short synopsis describing what the movie is about")
 	@Column(name = "description")
 	public String description;

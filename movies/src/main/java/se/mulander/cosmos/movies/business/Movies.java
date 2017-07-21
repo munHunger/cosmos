@@ -1,6 +1,5 @@
 package se.mulander.cosmos.movies.business;
 
-import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -35,7 +34,7 @@ public class Movies
 	{
 		try
 		{
-			return Response.ok(new Gson().toJson(se.mulander.cosmos.movies.util.Movies.getRecomendations())).build();
+			return Response.ok(se.mulander.cosmos.movies.util.Movies.getRecomendations()).build();
 		}
 		catch(Exception e)
 		{

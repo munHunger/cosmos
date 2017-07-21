@@ -19,7 +19,7 @@ public class Movie
 {
 	@ApiModelProperty(name = "internal_id", value = "The unique identifier used by the cosmos system")
 	@SerializedName("internal_id")
-	@Column(name = "id")
+	@Column(name = "movie_id")
 	@Id
 	public String internalID;
 	@ApiModelProperty(name = "image_url", value = "An absolute link to a thumbnail image")
@@ -33,11 +33,12 @@ public class Movie
 	@Column(name = "year")
 	public int year;
 	@ApiModelProperty(value = "A list of ratings by different providers such as rotten tomato and imdb")
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "rating")
 	public List<Rating> rating = new ArrayList<>();
 	@ApiModelProperty(name = "extended_movie",
 					  value = "More details about the movie. This can be info such as a description an what actors are in it")
 	@SerializedName("extended_movie")
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "child", cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "movie_id")
 	public ExtendedMovie extendedMovie;
 	@ApiModelProperty(value = "A list of strings noting what genre the movie is part of")
@@ -50,9 +51,10 @@ public class Movie
 	{
 	}
 
-	public void addGenre(String genre)
+	public Movie addGenre(String genre)
 	{
 		this.genre.add(genre);
+		return this;
 	}
 
 	public Movie(String imageURL, String title, int year)
@@ -65,6 +67,7 @@ public class Movie
 
 	public Movie addRating(Rating r)
 	{
+		r.parent = this;
 		this.rating.add(r);
 		return this;
 	}

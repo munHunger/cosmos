@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -19,10 +16,12 @@ import java.io.Serializable;
 @Table(name = "rating")
 public class Rating implements Serializable
 {
+
 	@Id
-	@Column(name = "movie_id")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, optional = true)
+	@JoinColumn(name = "movie_id")
 	@JsonIgnore
-	public String movieID;
+	public Movie parent;
 
 	@ApiModelProperty(value = "A provider whom the rating is coming from. For example imdb or rotten tomato")
 	@Column(name = "provider")
