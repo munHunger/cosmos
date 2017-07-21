@@ -12,6 +12,15 @@ CREATE TABLE `cosmos`.`rating` (
   `vote_count` INT NULL,
   PRIMARY KEY (`movie_id`, `provider`));
 
+CREATE TABLE `cosmos`.`cast` (
+  `movie_id` VARCHAR(64) NOT NULL,
+  `department` VARCHAR(45) NULL,
+  `job` VARCHAR(64) NULL,
+  `character` VARCHAR(64) NULL,
+  `name` VARCHAR(64) NOT NULL,
+  `profile_url` VARCHAR(255) NULL,
+  PRIMARY KEY (`movie_id`, `name`));
+
 CREATE TABLE `cosmos`.`actors` (
   `movie_id` VARCHAR(64) NOT NULL,
   `name` VARCHAR(255) NOT NULL,

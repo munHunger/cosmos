@@ -54,8 +54,6 @@ public class Movie
     public Movie setID(String id)
     {
         this.internalID = id;
-        if (extendedMovie != null)
-            extendedMovie.movieID = id;
         return this;
     }
 

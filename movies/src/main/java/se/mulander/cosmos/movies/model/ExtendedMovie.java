@@ -1,6 +1,5 @@
 package se.mulander.cosmos.movies.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,10 +15,6 @@ import java.util.List;
 public class ExtendedMovie
 {
     @Id
-    @Column(name = "movie_id")
-    @JsonIgnore
-    public String movieID;
-
     @OneToOne(fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     public Movie parent;
@@ -27,21 +22,9 @@ public class ExtendedMovie
     @ApiModelProperty(value = "A short synopsis describing what the movie is about")
     @Column(name = "description")
     public String description;
-    @ApiModelProperty(value = "A list of actors who starred in the movie")
-    @ElementCollection
-    @CollectionTable(name = "actors", joinColumns = @JoinColumn(name = "movie_id"))
-    @Column(name = "name")
-    public List<String> actors = new ArrayList<>();
-    @ApiModelProperty(value = "A list of people who directed the movie")
-    @ElementCollection
-    @CollectionTable(name = "directors", joinColumns = @JoinColumn(name = "movie_id"))
-    @Column(name = "name")
-    public List<String> directors = new ArrayList<>();
-    @ApiModelProperty(value = "A list of people who wrote the screenplay for the movie")
-    @ElementCollection
-    @CollectionTable(name = "writers", joinColumns = @JoinColumn(name = "movie_id"))
-    @Column(name = "name")
-    public List<String> writers = new ArrayList<>();
+    @ApiModelProperty(value = "A list of all people who contributed to the movie")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "starredIn", orphanRemoval = true)
+    public List<Cast> cast = new ArrayList<>();
     @ApiModelProperty(name = "poster_url", value = "An absolute link to a poster image")
     @SerializedName("poster_url")
     @Column(name = "poster_url")
@@ -57,21 +40,10 @@ public class ExtendedMovie
         this.posterURL = posterURL;
     }
 
-    public ExtendedMovie setActors(List<String> actors)
+    public ExtendedMovie addCastMember(Cast c)
     {
-        this.actors = actors;
-        return this;
-    }
-
-    public ExtendedMovie setDirectors(List<String> directors)
-    {
-        this.directors = directors;
-        return this;
-    }
-
-    public ExtendedMovie setWriters(List<String> writers)
-    {
-        this.writers = writers;
+        c.starredIn = this.parent;
+        this.cast.add(c);
         return this;
     }
 }

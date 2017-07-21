@@ -49,6 +49,20 @@ public class Movies
                                        ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
                                                                                  "https://image.tmdb.org/t/p/w1920/" + tmdb.backdrop_path);
                                        m.setExtended(exMovie);
+                                       StringBuilder detailsURL = new StringBuilder();
+                                       detailsURL.append(theMovieDbURL).append("/3/movie/");
+                                       detailsURL.append(tmdb.id);
+                                       detailsURL.append("/credits?api_key=").append(apiKey);
+                                       try
+                                       {
+                                           TMDBCastResponse castResponse = (TMDBCastResponse) HttpRequest.getRequest(
+                                                   detailsURL.toString(), TMDBCastResponse.class).data;
+                                           castResponse.cast.stream().forEach(cast -> exMovie.addCastMember(cast));
+                                           castResponse.crew.stream().forEach(cast -> exMovie.addCastMember(cast));
+                                       } catch (Exception e)
+                                       {
+                                           e.printStackTrace();
+                                       }
                                        return m;
                                    })
                                    .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
