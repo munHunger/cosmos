@@ -80,13 +80,7 @@ public class Movies
 			{
 				List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year", param);
 				if(dbMovies.isEmpty())
-				{
-					m.extendedMovie.cast.stream().forEach(c ->
-					{
-						Database.saveObject(c);
-					});
 					Database.saveObject(m);
-				}
 				else
 				{
 					Movie oldMovie = (Movie) dbMovies.get(0);

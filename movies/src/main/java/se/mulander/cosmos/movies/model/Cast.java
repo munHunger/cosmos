@@ -50,7 +50,7 @@ public class Cast
 			value = "The sub genre of what the member has been doing. For example if department is Sound, this could be Orchestrator")
 	public String job;
 
-	@Column(name = "character")
+	@Column(name = "movie_character")
 	@ApiModelProperty(value = "If the member played a part in the movie, then this is the name of the played character")
 	public String character;
 

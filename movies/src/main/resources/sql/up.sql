@@ -17,7 +17,7 @@ CREATE TABLE `cosmos`.`cast` (
   `id` VARCHAR(64) NOT NULL,
   `department` VARCHAR(255) NULL,
   `job` VARCHAR(255) NULL,
-  `character` VARCHAR(255) NULL,
+  `movie_character` VARCHAR(255) NULL,
   `name` VARCHAR(255) NOT NULL,
   `profile_url` VARCHAR(255) NULL,
   PRIMARY KEY (`id`));
