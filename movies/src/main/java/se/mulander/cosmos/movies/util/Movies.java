@@ -95,7 +95,7 @@ public class Movies
 		});
 		result = result.stream().map(m ->
 		{
-			//m.extendedMovie = null;
+			m.extendedMovie = null;
 			return m;
 		}).collect(Collectors.toList());
 		return result;
