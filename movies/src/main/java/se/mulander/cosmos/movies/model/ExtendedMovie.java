@@ -1,7 +1,7 @@
 package se.mulander.cosmos.movies.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -24,6 +24,7 @@ public class ExtendedMovie
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@PrimaryKeyJoinColumn
+	@JsonIgnore
 	public Movie parent;
 
 	@ApiModelProperty(value = "A short synopsis describing what the movie is about")
@@ -35,7 +36,7 @@ public class ExtendedMovie
 	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<Cast> cast = new ArrayList<>();
 	@ApiModelProperty(name = "poster_url", value = "An absolute link to a poster image")
-	@SerializedName("poster_url")
+	@JsonProperty("poster_url")
 	@Column(name = "poster_url")
 	public String posterURL;
 
