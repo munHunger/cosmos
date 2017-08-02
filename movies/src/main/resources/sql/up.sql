@@ -14,12 +14,13 @@ CREATE TABLE `cosmos`.`rating` (
 
 CREATE TABLE `cosmos`.`cast` (
   `movie_id` VARCHAR(64) NOT NULL,
-  `department` VARCHAR(45) NULL,
-  `job` VARCHAR(64) NULL,
-  `character` VARCHAR(64) NULL,
-  `name` VARCHAR(64) NOT NULL,
+  `id` VARCHAR(64) NOT NULL,
+  `department` VARCHAR(255) NULL,
+  `job` VARCHAR(255) NULL,
+  `character` VARCHAR(255) NULL,
+  `name` VARCHAR(255) NOT NULL,
   `profile_url` VARCHAR(255) NULL,
-  PRIMARY KEY (`movie_id`, `name`));
+  PRIMARY KEY (`id`));
 
 CREATE TABLE `cosmos`.`genre` (
   `movie_id` VARCHAR(64) NOT NULL,
