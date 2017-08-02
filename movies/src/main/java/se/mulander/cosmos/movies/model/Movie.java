@@ -1,7 +1,7 @@
 package se.mulander.cosmos.movies.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,12 +20,12 @@ import java.util.UUID;
 public class Movie
 {
 	@ApiModelProperty(name = "internal_id", value = "The unique identifier used by the cosmos system")
-	@SerializedName("internal_id")
+	@JsonProperty("internal_id")
 	@Column(name = "movie_id")
 	@Id
 	public String internalID;
 	@ApiModelProperty(name = "image_url", value = "An absolute link to a thumbnail image")
-	@SerializedName("image_url")
+	@JsonProperty("image_url")
 	@Column(name = "image_url")
 	public String imageURL;
 	@ApiModelProperty(value = "The title of the movie")
@@ -39,7 +39,7 @@ public class Movie
 	public List<Rating> rating = new ArrayList<>();
 	@ApiModelProperty(name = "extended_movie",
 					  value = "More details about the movie. This can be info such as a description an what actors are in it")
-	@SerializedName("extended_movie")
+	@JsonProperty("extended_movie")
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "movie_id")
 	public ExtendedMovie extendedMovie;
