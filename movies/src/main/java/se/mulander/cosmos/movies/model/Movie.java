@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class Movie
 	public ExtendedMovie extendedMovie;
 	@ApiModelProperty(value = "A list of strings noting what genre the movie is part of")
 	@ElementCollection
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@CollectionTable(name = "genre", joinColumns = @JoinColumn(name = "movie_id"))
 	@Column(name = "genre")
 	public List<String> genre = new ArrayList<>();

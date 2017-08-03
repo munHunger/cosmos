@@ -101,6 +101,16 @@ public class Movies
 		return result;
 	}
 
+	public static Movie getMovie(String id) throws Exception
+	{
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		List result = Database.getObjects("from Movie WHERE internalID = :id", param);
+		if(result.isEmpty())
+			return null;
+		return (Movie) result.get(0);
+	}
+
 	private static GenreList getGenres() throws Exception
 	{
 		return (GenreList) HttpRequest.getRequest(theMovieDbURL + "/3/genre/movie/list?api_key=" + apiKey,
