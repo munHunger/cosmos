@@ -3,6 +3,7 @@ package se.mulander.cosmos.movies.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -58,7 +59,8 @@ public class Cast
 	@ApiModelProperty(value = "The name of the cast member")
 	public String name;
 
-	@JsonProperty("profile_url")
+	@JsonProperty("profile_path")
+	@SerializedName("profile_path")
 	@Column(name = "profile_url")
 	@ApiModelProperty(value = "A url to an image with the members profile")
 	public String profileURL;

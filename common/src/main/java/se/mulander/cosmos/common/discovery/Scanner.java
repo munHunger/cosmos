@@ -19,6 +19,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /**
  * Created by Marcus Münger on 2017-07-20.
@@ -28,46 +31,66 @@ import java.net.InetAddress;
 @Api(value = "Discovery", description = "Endpoints for finding other services")
 public class Scanner
 {
-    public static String find(int port, String path)
-    {
-        try
-        {
-            String localIP = InetAddress.getLocalHost().toString();
-            String gate = "http://" + localIP.substring(localIP.indexOf("/")+1, localIP.lastIndexOf(".") + 1);
-            RequestConfig.Builder requestBuilder = RequestConfig.custom();
-            requestBuilder = requestBuilder.setConnectTimeout(10);
-            requestBuilder = requestBuilder.setConnectionRequestTimeout(10);
+	public static String getLocalAddress() throws SocketException
+	{
+		Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+		for(; n.hasMoreElements(); )
+		{
+			NetworkInterface e = n.nextElement();
+			Enumeration<InetAddress> a = e.getInetAddresses();
+			for(; a.hasMoreElements(); )
+			{
+				InetAddress addr = a.nextElement();
+				String address = addr.getHostAddress();
+				if(!address.contains(":") && !address.startsWith("127"))
+					return address;
+			}
+		}
+		return null;
+	}
 
-            HttpClientBuilder builder = HttpClientBuilder.create();
-            builder.setDefaultRequestConfig(requestBuilder.build());
-            HttpClient client = builder.build();
-            for(int i = 1; i < 255; i++)
-            {
-                try
-                {
-                    String url = String.format("%s%d:%d%s", gate, i, port, path);
-                    int responseStatus = client.execute(new HttpGet(url)).getStatusLine().getStatusCode();
-                    if (responseStatus == 200)
-                        return String.format("%s%d:%d", gate, i, port);
-                }
-                catch (ConnectTimeoutException e)
-                {}
-            }
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public static String find(int port, String path)
+	{
+		try
+		{
+			String localIP = getLocalAddress();
+			String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
+			RequestConfig.Builder requestBuilder = RequestConfig.custom();
+			requestBuilder = requestBuilder.setConnectTimeout(10);
+			requestBuilder = requestBuilder.setConnectionRequestTimeout(10);
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Discover", notes = "Static point that returns 200 OK, to note that this endpoint is alive. As this is common for all cosmos microservices")
-    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
-                                message = "static OK to note that it is alive")})
-    public Response getRecomendations()
-    {
-        return Response.ok().build();
-    }
+			HttpClientBuilder builder = HttpClientBuilder.create();
+			builder.setDefaultRequestConfig(requestBuilder.build());
+			HttpClient client = builder.build();
+			for(int i = 1; i < 255; i++)
+			{
+				try
+				{
+					String url = String.format("%s%d:%d%s", gate, i, port, path);
+					int responseStatus = client.execute(new HttpGet(url)).getStatusLine().getStatusCode();
+					if(responseStatus == 200)
+						return String.format("%s%d:%d", gate, i, port);
+				}
+				catch(ConnectTimeoutException e)
+				{
+				}
+			}
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Discover",
+				  notes = "Static point that returns 200 OK, to note that this endpoint is alive. As this is common for all cosmos microservices")
+	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+								message = "static OK to note that it is alive")})
+	public Response getRecomendations()
+	{
+		return Response.ok().build();
+	}
 }
