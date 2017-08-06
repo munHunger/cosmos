@@ -48,7 +48,7 @@ public class Movies
 									.get().name)
 							.forEach(name -> m.addGenre(name));
 					ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
-							"https://image.tmdb.org/t/p/w1920/" + tmdb.backdrop_path);
+							"https://image.tmdb.org/t/p/w1920" + tmdb.backdrop_path);
 					m.setExtended(exMovie);
 					StringBuilder detailsURL = new StringBuilder();
 					detailsURL.append(theMovieDbURL).append("/3/movie/");
@@ -63,7 +63,8 @@ public class Movies
 						exMovie.cast.stream().forEach(c ->
 						{
 							c.generateID();
-							c.profileURL = "https://image.tmdb.org/t/p/w185" + c.profileURL;
+							if(c.profileURL != null)
+								c.profileURL = "https://image.tmdb.org/t/p/w185" + c.profileURL;
 						});
 					}
 					catch(Exception e)
