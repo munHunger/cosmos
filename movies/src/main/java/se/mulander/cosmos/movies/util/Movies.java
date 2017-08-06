@@ -60,7 +60,11 @@ public class Movies
 								detailsURL.toString(), TMDBCastResponse.class).data;
 						castResponse.cast.stream().forEach(cast -> exMovie.addCastMember(cast));
 						castResponse.crew.stream().forEach(cast -> exMovie.addCastMember(cast));
-						exMovie.cast.stream().forEach(c -> c.generateID());
+						exMovie.cast.stream().forEach(c ->
+						{
+							c.generateID();
+							c.profileURL = "https://image.tmdb.org/t/p/w185" + c.profileURL;
+						});
 					}
 					catch(Exception e)
 					{
