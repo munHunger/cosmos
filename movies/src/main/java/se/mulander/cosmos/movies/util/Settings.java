@@ -78,7 +78,7 @@ public class Settings
 		{
 			while(settingsURL == null)
 			{
-				settingsURL = Scanner.find(8080, "/settings/api/discover");
+				settingsURL = Scanner.find(80, "/settings/api/discover");
 			}
 			settingsURL += "/settings/api";
 			settingsUpdater.accept(settingsURL + "/settings/structure");
