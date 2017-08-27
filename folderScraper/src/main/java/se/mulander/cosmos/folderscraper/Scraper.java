@@ -1,6 +1,8 @@
 package se.mulander.cosmos.folderscraper;
 
 import com.google.gson.Gson;
+import se.mulander.cosmos.common.database.Database;
+import se.mulander.cosmos.folderscraper.utils.model.FileObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,6 +17,14 @@ import javax.ws.rs.core.Response;
 @Path("/scraper")
 public class Scraper
 {
+	@Path("/folderdb")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFolderDBStatus() throws Exception
+	{
+		return Response.ok(new Gson().toJson(new Database().getObject(FileObject.class, null))).build();
+	}
+
 	@Path("/folderstatus")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

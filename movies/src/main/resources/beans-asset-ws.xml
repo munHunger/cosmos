@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+  	http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<!-- Application Beans -->
+	<context:component-scan base-package="se.mulander.cosmos"/>
+
+	<!-- Swagger Beans -->
+	<bean id="apiListingResource" class="io.swagger.jaxrs.listing.ApiListingResource"/>
+	<bean id="swaggerSerializers" class="io.swagger.jaxrs.listing.SwaggerSerializers" scope="singleton"/>
+
+	<!-- Swagger Configuration -->
+	<bean id="beanConfig" class="io.swagger.jaxrs.config.BeanConfig">
+		<property name="schemes" value="http, https"/>
+		<property name="filterClass"
+				  value="se.mulander.cosmos.common.swagger.ApiAuthorizationFilterImpl"/>
+		<property name="resourcePackage" value="se.mulander.cosmos"/>
+		<property name="version" value="0.0.1"/>
+		<property name="host" value=""/>
+		<property name="basePath" value="/movies/api"/>
+		<property name="title" value="Service for cosmos"/>
+		<property name="description" value="A service for managing part or parts of cosmos"/>
+		<property name="contact" value="marcusmunger@hotmail.com"/>
+		<property name="scan" value="true"/>
+	</bean>
+
+	<!-- API Origin Filter -->
+	<bean id="apiOriginFilter" class="se.mulander.cosmos.common.swagger.ApiOriginFilter"/>
+
+</beans>
