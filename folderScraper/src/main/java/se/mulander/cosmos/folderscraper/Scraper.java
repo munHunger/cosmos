@@ -6,6 +6,7 @@ import se.mulander.cosmos.folderscraper.utils.model.FileObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,6 +31,14 @@ public class Scraper
 	public Response getCurrentFolderStatus() throws Exception
 	{
 		return Response.ok(new Gson().toJson(new se.mulander.cosmos.folderscraper.utils.business.Scraper().getFolderStatus())).build();
+	}
+
+	@Path("/folderstatus/{folder}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSpecificFolderStatus(@PathParam("folder") String folder) throws Exception
+	{
+		return Response.ok(new Gson().toJson(new se.mulander.cosmos.folderscraper.utils.business.Scraper().getFolderStatus(folder))).build();
 	}
 
 	@Path("/watcherstatus")

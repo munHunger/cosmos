@@ -18,6 +18,8 @@ public class FileObject
 	public boolean isMovie = false;
 	public boolean isTV = false;
 	public int externalID = -1;
+	@MaxLength(length = 256)
+	public String title;
 
 	public FileObject()
 	{
