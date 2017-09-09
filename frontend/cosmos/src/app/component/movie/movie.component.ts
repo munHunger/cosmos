@@ -11,6 +11,8 @@ export class MovieComponent {
     @Input()
     private movie: Movie;
 
+    private selected: boolean = false;
+
     private hover: boolean = false;
 
     constructor(private movieService: MovieService)
