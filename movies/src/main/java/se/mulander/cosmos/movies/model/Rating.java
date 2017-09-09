@@ -47,6 +47,7 @@ public class Rating implements Serializable
 	{
 		this.provider = provider;
 		this.rating = rating;
+		this.max = max;
 	}
 
 	public Rating(String provider, double rating, double max, int voteCount)
@@ -54,5 +55,6 @@ public class Rating implements Serializable
 		this.provider = provider;
 		this.rating = rating;
 		this.voteCount = voteCount;
+		this.max = max;
 	}
 }
