@@ -7,6 +7,7 @@ import { AppComponent } from './component/app/app.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
 import { MovieListComponent } from './component/movieList/movieList.component';
 import { NotFoundComponent } from './component/notFound/notFound.component';
+import { MovieComponent } from './component/movie/movie.component';
 
 import { MovieService } from './service/movies.service';
 
@@ -24,7 +25,8 @@ const appRoutes: Routes = [
     AppComponent,
     NavbarComponent,
     MovieListComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    MovieComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,12 @@
+.image
+{
+    position: relative;
+    padding: 0px;
+    display: inline-block;
+    width: 100%;
+}
+
+img
+{
+    width: 100%;
+}
