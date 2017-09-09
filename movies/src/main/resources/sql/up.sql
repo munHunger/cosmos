@@ -9,6 +9,7 @@ CREATE TABLE `cosmos`.`rating` (
   `movie_id` VARCHAR(64) NOT NULL,
   `provider` VARCHAR(45) NOT NULL,
   `rating` DOUBLE NULL,
+  `max_vote` DOUBLE NULL,
   `vote_count` INT NULL,
   PRIMARY KEY (`movie_id`, `provider`));
 
