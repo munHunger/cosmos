@@ -40,7 +40,7 @@ public class Movies
 					Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path,
 							tmdb.title, year.matches("\\d+") ? Integer.parseInt(
 							year) : -1).addRating(
-							new Rating("The Movie Database", tmdb.vote_average, tmdb.vote_count));
+							new Rating("The Movie Database", tmdb.vote_average, 10, tmdb.vote_count));
 					tmdb.genre_ids.stream()
 							.map(id -> genreList.genres.stream()
 									.filter(genre -> genre.id == id)

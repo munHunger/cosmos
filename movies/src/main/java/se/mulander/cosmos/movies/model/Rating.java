@@ -35,18 +35,21 @@ public class Rating implements Serializable
 	@JsonProperty(value = "vote_count")
 	@Column(name = "vote_count")
 	public int voteCount;
+	@ApiModelProperty(value = "The highest possible rating")
+	@Column(name = "max_vote")
+	public double max;
 
 	public Rating()
 	{
 	}
 
-	public Rating(String provider, double rating)
+	public Rating(String provider, double rating, double max)
 	{
 		this.provider = provider;
 		this.rating = rating;
 	}
 
-	public Rating(String provider, double rating, int voteCount)
+	public Rating(String provider, double rating, double max, int voteCount)
 	{
 		this.provider = provider;
 		this.rating = rating;
