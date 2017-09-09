@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Business end of the folder scraper.
  * This manages getting statuses of the watched folder, moving completed downloads and starting/stopping the watchthread.
- *
+ * <p>
  * Created by marcu on 2017-03-17.
  */
 public class Scraper
@@ -163,6 +163,7 @@ public class Scraper
 	/**
 	 * Cleans a directory.
 	 * i.e. recursively removes all .ignore files and empty directories
+	 *
 	 * @param directory the directory to clean
 	 */
 	private void cleanDirectory(File directory)
@@ -188,7 +189,7 @@ public class Scraper
 	 * @throws IOException              If the move fails.
 	 * @throws IllegalArgumentException If the object is not completed, both a movie and a tv-show or neither.
 	 */
-	private String moveObject(FileObject o) throws IOException, IllegalArgumentException
+	public String moveObject(FileObject o) throws IOException, IllegalArgumentException
 	{
 		if(!o.isComplete)
 			throw new IllegalArgumentException("FileObject must be completed before moving");
@@ -208,32 +209,41 @@ public class Scraper
 
 	/**
 	 * Moves a directory and any sub files/directories
+	 *
 	 * @param sourceDir
 	 * @param targetDir
 	 * @throws IOException
 	 */
 	private static void copyDirectory(File sourceDir, File targetDir)
-			throws IOException {
-		if (sourceDir.isDirectory()) {
+			throws IOException
+	{
+		if(sourceDir.isDirectory())
+		{
 			copyDirectoryRecursively(sourceDir, targetDir);
-		} else if(sourceDir.exists()){
+		}
+		else if(sourceDir.exists())
+		{
 			Files.move(sourceDir.toPath(), targetDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 	}
 
 	/**
 	 * Copies a directory recursively
+	 *
 	 * @param source
 	 * @param target
 	 * @throws IOException
 	 */
 	private static void copyDirectoryRecursively(File source, File target)
-			throws IOException {
-		if (!target.exists()) {
+			throws IOException
+	{
+		if(!target.exists())
+		{
 			target.mkdir();
 		}
 
-		for (String child : source.list()) {
+		for(String child : source.list())
+		{
 			copyDirectory(new File(source, child), new File(target, child));
 		}
 	}

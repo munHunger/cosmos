@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -67,8 +68,12 @@ public class Scanner
 				try
 				{
 					String url = String.format("%s%d:%d%s", gate, i, port, path);
-					int responseStatus = client.execute(new HttpGet(url)).getStatusLine().getStatusCode();
-					if(responseStatus == 200)
+					org.apache.http.HttpResponse response = client.execute(new HttpGet(url));
+					int responseStatus = response.getStatusLine().getStatusCode();
+					byte[] byteData = new byte[response.getEntity().getContent().available()];
+					new DataInputStream(response.getEntity().getContent()).readFully(byteData);
+
+					if(responseStatus == 200 && new String(byteData).equals("cosmos"))
 						return String.format("%s%d:%d", gate, i, port);
 				}
 				catch(ConnectTimeoutException e)
@@ -91,6 +96,6 @@ public class Scanner
 								message = "static OK to note that it is alive")})
 	public Response getRecomendations()
 	{
-		return Response.ok().build();
+		return Response.ok("cosmos").build();
 	}
 }
