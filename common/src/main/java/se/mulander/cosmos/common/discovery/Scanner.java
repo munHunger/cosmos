@@ -7,16 +7,17 @@ import io.swagger.annotations.ApiResponses;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Component;
 
+import javax.net.ssl.SSLHandshakeException;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -55,6 +56,7 @@ public class Scanner
 		{
 			String localIP = getLocalAddress();
 			String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
+			String sslGate = "https://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
 			RequestConfig.Builder requestBuilder = RequestConfig.custom();
 			requestBuilder = requestBuilder.setConnectTimeout(10);
 			requestBuilder = requestBuilder.setConnectionRequestTimeout(10);
@@ -66,12 +68,27 @@ public class Scanner
 			{
 				try
 				{
-					String url = String.format("%s%d:%d%s", gate, i, port, path);
-					int responseStatus = client.execute(new HttpGet(url)).getStatusLine().getStatusCode();
-					if(responseStatus == 200)
+					org.apache.http.HttpResponse response;
+					try
+					{
+						String url = String.format("%s%d:%d%s", gate, i, port, path);
+						response = client.execute(new HttpGet(url));
+					}
+					catch(SSLHandshakeException e)
+					{
+						String url = String.format("%s%d:%d%s", sslGate, i, 443, path);
+						response = client.execute(new HttpGet(url));
+					}
+					int responseStatus = response.getStatusLine().getStatusCode();
+					byte[] byteData = new byte[response.getEntity().getContent().available()];
+					new DataInputStream(response.getEntity().getContent()).readFully(byteData);
+
+					String data = new String(byteData);
+
+					if(responseStatus == 200 && data.equals("cosmos"))
 						return String.format("%s%d:%d", gate, i, port);
 				}
-				catch(ConnectTimeoutException e)
+				catch(Exception e)
 				{
 				}
 			}
@@ -91,6 +108,6 @@ public class Scanner
 								message = "static OK to note that it is alive")})
 	public Response getRecomendations()
 	{
-		return Response.ok().build();
+		return Response.ok("cosmos").build();
 	}
 }
