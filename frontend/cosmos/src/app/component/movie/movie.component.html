@@ -1,6 +1,11 @@
-<div class="movie col-sm-6 col-md-3 col-lg-2">
+<div class="movie col-sm-6 col-md-3 col-lg-2" (mouseover)="hover = true" (mouseleave)="hover = false">
     <img src="{{movie.image_url}}" class="poster">
-    <div class="rating">
-        {{movie.rating[0].rating}}
+    <div *ngIf="hover" class="info">
+        <div class="rating">
+            <div *ngFor="let i of asArray(calcRating())" class="hexagon"></div>
+        </div>
+        <div class="release">
+            {{movie.year}}
+        </div>
     </div>
 </div>
