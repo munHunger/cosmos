@@ -63,7 +63,7 @@ public class Movies
 						exMovie.cast.stream().forEach(c ->
 						{
 							c.generateID();
-							if(c.profileURL != null)
+							if(c.profileURL != null && !c.profileURL.toUpperCase().equals("NULL"))
 								c.profileURL = "https://image.tmdb.org/t/p/w185" + c.profileURL;
 						});
 					}
