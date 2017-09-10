@@ -3,6 +3,8 @@
     background-color: #2E3845;
     height: 100%;
     padding: 0px;
+    z-index: 500;
+    box-shadow: 2px 0px 2px #222; /* TODO: make this always on top*/
 }
 
 .navbar-title
