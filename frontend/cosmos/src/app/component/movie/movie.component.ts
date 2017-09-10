@@ -22,7 +22,10 @@ export class MovieComponent {
     public select()
     {
         this.selected = true;
-        this.movieService.getExtendMovie(this.movie).subscribe(res => this.movie = res);
+        this.movieService.getExtendMovie(this.movie).subscribe(res => 
+            {
+                this.movie = res
+            });
     }
 
     public calcRating(): number

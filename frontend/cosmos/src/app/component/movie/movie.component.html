@@ -9,7 +9,29 @@
         </div>
     </div>
     <div *ngIf="selected" class="overlay"></div>
-    <div *ngIf="selected && movie.extended_movie" class="detail">
-        <img src="{{movie.extended_movie.poster_url}}">
+    <div *ngIf="selected && movie.extended_movie" class="detail row">
+        <div class="col-1 action-panel">
+
+        </div>
+        <div class="col-5 left-panel">
+            <img src="{{movie.extended_movie.poster_url}}" class="banner">
+            <div class="image-break"></div>
+            <div class="description"> 
+                <div class="title">
+                    {{movie.title}}
+                    <div class="year">
+                        ({{movie.year}})
+                    </div>
+                </div> 
+                {{movie.extended_movie.description}}
+            </div>
+        </div>
+        <div class="col-6">
+            <div *ngFor="let cast of movie.extended_movie.cast">
+                <div *ngIf="cast.profile_path" class="cast-poster">
+                    <img src="{{cast.profile_path}}">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
