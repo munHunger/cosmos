@@ -1,4 +1,5 @@
 import { Rating } from './rating.model';
+import { ExtendedMovie } from './extendedMovie.model';
 
 export class Movie
 {
@@ -8,4 +9,5 @@ export class Movie
     public rating: Rating[];
     public genre: string[];
     public image_url: string;
+    public extended_movie: ExtendedMovie;
 }

@@ -1,4 +1,4 @@
-<div class="movie col-sm-6 col-md-3 col-lg-2" (mouseover)="hover = true" (mouseleave)="hover = false" (click)="selected = true">
+<div class="movie col-sm-6 col-md-3 col-lg-2" (mouseover)="hover = true" (mouseleave)="hover = false" (click)="select()">
     <img src="{{movie.image_url}}" class="poster">
     <div *ngIf="hover" class="info">
         <div class="rating">
@@ -9,4 +9,7 @@
         </div>
     </div>
     <div *ngIf="selected" class="overlay"></div>
+    <div *ngIf="selected && movie.extended_movie" class="detail">
+        <img src="{{movie.extended_movie.poster_url}}">
+    </div>
 </div>

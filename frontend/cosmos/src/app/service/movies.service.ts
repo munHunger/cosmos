@@ -23,6 +23,11 @@ export class MovieService
         return this.http.get(this.baseURL + "/movies/recomendations").map(res => res.json()).catch(this.handleError);
     }
 
+    public getExtendMovie(movie: Movie): Observable<Movie>
+    {
+        return this.http.get(this.baseURL + "/movies/" + movie.internal_id).map(res => res.json()).catch(this.handleError);
+    }
+
     
   private handleError(error: Response | any)
   {
