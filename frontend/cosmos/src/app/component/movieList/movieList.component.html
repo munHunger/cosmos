@@ -1,0 +1,12 @@
+<div class="container-fluid">
+    <div class="row">
+        <div *ngIf="!movieList">
+            <div class="screen-center loading">
+                LOADING
+            </div>
+        </div>
+        <div>
+            <movie *ngFor="let m of movieList" [movie]="m"></movie>
+        </div>
+    </div>
+</div>

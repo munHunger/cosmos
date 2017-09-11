@@ -1,0 +1,19 @@
+.not-found
+{
+    text-align: center;
+    padding: 150px;
+}
+
+.title
+{
+    font-size: 100px;
+    font-weight: 900;
+    color: #AAA;
+}
+
+.body
+{
+    font-size: 30px;
+    font-weight: 600;
+    color: #BBB;
+}

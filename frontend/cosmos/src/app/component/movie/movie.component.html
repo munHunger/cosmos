@@ -1,0 +1,37 @@
+<div class="movie col-sm-6 col-md-3 col-lg-2" (mouseover)="hover = true" (mouseleave)="hover = false" (click)="select()">
+    <img src="{{movie.image_url}}" class="poster">
+    <div *ngIf="hover" class="info">
+        <div class="rating">
+            <div *ngFor="let i of asArray(calcRating())" class="hexagon"></div>
+        </div>
+        <div class="release">
+            {{movie.year}}
+        </div>
+    </div>
+    <div *ngIf="selected" class="overlay" (click)="deselect($event)"></div>
+    <div *ngIf="selected && movie.extended_movie" (window:keydown.esc)="deselect($event)" class="detail row">
+        <div class="col-1 action-panel">
+
+        </div>
+        <div class="col-5 left-panel">
+            <img src="{{movie.extended_movie.poster_url}}" class="banner">
+            <div class="image-break"></div>
+            <div class="description"> 
+                <div class="title">
+                    {{movie.title}}
+                    <div class="year">
+                        ({{movie.year}})
+                    </div>
+                </div> 
+                {{movie.extended_movie.description}}
+            </div>
+        </div>
+        <div class="col-6 cast">
+            <div *ngFor="let cast of movie.extended_movie.cast">
+                <div *ngIf="cast.profile_path" class="cast-poster">
+                    <img src="{{cast.profile_path}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
