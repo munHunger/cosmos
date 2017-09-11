@@ -13,6 +13,11 @@
     backdrop-filter: blur(3px);
 }
 
+.cast
+{
+    overflow: auto;
+}
+
 .cast-poster
 {
     width: 150px;

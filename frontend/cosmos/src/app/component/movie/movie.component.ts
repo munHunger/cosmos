@@ -13,6 +13,8 @@ export class MovieComponent {
 
     private selected: boolean = false;
 
+    private loaded: boolean = false;
+
     private hover: boolean = false;
 
     constructor(private movieService: MovieService)
@@ -22,10 +24,18 @@ export class MovieComponent {
     public select()
     {
         this.selected = true;
-        this.movieService.getExtendMovie(this.movie).subscribe(res => 
-            {
-                this.movie = res
-            });
+        if(!this.loaded)
+            this.movieService.getExtendMovie(this.movie).subscribe(res => 
+                {
+                    this.movie = res;
+                    this.loaded = true;
+                });
+    }
+
+    public deselect($event)
+    {
+        this.selected = false;
+        $event.stopPropagation();
     }
 
     public calcRating(): number

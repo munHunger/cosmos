@@ -8,8 +8,9 @@
             {{movie.year}}
         </div>
     </div>
-    <div *ngIf="selected" class="overlay"></div>
-    <div *ngIf="selected && movie.extended_movie" class="detail row">
+    {{selected}}
+    <div *ngIf="selected" class="overlay" (click)="deselect($event)"></div>
+    <div *ngIf="selected && movie.extended_movie" (keyup.control.esc)="deselect()" class="detail row">
         <div class="col-1 action-panel">
 
         </div>
@@ -26,7 +27,7 @@
                 {{movie.extended_movie.description}}
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-6 cast">
             <div *ngFor="let cast of movie.extended_movie.cast">
                 <div *ngIf="cast.profile_path" class="cast-poster">
                     <img src="{{cast.profile_path}}">
