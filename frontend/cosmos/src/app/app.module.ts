@@ -10,6 +10,7 @@ import { NotFoundComponent } from './component/notFound/notFound.component';
 import { MovieComponent } from './component/movie/movie.component';
 
 import { MovieService } from './service/movies.service';
+import { SettingsService } from './service/settings.service';
 
 const appRoutes: Routes = [
   { path: "movies", component: MovieListComponent },
@@ -33,7 +34,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     HttpModule
   ],
-  providers: [ MovieService ],
+  providers: [ MovieService, SettingsService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
