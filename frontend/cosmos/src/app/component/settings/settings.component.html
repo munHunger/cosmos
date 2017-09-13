@@ -1,0 +1,13 @@
+<div class="header">
+    <div *ngFor="let setting of settings" class="tab">
+        {{setting.name}}
+    </div>
+</div>
+
+<div class="settings">
+    <div *ngFor="let setting of settings[0].children">
+        <label>{{setting.name}}</label>
+        <br />
+        <input type="text" name="{{setting.name}}" [(ngModel)]="setting.value">
+    </div>
+</div>

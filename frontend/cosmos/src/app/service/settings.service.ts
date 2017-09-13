@@ -24,6 +24,7 @@ export class SettingsService
         dbURL.name = "movie_db_api_uri";
         dbURL.regex = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         dbURL.type = "string";
+        dbURL.value = "test_url";
         let dbKey = new Setting();
         dbKey.name = "movie_db_api_key";
         dbKey.regex = ".*";
@@ -31,7 +32,7 @@ export class SettingsService
         let movieSetting = new Setting();
         movieSetting.name = "movies";
         movieSetting.children = [dbKey, dbURL];
-        return [movieSetting];
+        return [movieSetting, movieSetting];
     }
 
     
