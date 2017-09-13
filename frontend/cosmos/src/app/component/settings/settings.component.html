@@ -6,8 +6,10 @@
 
 <div class="settings">
     <div *ngFor="let setting of settings[0].children">
-        <label>{{setting.name}}</label>
-        <br />
-        <input type="text" name="{{setting.name}}" [(ngModel)]="setting.value">
+        <div class="setting">
+            <label class="settings-label">{{setting.name}}</label>
+            <br />
+            <input type="text" name="{{setting.name}}" [(ngModel)]="setting.value" class="setting-input">
+        </div>
     </div>
 </div>
