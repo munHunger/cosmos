@@ -1,4 +1,4 @@
-package se.mulander.cosmos.movies.model;
+package se.mulander.cosmos.common.model.settings;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
