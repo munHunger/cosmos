@@ -12,3 +12,36 @@ body
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
+
+.header
+{
+    position: fixed;
+    left: 175px;
+    right: 0px;
+    height: 60px;
+    background-color: #444;
+    font-size: 24px;
+    font-weight: 900;
+    color: #BBB;
+    padding-top: 20px;
+}
+
+.tab
+{
+    display: inline;
+    cursor: pointer;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #555;
+    border-right-color: #999;
+    border-right-width: 2px;
+    border-right-style: solid;
+    color: #BBB;
+}
+
+.tab:hover
+{
+    text-decoration: none;
+    background-color: #666;
+}
