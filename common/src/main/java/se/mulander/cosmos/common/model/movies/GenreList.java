@@ -1,4 +1,4 @@
-package se.mulander.cosmos.common.model.settings;
+package se.mulander.cosmos.common.model.movies;
 
 import java.util.List;
 

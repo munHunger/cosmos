@@ -27,9 +27,9 @@
         </property>
 
         <!-- List of XML mapping files -->
-        <mapping class="se.mulander.cosmos.common.model.settings.Movie"/>
-        <mapping class="se.mulander.cosmos.common.model.settings.ExtendedMovie"/>
-        <mapping class="se.mulander.cosmos.common.model.settings.Rating"/>
-        <mapping class="se.mulander.cosmos.common.model.settings.Cast"/>
+        <mapping class="se.mulander.cosmos.common.model.movies.Movie"/>
+        <mapping class="se.mulander.cosmos.common.model.movies.ExtendedMovie"/>
+        <mapping class="se.mulander.cosmos.common.model.movies.Rating"/>
+        <mapping class="se.mulander.cosmos.common.model.movies.Cast"/>
     </session-factory>
 </hibernate-configuration>
