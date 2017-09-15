@@ -7,7 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.discovery.Scanner;
-import se.mulander.cosmos.common.model.Setting;
+import se.mulander.cosmos.common.model.settings.Setting;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -42,8 +42,8 @@ public class Settings
 				List<Setting> settings = mapper.readValue(response.getEntity().getContent(), mapper.getTypeFactory().constructCollectionType(List.class, Setting.class));
 
 				Optional<Setting> movieSetting = settings.stream()
-						.filter(s -> s.name.equals("movies"))
-						.findFirst();
+														 .filter(s -> s.name.equals("movies"))
+														 .findFirst();
 				if(movieSetting.isPresent())
 				{
 					for(Setting s : movieSetting.get().children)

@@ -1,5 +1,7 @@
 package se.mulander.cosmos.movies.model;
 
+import se.mulander.cosmos.common.model.movies.Cast;
+
 import java.util.List;
 
 /**

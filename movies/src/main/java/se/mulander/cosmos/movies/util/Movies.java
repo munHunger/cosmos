@@ -2,6 +2,10 @@ package se.mulander.cosmos.movies.util;
 
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.jpa.Database;
+import se.mulander.cosmos.common.model.movies.ExtendedMovie;
+import se.mulander.cosmos.common.model.movies.GenreList;
+import se.mulander.cosmos.common.model.movies.Movie;
+import se.mulander.cosmos.common.model.movies.Rating;
 import se.mulander.cosmos.movies.model.*;
 
 import java.util.Arrays;
@@ -38,7 +42,7 @@ public class Movies
 				{
 					String year = tmdb.release_date.trim().substring(0, 4);
 					Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path,
-							tmdb.title, year.matches("\\d+") ? Integer.parseInt(
+										tmdb.title, year.matches("\\d+") ? Integer.parseInt(
 							year) : -1).addRating(
 							new Rating("The Movie Database", tmdb.vote_average, 10, tmdb.vote_count));
 					tmdb.genre_ids.stream()
@@ -48,7 +52,7 @@ public class Movies
 									.get().name)
 							.forEach(name -> m.addGenre(name));
 					ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
-							"https://image.tmdb.org/t/p/w1920" + tmdb.backdrop_path);
+															  "https://image.tmdb.org/t/p/w1920" + tmdb.backdrop_path);
 					m.setExtended(exMovie);
 					StringBuilder detailsURL = new StringBuilder();
 					detailsURL.append(theMovieDbURL).append("/3/movie/");
