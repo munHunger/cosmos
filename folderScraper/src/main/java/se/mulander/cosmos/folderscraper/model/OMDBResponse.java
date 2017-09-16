@@ -1,4 +1,4 @@
-package se.mulander.cosmos.folderscraper.utils.model;
+package se.mulander.cosmos.folderscraper.model;
 
 /**
  * Created by marcu on 2017-02-25.

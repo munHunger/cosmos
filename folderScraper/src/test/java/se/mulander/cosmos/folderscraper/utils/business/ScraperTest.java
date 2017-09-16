@@ -11,8 +11,9 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.Database;
 import se.mulander.cosmos.common.model.HttpResponse;
-import se.mulander.cosmos.folderscraper.utils.model.FileObject;
-import se.mulander.cosmos.folderscraper.utils.model.OMDBResponse;
+import se.mulander.cosmos.folderscraper.impl.Scraper;
+import se.mulander.cosmos.folderscraper.model.FileObject;
+import se.mulander.cosmos.folderscraper.model.OMDBResponse;
 
 import java.io.File;
 import java.nio.file.Files;
