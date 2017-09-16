@@ -121,6 +121,7 @@ public class ScraperTest
 						File partMock = mock(File.class);
 						File ignoreMock = mock(File.class);
 						when(fileMock.listFiles()).thenReturn(new File[]{partMock, ignoreMock});
+						when(ignoreMock.delete()).thenReturn(true);
 						when(partMock.getPath()).thenReturn("xxxpart");
 						when(ignoreMock.getPath()).thenReturn("xxxignore");
 					});
