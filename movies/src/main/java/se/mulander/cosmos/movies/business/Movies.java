@@ -21,47 +21,49 @@ import javax.ws.rs.core.Response;
 @Api(value = "Movies", description = "Endpoints for finding new movies and managing wishlists")
 public class Movies
 {
-	@GET
-	@Path("/recomendations")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
-	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
-								message = "A list of movie recomendations",
-								responseContainer = "Array",
-								response = Movie.class)})
-	public Response getRecomendations()
-	{
-		try
-		{
-			return Response.ok(se.mulander.cosmos.movies.util.Movies.getRecomendations()).build();
-		}
-		catch(Exception e)
-		{
-			return Response.serverError().build();
-		}
-	}
+    @GET
+    @Path("/recomendations")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+                                message = "A list of movie recomendations",
+                                responseContainer = "Array",
+                                response = Movie.class)})
+    public Response getRecomendations()
+    {
+        try
+        {
+            return Response.ok(se.mulander.cosmos.movies.impl.Movies.getRecomendations()).build();
+        } catch (Exception e)
+        {
+            return Response.serverError().build();
+        }
+    }
 
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Get a full movie object", notes = "Gets the full movie object associated with the id")
-	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
-								message = "The full movie object",
-								response = Movie.class), @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
-																	  message = "The given ID could not be found in the database",
-																	  response = ErrorMessage.class)})
-	public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id)
-	{
-		try
-		{
-			Movie m = se.mulander.cosmos.movies.util.Movies.getMovie(id);
-			if(m != null)
-				return Response.ok(m).build();
-			return Response.status(HttpServletResponse.SC_NOT_FOUND).entity(new ErrorMessage("Not found", "Could not find an object in the database with the ID:" + id)).build();
-		}
-		catch(Exception e)
-		{
-			return Response.serverError().build();
-		}
-	}
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get a full movie object", notes = "Gets the full movie object associated with the id")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+                                message = "The full movie object",
+                                response = Movie.class), @ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
+                                                                      message = "The given ID could not be found in " +
+                                                                              "the database",
+                                                                      response = ErrorMessage.class)})
+    public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id)
+    {
+        try
+        {
+            Movie m = se.mulander.cosmos.movies.impl.Movies.getMovie(id);
+            if (m != null)
+                return Response.ok(m).build();
+            return Response.status(HttpServletResponse.SC_NOT_FOUND)
+                           .entity(new ErrorMessage("Not found",
+                                                    "Could not find an object in the database with the ID:" + id))
+                           .build();
+        } catch (Exception e)
+        {
+            return Response.serverError().build();
+        }
+    }
 }
