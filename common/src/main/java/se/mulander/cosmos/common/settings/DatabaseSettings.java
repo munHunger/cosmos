@@ -21,9 +21,11 @@ public abstract class DatabaseSettings
 {
     public static String settingsURL = null;
 
-    public static Setting defaultSetting;
-
     public static Setting settingValue;
+
+    protected static DatabaseSettings singleton;
+
+    protected abstract Setting getDefaultSetting();
 
     public static String getSettingsValue(String path)
     {
@@ -72,7 +74,7 @@ public abstract class DatabaseSettings
                 if (movieSetting.isPresent())
                     settingValue = movieSetting.get();
                 else
-                    HttpRequest.postRequest(settingsURL + "/settings/register", defaultSetting, null);
+                    HttpRequest.postRequest(settingsURL + "/settings/register", singleton.getDefaultSetting(), null);
             }
         } catch (Exception e)
         {
