@@ -1,4 +1,4 @@
-package se.mulander.cosmos.movies.model;
+package se.mulander.cosmos.common.model.movies.tmdb;
 
 import se.mulander.cosmos.common.model.movies.Cast;
 

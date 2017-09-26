@@ -2,12 +2,14 @@ package se.mulander.cosmos.folderscraper.impl;
 
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.Database;
+import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.folderscraper.model.FileObject;
-import se.mulander.cosmos.folderscraper.model.OMDBResponse;
 import se.mulander.cosmos.folderscraper.util.Settings;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -267,7 +269,9 @@ public class Scraper
      */
     public FileObject searchMetaData(FileObject o) throws Exception
     {
-        String url = "http://www.omdbapi.com/?t=";
+        String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
+        String apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+        StringBuilder urlBuilder = new StringBuilder(theMovieDbURL).append("/3/search/multi");
         String name = o.filePath.substring(Math.max(0,
                                                     Math.max(o.filePath.lastIndexOf("\\"),
                                                              o.filePath.lastIndexOf("/"))), o.filePath.length());
@@ -281,13 +285,18 @@ public class Scraper
                 {
                     if (!nameComponents[n + j].isEmpty()) builder.append(nameComponents[n + j]).append(".");
                 }
-                String search = url + builder.toString();
-                OMDBResponse res = (OMDBResponse) HttpRequest.getRequest(search, OMDBResponse.class).data;
-                if (res.Response.toUpperCase().equals("TRUE"))
+                urlBuilder.append("?api_key=").append(apiKey);
+                urlBuilder.append("&include_adult=false");
+                urlBuilder.append("&query=")
+                          .append(URLEncoder.encode(builder.toString(), StandardCharsets.UTF_8.toString()));
+                TMDBResponse res = (TMDBResponse) HttpRequest.getRequest(urlBuilder.toString(),
+                                                                         TMDBResponse.class).data;
+                if (res.results.length > 0)
                 {
-                    o.isTV = res.Type.toUpperCase().equals("SERIES");
-                    o.isMovie = res.Type.toUpperCase().equals("MOVIE");
-                    o.title = res.Title;
+                    TMDBResponse.Result firstResult = res.results[0];
+                    o.isTV = firstResult.media_type.toUpperCase().equals("TV");
+                    o.isMovie = firstResult.media_type.toUpperCase().equals("MOVIE");
+                    o.title = firstResult.title;
                     return o;
                 }
             }
