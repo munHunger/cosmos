@@ -122,6 +122,7 @@ public class ScraperTest
                     it("returns an empty list", () -> expect(underTest.getFolderStatus().isEmpty()).toBeTrue());
                 });
                 //endregion
+                //region Has a completed file or folder
                 describe("Has a completed file or folder", () -> {
                     Database dbMock = mock(Database.class);
                     Scraper spied = PowerMockito.spy(underTest);
@@ -160,6 +161,7 @@ public class ScraperTest
                     });
                     //endregion
                 });
+                //endregion
             });
             //endregion
             //region Fetching metadata
