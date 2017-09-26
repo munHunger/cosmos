@@ -4,7 +4,7 @@ import io.swagger.annotations.*;
 import org.springframework.stereotype.Component;
 import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
-import se.mulander.cosmos.common.model.Setting;
+import se.mulander.cosmos.common.model.settings.Setting;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
