@@ -8,14 +8,21 @@ import se.mulander.cosmos.common.settings.DatabaseSettings;
  */
 public class Settings extends DatabaseSettings
 {
-    public Setting getDefaultSetting()
-    {
-        return null;
-    }
-
     public Settings()
     {
         DatabaseSettings.singleton = this;
         DatabaseSettings.init();
+    }
+
+    public Setting getDefaultSetting()
+    {
+        return new Setting("scraper",
+                           new Setting("update_delay", "\\d+", "10"),
+                           new Setting("folders",
+                                       new Setting("downloads",
+                                                   ".*",
+                                                   "\\\\192.168.1.181\\munhunger\\Glory\\transmission"),
+                                       new Setting("movies", ".*", "\\\\192.168.1.181\\munhunger\\Glory\\Movies"),
+                                       new Setting("tv", ".*", "\\\\192.168.1.181\\munhunger\\Holy\\TV-Series")));
     }
 }
