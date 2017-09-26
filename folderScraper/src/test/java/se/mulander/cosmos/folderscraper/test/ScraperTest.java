@@ -36,20 +36,24 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest({Scraper.class, HttpRequest.class})
 public class ScraperTest
 {
-
     {
         describe("Scraper", () -> {
             Scraper underTest = new Scraper();
 
+            //region Moving an object
             describe("Moving an object", () -> {
                 FileObject object = new FileObject();
+                //region Object is not completed
                 describe("Object is not completed", () -> {
                     beforeEach(() -> object.isComplete = false);
                     it("throws IllegalArgumentException",
                        () -> new ExceptionMatcher(() -> underTest.moveObject(object)).toThrow(IllegalArgumentException.class));
                 });
+                //endregion
+                //region Object is completed
                 describe("Object is completed", () -> {
                     beforeEach(() -> object.isComplete = true);
+                    //region Object is not a movie or a tv-show
                     describe("Object is not a movie or a tv-show", () -> {
                         beforeEach(() -> {
                             object.isMovie = false;
@@ -59,6 +63,8 @@ public class ScraperTest
                            () -> new ExceptionMatcher(() -> underTest.moveObject(object)).toThrow(
                                    IllegalArgumentException.class));
                     });
+                    //endregion
+                    //region Object is both a movie and a tv-show
                     describe("Object is both a movie and a tv-show", () -> {
                         beforeEach(() -> {
                             object.isTV = true;
@@ -69,6 +75,8 @@ public class ScraperTest
                            () -> new ExceptionMatcher(() -> underTest.moveObject(object)).toThrow(
                                    IllegalArgumentException.class));
                     });
+                    //endregion
+                    //region Object is a tv-show
                     describe("Object is a TV-show", () -> {
                         beforeEach(() -> {
                             object.isTV = true;
@@ -77,6 +85,8 @@ public class ScraperTest
                         });
                         it("Calls Files.move", () -> verifyStatic(times(1)));
                     });
+                    //endregion
+                    //region Object is a movie
                     describe("Object is a Movie", () -> {
                         beforeEach(() -> {
                             object.isMovie = true;
@@ -84,15 +94,22 @@ public class ScraperTest
                         });
                         it("Calls Files.move", () -> verifyStatic(times(1)));
                     });
+                    //endregion
                 });
+                //endregion
             });
+            //endregion
+            //region Checking folderstatus
             describe("Checking folderstatus", () -> {
                 File fileMock = mock(File.class);
                 beforeEach(() -> PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(fileMock));
+                //region Has no files or folders in watch path
                 describe("Has no files or folders in watch path", () -> {
                     beforeEach(() -> when(fileMock.listFiles()).thenReturn(new File[0]));
                     it("returns an empty list", () -> expect(underTest.getFolderStatus().isEmpty()).toBeTrue());
                 });
+                //endregion
+                //region Has no completed files or folders in watch path
                 describe("Has no completed files or folders in watch path", () -> {
                     beforeEach(() -> {
                         File partMock = mock(File.class);
@@ -104,6 +121,7 @@ public class ScraperTest
                     });
                     it("returns an empty list", () -> expect(underTest.getFolderStatus().isEmpty()).toBeTrue());
                 });
+                //endregion
                 describe("Has a completed file or folder", () -> {
                     Database dbMock = mock(Database.class);
                     Scraper spied = PowerMockito.spy(underTest);
@@ -114,6 +132,7 @@ public class ScraperTest
                         when(dbMock.saveObject(any())).thenReturn(true);
                         doReturn(null).when(spied).searchMetaData(any());
                     });
+                    //region Object is not in database
                     describe("Object is not in database", () -> {
                         beforeEach(() -> {
                             when(dbMock.getObject(any(Class.class), any(String.class))).thenReturn(new ArrayList<>());
@@ -126,6 +145,8 @@ public class ScraperTest
                            () -> verify(dbMock, times(2)).insertObject(any()));
                         after(() -> Mockito.reset(dbMock));
                     });
+                    //endregion
+                    //region Object is already in the database
                     describe("Object is already in the database", () -> {
                         beforeEach(() -> {
                             List<Object> returnList = new ArrayList<>();
@@ -137,11 +158,15 @@ public class ScraperTest
                            () -> verify(dbMock, times(2)).saveObject(any()));
                         after(() -> Mockito.reset(dbMock));
                     });
+                    //endregion
                 });
             });
+            //endregion
+            //region Fetching metadata
             describe("Fetching metadata", () -> {
                 FileObject toSearchFor = new FileObject("random.path.exe");
                 beforeEach(() -> PowerMockito.whenNew(FileObject.class).withAnyArguments().thenReturn(toSearchFor));
+                //region Object cannot be found on omdbapi
                 describe("Object cannot be found on omdbapi", () -> {
                     beforeEach(() -> {
                         OMDBResponse response = new OMDBResponse();
@@ -154,6 +179,8 @@ public class ScraperTest
                     it("Doesn't change the object",
                        () -> expect(underTest.searchMetaData(toSearchFor)).toEqual(toSearchFor));
                 });
+                //endregion
+                //region Object can be found on omdbapi
                 describe("Object can be found on omdbapi", () -> {
                     OMDBResponse response = new OMDBResponse();
                     beforeEach(() -> {
@@ -163,6 +190,7 @@ public class ScraperTest
                                 response,
                                 200));
                     });
+                    //region Object is a tv/show
                     describe("Object is a tv-show", () -> {
                         beforeEach(() -> response.Type = "series");
                         it("Sets the tv-flag to true",
@@ -170,41 +198,62 @@ public class ScraperTest
                         it("Sets the movie-flag to false",
                            () -> expect(underTest.searchMetaData(toSearchFor).isMovie).toBeFalse());
                     });
+                    //endregion
                 });
+                //endregion
             });
+            //endregion
+            //region Checking if file is downloaded
             describe("Checking if file is downloaded", () -> {
                 File fileMock = mock(File.class);
                 beforeEach(() -> PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(fileMock));
+                //region Download is a single file
                 describe("Download is a single file", () -> {
                     beforeEach(() -> when(fileMock.isDirectory()).thenReturn(false));
+                    //region Download is complete
                     describe("Download is complete", () -> {
                         beforeEach(() -> when(fileMock.exists()).thenReturn(false));
                         it("Returns true", () -> expect(underTest.isDone(new FileObject(""))).toBeTrue());
                     });
+                    //endregion
+                    //region Download is incomplete
                     describe("Download is incomplete", () -> {
                         beforeEach(() -> when(fileMock.exists()).thenReturn(true));
                         it("Returns true", () -> expect(underTest.isDone(new FileObject(""))).toBeFalse());
                     });
+                    //endregion
                 });
+                //endregion
+                //region Download is a folder
                 describe("Download is a folder", () -> {
                     beforeEach(() -> when(fileMock.isDirectory()).thenReturn(true));
+                    //region Folder is empty
                     describe("Folder is empty", () -> {
                         beforeEach(() -> when(fileMock.listFiles()).thenReturn(new File[0]));
                         it("Returns true", () -> expect(underTest.isDone(new FileObject(""))).toBeTrue());
                     });
+                    //endregion
+                    //region Folder has content
                     describe("Folder has content", () -> {
                         beforeEach(() -> when(fileMock.listFiles()).thenReturn(new File[]{fileMock}));
+                        //region Download is complete
                         describe("Download is complete", () -> {
                             beforeEach(() -> when(fileMock.getPath()).thenReturn("a.p"));
                             it("Returns true", () -> expect(underTest.isDone(new FileObject(""))).toBeTrue());
                         });
+                        //endregion
+                        //region Download is incomplete
                         describe("Download is incomplete", () -> {
                             beforeEach(() -> when(fileMock.getPath()).thenReturn("a.part"));
                             it("Returns true", () -> expect(underTest.isDone(new FileObject(""))).toBeFalse());
                         });
+                        //endregion
                     });
+                    //endregion
                 });
+                //endregion
             });
+            //endregion
         });
     }
 }
