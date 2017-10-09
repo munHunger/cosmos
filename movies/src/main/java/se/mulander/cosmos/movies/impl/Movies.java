@@ -2,6 +2,8 @@ package se.mulander.cosmos.movies.impl;
 
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.jpa.Database;
+import se.mulander.cosmos.common.model.ErrorMessage;
+import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.ExtendedMovie;
 import se.mulander.cosmos.common.model.movies.GenreList;
 import se.mulander.cosmos.common.model.movies.Movie;
@@ -10,6 +12,10 @@ import se.mulander.cosmos.common.model.movies.tmdb.TMDBCastResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.movies.util.Settings;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,96 +25,167 @@ import java.util.stream.Collectors;
 /**
  * Created by marcu on 2017-03-17.
  */
-public class Movies
-{
+public class Movies {
 
-    public static Object getRecomendations() throws Exception
-    {
+    public static Response getRecomendations() throws Exception {
         String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
         String apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
         GenreList genreList = getGenres();
-        StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(theMovieDbURL).append("/3/discover/movie");
-        urlBuilder.append("?api_key=").append(apiKey);
-        urlBuilder.append("&sort_by=popularity.desc");
-        urlBuilder.append("&include_adult=false");
-        urlBuilder.append("&include_video=false");
-        urlBuilder.append("&page=1");
-        urlBuilder.append("&primary_release_year=2017");
-        TMDBResponse response = (TMDBResponse) HttpRequest.getRequest(urlBuilder.toString(), TMDBResponse.class).data;
 
-        List<Movie> result = Arrays.asList(response.results)
-                                   .stream()
-                                   .map(tmdb -> {
-                                       String year = tmdb.release_date.trim().substring(0, 4);
-                                       Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.poster_path,
-                                                           tmdb.title,
-                                                           year.matches("\\d+") ? Integer.parseInt(year) : -1).addRating(
-                                               new Rating("The Movie Database",
-                                                          tmdb.vote_average,
-                                                          10,
-                                                          tmdb.vote_count));
-                                       tmdb.genre_ids.stream()
-                                                     .map(id -> genreList.genres.stream()
-                                                                                .filter(genre -> genre.id == id)
-                                                                                .findFirst()
-                                                                                .get().name)
-                                                     .forEach(name -> m.addGenre(name));
-                                       ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
-                                                                                 "https://image.tmdb" + ".org/t/p/w1920" + tmdb.backdrop_path);
-                                       m.setExtended(exMovie);
-                                       StringBuilder detailsURL = new StringBuilder();
-                                       detailsURL.append(theMovieDbURL).append("/3/movie/");
-                                       detailsURL.append(tmdb.id);
-                                       detailsURL.append("/credits?api_key=").append(apiKey);
-                                       try
-                                       {
-                                           TMDBCastResponse castResponse = (TMDBCastResponse) HttpRequest.getRequest(
-                                                   detailsURL.toString(),
-                                                   TMDBCastResponse.class).data;
-                                           castResponse.cast.stream().forEach(cast -> exMovie.addCastMember(cast));
-                                           castResponse.crew.stream().forEach(cast -> exMovie.addCastMember(cast));
-                                           exMovie.cast.stream().forEach(c -> {
-                                               c.generateID();
-                                               if (c.profileURL != null && !c.profileURL.toUpperCase().equals("NULL"))
-                                                   c.profileURL = "https://image" + ".tmdb.org/t/p/w185" + c.profileURL;
-                                           });
-                                       } catch (Exception e)
-                                       {
-                                           e.printStackTrace();
-                                       }
-                                       return m;
-                                   })
-                                   .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(m1.rating.get(0).rating))
-                                   .collect(Collectors.toList());
-        result.stream().forEach(m -> {
-            Map<String, Object> param = new HashMap<>();
-            param.put("title", m.title);
-            param.put("year", m.year);
-            try
-            {
-                List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year", param);
-                if (dbMovies.isEmpty()) Database.saveObject(m);
-                else
-                {
-                    Movie oldMovie = (Movie) dbMovies.get(0);
-                    m.setID(oldMovie.internalID);
-                    Database.updateObject(m);
-                }
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        });
-        result = result.stream().map(m -> {
-            m.extendedMovie = null;
-            return m;
-        }).collect(Collectors.toList());
-        return result;
+        final Client client = ClientBuilder.newClient();
+        try {
+            Response res = client.target(theMovieDbURL)
+                                 .path("/3/discover/movie")
+                                 .queryParam("api_key", apiKey)
+                                 .queryParam("sort_by", "popularity.desc")
+                                 .queryParam("include_adult", false)
+                                 .queryParam("include_video", false)
+                                 .queryParam("page", 1)
+                                 .queryParam("primary_release_year", 2017)
+                                 .request()
+                                 .buildGet()
+                                 .invoke();
+            if (res.getStatus() != HttpServletResponse.SC_OK)
+                return Response.serverError()
+                               .entity(new ErrorMessage("Could not get recommendations",
+                                                        "Response from movie database was not 200 OK. code was:" + res
+                                                                .getStatus()))
+                               .build();
+            TMDBResponse tmdbResponse = res.readEntity(TMDBResponse.class);
+
+            List<Movie> result = Arrays.stream(tmdbResponse.results)
+                                       .map(tmdb -> tmdbToInternal(tmdb, client, theMovieDbURL, apiKey, genreList))
+                                       .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
+                                               m1.rating.get(0).rating))
+                                       .collect(Collectors.toList());
+            result.stream().forEach(m ->
+                                    {
+                                        Map<String, Object> param = new HashMap<>();
+                                        param.put("title", m.title);
+                                        param.put("year", m.year);
+                                        try {
+                                            List dbMovies = Database.getObjects(
+                                                    "from Movie WHERE title = :title AND year = :year", param);
+                                            if (dbMovies.isEmpty()) Database.saveObject(m);
+                                            else {
+                                                Movie oldMovie = (Movie) dbMovies.get(0);
+                                                m.setID(oldMovie.internalID);
+                                                Database.updateObject(m);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+            result = result.stream().map(m ->
+                                         {
+                                             m.extendedMovie = null;
+                                             return m;
+                                         }).collect(Collectors.toList());
+            //return result;
+        } finally {
+            client.close();
+        }
+        return null;
     }
 
-    public static Movie getMovie(String id) throws Exception
+    /**
+     * Maps a movie database object to an internal representation of a movie.
+     * This will fix poster paths, add extended movie object and cast for everyone who worked on the movie
+     *
+     * @param tmdb          the raw tmdb result movie to map
+     * @param client        A client to use when adding more data. Note that this client will not be closed.
+     * @param theMovieDbURL the base url to the movie database api
+     * @param apiKey        the API key to the movie database.
+     * @param genreList     A list of genres used to map the tmdb genre int to a full genre name.
+     * @return a fully expanded and mapped object
+     */
+    private static Movie tmdbToInternal(TMDBResponse.Result tmdb, Client client, String theMovieDbURL, String apiKey,
+                                        GenreList genreList) {
+
+        String year = tmdb.release_date.trim().substring(0, 4);
+        Movie m = new Movie(
+                "https://image.tmdb.org/t/p/w185/" + tmdb.poster_path,
+                tmdb.title,
+                year.matches("\\d+") ? Integer.parseInt(
+                        year) : -1).addRating(
+                new Rating("The Movie Database",
+                           tmdb.vote_average,
+                           10,
+                           tmdb.vote_count));
+        tmdb.genre_ids.stream()
+                      .map(id -> genreList.genres.stream()
+                                                 .filter(genre -> genre.id ==
+                                                         id)
+
+                                                 .findFirst()
+                                                 .get().name)
+                      .forEach(name -> m.addGenre(name));
+        ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
+                                                  "https://image.tmdb" + "" +
+                                                          ".org/t/p/w1920" +
+                                                          tmdb
+                                                                  .backdrop_path);
+        m.setExtended(exMovie);
+
+        addCast(client, tmdb, exMovie,
+                theMovieDbURL, apiKey);
+
+        return m;
+    }
+
+    /**
+     * Adds a cast to a given movie object.
+     *
+     * @param client        The client to create the movie API request with
+     * @param tmdb          the tmdb response for the movie object.
+     * @param exMovie       the extended movie object to further expand with cast
+     * @param theMovieDbURL url to the movie database
+     * @param apiKey        the api key for the movie database
+     * @throws APIException if tmdb couldn't respond with a 200 OK
+     */
+    private static void addCast(Client client, TMDBResponse.Result tmdb,
+                                ExtendedMovie exMovie,
+                                String theMovieDbURL,
+                                String apiKey) throws
+                                               APIException
+
     {
+        Response castResponse = client.target(theMovieDbURL)
+                                      .path("/3/movie")
+                                      .path("/" + tmdb.id)
+                                      .path("/credits")
+                                      .queryParam("api_key", apiKey)
+                                      .request()
+                                      .buildGet()
+                                      .invoke();
+
+        if (castResponse.getStatus() != HttpServletResponse.SC_OK)
+            throw new APIException(
+                    "Could not get cast for movie " + tmdb.title,
+                    "Response from movie database was not 200 " +
+                            "OK. code was:" + castResponse
+                            .getStatus());
+
+        TMDBCastResponse
+                castList = castResponse.readEntity(TMDBCastResponse.class);
+        castList.cast
+                .forEach(exMovie::addCastMember);
+        castList.crew
+                .forEach(exMovie::addCastMember);
+        exMovie.cast.forEach(c ->
+                             {
+                                 c.generateID();
+                                 if (c.profileURL != null && !c
+                                         .profileURL
+                                         .toUpperCase()
+                                         .equals("NULL"))
+                                     c.profileURL = "https://image"
+                                             + ".tmdb.org/t/p/w185"
+                                             + c.profileURL;
+                             });
+    }
+
+    public static Movie getMovie(String id) throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("id", id);
         List result = Database.getObjects("from Movie WHERE internalID = :id", param);
@@ -116,9 +193,9 @@ public class Movies
         return (Movie) result.get(0);
     }
 
-    private static GenreList getGenres() throws Exception
-    {
-        return (GenreList) HttpRequest.getRequest(Settings.getSettingsValue("movies.movie_db_api_uri") + "/3/genre/movie/list?api_key=" + Settings
-                .getSettingsValue("movies.movie_db_api_key"), GenreList.class).data;
+    private static GenreList getGenres() throws Exception {
+        return (GenreList) HttpRequest.getRequest(
+                Settings.getSettingsValue("movies.movie_db_api_uri") + "/3/genre/movie/list?api_key=" + Settings
+                        .getSettingsValue("movies.movie_db_api_key"), GenreList.class).data;
     }
 }

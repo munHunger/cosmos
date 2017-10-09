@@ -1,7 +1,6 @@
 package se.mulander.cosmos.movies.business;
 
 import io.swagger.annotations.*;
-import org.springframework.stereotype.Component;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.movies.Movie;
 
@@ -17,10 +16,8 @@ import javax.ws.rs.core.Response;
  * Created by marcu on 2017-04-02.
  */
 @Path("/movies")
-@Component
 @Api(value = "Movies", description = "Endpoints for finding new movies and managing wishlists")
-public class Movies
-{
+public class Movies {
     @GET
     @Path("/recomendations")
     @Produces(MediaType.APPLICATION_JSON)
@@ -29,15 +26,9 @@ public class Movies
                                 message = "A list of movie recomendations",
                                 responseContainer = "Array",
                                 response = Movie.class)})
-    public Response getRecomendations()
-    {
-        try
-        {
-            return Response.ok(se.mulander.cosmos.movies.impl.Movies.getRecomendations()).build();
-        } catch (Exception e)
-        {
-            return Response.serverError().build();
-        }
+    public Response getRecomendations() {
+        //return se.mulander.cosmos.movies.impl.Movies.getRecomendations();
+        return null;
     }
 
     @GET
@@ -50,10 +41,8 @@ public class Movies
                                                                       message = "The given ID could not be found in " +
                                                                               "the database",
                                                                       response = ErrorMessage.class)})
-    public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id)
-    {
-        try
-        {
+    public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id) {
+        try {
             Movie m = se.mulander.cosmos.movies.impl.Movies.getMovie(id);
             if (m != null)
                 return Response.ok(m).build();
@@ -61,8 +50,7 @@ public class Movies
                            .entity(new ErrorMessage("Not found",
                                                     "Could not find an object in the database with the ID:" + id))
                            .build();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
