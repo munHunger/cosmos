@@ -2,7 +2,6 @@ package se.mulander.cosmos.movies.impl;
 
 import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.jpa.Database;
-import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.ExtendedMovie;
 import se.mulander.cosmos.common.model.movies.GenreList;
@@ -34,39 +33,52 @@ public class Movies {
 
         final Client client = ClientBuilder.newClient();
         try {
-            Response res = client.target(theMovieDbURL)
-                                 .path("/3/discover/movie")
-                                 .queryParam("api_key", apiKey)
-                                 .queryParam("sort_by", "popularity.desc")
-                                 .queryParam("include_adult", false)
-                                 .queryParam("include_video", false)
-                                 .queryParam("page", 1)
-                                 .queryParam("primary_release_year", 2017)
-                                 .request()
-                                 .buildGet()
-                                 .invoke();
-            if (res.getStatus() != HttpServletResponse.SC_OK)
-                return Response.serverError()
-                               .entity(new ErrorMessage("Could not get recommendations",
-                                                        "Response from movie database was not 200 OK. code was:" + res
-                                                                .getStatus()))
-                               .build();
-            TMDBResponse tmdbResponse = res.readEntity(TMDBResponse.class);
+            TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL, apiKey);
 
-            try {
-                List<Movie> result = Arrays.stream(tmdbResponse.results)
-                                           .map(tmdb -> tmdbToInternal(tmdb, client, theMovieDbURL, apiKey, genreList))
-                                           .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
-                                                   m1.rating.get(0).rating))
-                                           .collect(Collectors.toList());
-                saveListInDatabase(result);
+            List<Movie> result = Arrays.stream(tmdbResponse.results)
+                                       .map(tmdb -> tmdbToInternal(tmdb, client, theMovieDbURL, apiKey, genreList))
+                                       .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
+                                               m1.rating.get(0).rating))
+                                       .collect(Collectors.toList());
+            saveListInDatabase(result);
 
-                return Response.ok(clearExtended(result)).build();
-            } catch (APIException e) {
-                return Response.serverError().entity(e.toErrorMessage()).build();
-            }
+            return Response.ok(clearExtended(result)).build();
+        } catch (APIException e) {
+            return Response.serverError().entity(e.toErrorMessage()).build();
         } finally {
             client.close();
+        }
+    }
+
+    /**
+     * Gets the most popular movies with a primary release year of today.
+     *
+     * @param client        The client to make HTTP requests with
+     * @param theMovieDbURL The movie database URL to query
+     * @param apiKey        The key to authenticate with against the movieDB
+     * @return the response object of the movie database
+     * @throws APIException if the movie db did not reply with a 200 OK.
+     */
+    private static TMDBResponse getTopMovies(Client client, String theMovieDbURL, String apiKey) throws APIException {
+        Response res = client.target(theMovieDbURL)
+                             .path("/3/discover/movie")
+                             .queryParam("api_key", apiKey)
+                             .queryParam("sort_by", "popularity.desc")
+                             .queryParam("include_adult", false)
+                             .queryParam("include_video", false)
+                             .queryParam("page", 1)
+                             .queryParam("primary_release_year", 2017)
+                             .request()
+                             .buildGet()
+                             .invoke();
+        try {
+            if (res.getStatus() != HttpServletResponse.SC_OK)
+                throw new APIException("Could not get recommendations",
+                                       "Response from movie database was not 200 OK. code was:" + res
+                                               .getStatus());
+            return res.readEntity(TMDBResponse.class);
+        } finally {
+            res.close();
         }
     }
 
