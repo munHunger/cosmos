@@ -15,4 +15,8 @@ public class MapCacheEntry<T> {
     public boolean isOlderThan(long ttl) {
         return ttl < System.currentTimeMillis() - timeCreated;
     }
+
+    public long getAge() {
+        return System.currentTimeMillis() - timeCreated;
+    }
 }

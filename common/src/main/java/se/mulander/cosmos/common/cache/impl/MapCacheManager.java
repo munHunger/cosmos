@@ -5,7 +5,7 @@ import se.mulander.cosmos.common.cache.CacheManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 /**
  * @author Marcus Münger
@@ -14,7 +14,7 @@ public class MapCacheManager<T> implements CacheManager {
     private Map<String, MapCacheEntry<T>> cache = new HashMap<>();
 
     protected long ttl;
-    protected Predicate<T> cacheUpdater;
+    protected Function<Long, Boolean> returnOld;
 
     @Override
     public void put(String key, Object value) {
@@ -27,13 +27,13 @@ public class MapCacheManager<T> implements CacheManager {
             return Optional.empty();
         MapCacheEntry entry = cache.get(key);
         if (ttl > 0 && entry.isOlderThan(ttl)) {
-            if (cacheUpdater == null) {
+            if (returnOld == null) {
                 delete(key);
                 return Optional.empty();
             }
-            //TODO: How to signal update
+            return returnOld.apply(entry.getAge()) ? Optional.ofNullable((T) entry.data) : Optional.empty();
         }
-        return Optional.ofNullable(cache.get(key).data);
+        return Optional.ofNullable((T) entry.data);
     }
 
     @Override
@@ -41,7 +41,8 @@ public class MapCacheManager<T> implements CacheManager {
         cache.remove(key);
     }
 
-    protected MapCacheManager(long ttl) {
+    protected MapCacheManager(long ttl, Function<Long, Boolean> returnOld) {
         this.ttl = ttl;
+        this.returnOld = returnOld;
     }
 }
