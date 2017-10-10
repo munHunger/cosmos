@@ -47,7 +47,7 @@ public class Cast {
     @Column(name = "job")
     @ApiModelProperty(
             value = "The sub genre of what the member has been doing. For example if department is Sound, this could " +
-					"be Orchestrator")
+                    "be Orchestrator")
     public String job;
 
     @Column(name = "movie_character")
