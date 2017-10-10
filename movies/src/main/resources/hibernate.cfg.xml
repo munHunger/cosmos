@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory name="localConnection">
         <property name="hibernate.dialect">
-            org.hibernate.dialect.MySQLDialect
+            org.hibernate.dialect.MySQL57Dialect
         </property>
         <property name="hibernate.connection.driver_class">
             com.mysql.jdbc.Driver
@@ -20,7 +20,10 @@
             root
         </property>
         <property name="hibernate.connection.password">
-            warthog
+            password
+        </property>
+        <property name="hibernate.hbm2ddl.auto">
+            create
         </property>
         <property name="show_sql">
             true
