@@ -1,13 +1,13 @@
-package se.mulander.cosmos.movies;
+package se.mulander.cosmos.folderscraper;
 
 import se.mulander.cosmos.common.ssl.SSLManager;
-import se.mulander.cosmos.movies.util.Settings;
+import se.mulander.cosmos.folderscraper.util.Settings;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
- * Created by Marcus Münger on 2017-05-19.
+ * Created by Marcus Münger on 2017-09-16.
  */
 public class Startup implements ServletContextListener
 {
@@ -17,7 +17,7 @@ public class Startup implements ServletContextListener
         try
         {
             SSLManager.init();
-            new Settings();
+            Settings.init();
         } catch (Exception e)
         {
             System.err.println("Could not initialize SSL");
