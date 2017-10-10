@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -75,7 +72,7 @@ public class Movies {
                              .queryParam("include_adult", false)
                              .queryParam("include_video", false)
                              .queryParam("page", 1)
-                             .queryParam("primary_release_year", 2017)
+                             .queryParam("primary_release_year", Calendar.getInstance().get(Calendar.YEAR))
                              .request()
                              .buildGet()
                              .invoke();
