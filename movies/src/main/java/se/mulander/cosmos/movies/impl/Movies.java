@@ -77,18 +77,29 @@ public class Movies {
                                                 e.printStackTrace();
                                             }
                                         });
-                result = result.stream().map(m ->
-                                             {
-                                                 m.extendedMovie = null;
-                                                 return m;
-                                             }).collect(Collectors.toList());
-                return Response.ok(result).build();
+
+                return Response.ok(clearExtended(result)).build();
             } catch (APIException e) {
                 return Response.serverError().entity(e.toErrorMessage()).build();
             }
         } finally {
             client.close();
         }
+    }
+
+    /**
+     * Sets the extended movie objects to null for all movies in the list.
+     * This is usefull for when you don't want to send too much data down to the user
+     *
+     * @param movies A list of movies to clear the extended movie object of
+     * @return The supplied list but with the extended movie objects set to null
+     */
+    private static List<Movie> clearExtended(List<Movie> movies) {
+        return movies.stream().map(m ->
+                                   {
+                                       m.extendedMovie = null;
+                                       return m;
+                                   }).collect(Collectors.toList());
     }
 
     /**
