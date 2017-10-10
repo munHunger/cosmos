@@ -31,7 +31,7 @@ public class Setting {
     @Column(name = "type", length = 7)
     public String type;
     @ApiModelProperty(value = "A regex to evaluate string settings. Note that this only applies to settings where " +
-			"type=string. Backend must accept any string that matches regex, although no guarantee of correctness")
+            "type=string. Backend must accept any string that matches regex, although no guarantee of correctness")
     @Column(name = "regex", length = 512)
     public String regex;
 
