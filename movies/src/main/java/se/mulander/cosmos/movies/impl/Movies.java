@@ -59,24 +59,7 @@ public class Movies {
                                            .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
                                                    m1.rating.get(0).rating))
                                            .collect(Collectors.toList());
-                result.stream().forEach(m ->
-                                        {
-                                            Map<String, Object> param = new HashMap<>();
-                                            param.put("title", m.title);
-                                            param.put("year", m.year);
-                                            try {
-                                                List dbMovies = Database.getObjects(
-                                                        "from Movie WHERE title = :title AND year = :year", param);
-                                                if (dbMovies.isEmpty()) Database.saveObject(m);
-                                                else {
-                                                    Movie oldMovie = (Movie) dbMovies.get(0);
-                                                    m.setID(oldMovie.internalID);
-                                                    Database.updateObject(m);
-                                                }
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        });
+                saveListInDatabase(result);
 
                 return Response.ok(clearExtended(result)).build();
             } catch (APIException e) {
@@ -85,6 +68,33 @@ public class Movies {
         } finally {
             client.close();
         }
+    }
+
+    /**
+     * Saves each movie in the database.
+     * If the movie is already in the list (noted by title and year) then it will update the existing
+     *
+     * @param movies a list of movies to save
+     */
+    private static void saveListInDatabase(List<Movie> movies) {
+        movies.forEach(m ->
+                       {
+                           Map<String, Object> param = new HashMap<>();
+                           param.put("title", m.title);
+                           param.put("year", m.year);
+                           try {
+                               List dbMovies = Database.getObjects(
+                                       "from Movie WHERE title = :title AND year = :year", param);
+                               if (dbMovies.isEmpty()) Database.saveObject(m);
+                               else {
+                                   Movie oldMovie = (Movie) dbMovies.get(0);
+                                   m.setID(oldMovie.internalID);
+                                   Database.updateObject(m);
+                               }
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+                       });
     }
 
     /**
