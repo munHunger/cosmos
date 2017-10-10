@@ -17,8 +17,7 @@ import java.util.function.Consumer;
 /**
  * Created by Marcus Münger on 2017-07-20.
  */
-public abstract class DatabaseSettings
-{
+public abstract class DatabaseSettings {
     public static String settingsURL = null;
 
     public static Setting settingValue;
@@ -27,18 +26,15 @@ public abstract class DatabaseSettings
 
     protected abstract Setting getDefaultSetting();
 
-    public static String getSettingsValue(String path)
-    {
+    public static String getSettingsValue(String path) {
         if (settingValue == null)
             return null;
         return getSettingsValue(path, settingValue);
     }
 
-    private static String getSettingsValue(String path, Setting setting)
-    {
-        String[] pathSplit = path.split(".");
-        if (pathSplit[0].equals(setting.name))
-        {
+    private static String getSettingsValue(String path, Setting setting) {
+        String[] pathSplit = path.split("\\.");
+        if (pathSplit[0].equals(setting.name)) {
             if (pathSplit.length == 1)
                 return setting.value;
             for (Setting child : setting.children)
@@ -50,8 +46,7 @@ public abstract class DatabaseSettings
 
     private static Consumer<String> settingsUpdater = (url) ->
     {
-        try
-        {
+        try {
 
             RequestConfig.Builder requestBuilder = RequestConfig.custom();
             HttpClientBuilder builder = HttpClientBuilder.create();
@@ -59,8 +54,7 @@ public abstract class DatabaseSettings
             HttpClient client = builder.build();
 
             org.apache.http.HttpResponse response = client.execute(new HttpGet(url));
-            if (response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK)
-            {
+            if (response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK) {
                 ObjectMapper mapper = new ObjectMapper();
                 List<Setting> settings = mapper.readValue(response.getEntity().getContent(), mapper.getTypeFactory()
                                                                                                    .constructCollectionType(
@@ -76,24 +70,20 @@ public abstract class DatabaseSettings
                 else
                     HttpRequest.postRequest(settingsURL + "/settings/register", singleton.getDefaultSetting(), null);
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     };
 
-    public static void init()
-    {
+    public static void init() {
         new Thread(() ->
                    {
-                       while (settingsURL == null)
-                       {
+                       while (settingsURL == null) {
                            settingsURL = Scanner.find(80, "/settings/api/discover");
                        }
                        settingsURL += "/settings/api";
                        settingsUpdater.accept(settingsURL + "/settings/structure");
-                       while (true)
-                       {
+                       while (true) {
                            settingsUpdater.accept(settingsURL + "/settings/structure/poll");
                        }
                    }).start();

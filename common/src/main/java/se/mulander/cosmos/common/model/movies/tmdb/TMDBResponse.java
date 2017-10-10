@@ -5,13 +5,13 @@ import java.util.List;
 /**
  * Created by marcu on 2017-04-02.
  */
-public class TMDBResponse
-{
+public class TMDBResponse {
     public int page;
+    public int total_results;
+    public int total_pages;
     public Result[] results;
 
-    public class Result
-    {
+    public class Result {
         public String poster_path;
         public boolean adult;
         public String overview;

@@ -50,6 +50,9 @@ public class Movies {
             return Response.ok(clearExtended(result)).build();
         } catch (APIException e) {
             return Response.serverError().entity(e.toErrorMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError().entity(new ErrorMessage("Nope", "Something went wrong")).build();
         } finally {
             client.close();
         }
