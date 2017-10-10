@@ -20,48 +20,47 @@ import java.util.UUID;
 @Entity
 @Table(name = "cast")
 @ApiModel(description = "A cast member that has been part of making the movie")
-public class Cast
-{
-	@Id
-	@Column(name = "id")
-	@JsonIgnore
-	public String id;
+public class Cast {
+    @Id
+    @Column(name = "id", length = 64)
+    @JsonIgnore
+    public String id;
 
-	public Cast()
-	{
-		generateID();
-	}
+    public Cast() {
+        generateID();
+    }
 
-	public void generateID()
-	{
-		this.id = UUID.randomUUID().toString();
-	}
+    public void generateID() {
+        this.id = UUID.randomUUID().toString();
+    }
 
-	@JsonIgnore
-	@Column(name = "movie_id")
-	public String movieID;
+    @JsonIgnore
+    @Column(name = "movie_id", length = 64)
+    public String movieID;
 
-	@Column(name = "department")
-	@ApiModelProperty(
-			value = "The work area that the member has participated in. This could for example be Sound, Directing or Visual Effects")
-	public String department;
+    @Column(name = "department")
+    @ApiModelProperty(
+            value = "The work area that the member has participated in. This could for example be Sound, Directing or" +
+                    " Visual Effects")
+    public String department;
 
-	@Column(name = "job")
-	@ApiModelProperty(
-			value = "The sub genre of what the member has been doing. For example if department is Sound, this could be Orchestrator")
-	public String job;
+    @Column(name = "job")
+    @ApiModelProperty(
+            value = "The sub genre of what the member has been doing. For example if department is Sound, this could " +
+					"be Orchestrator")
+    public String job;
 
-	@Column(name = "movie_character")
-	@ApiModelProperty(value = "If the member played a part in the movie, then this is the name of the played character")
-	public String character;
+    @Column(name = "movie_character")
+    @ApiModelProperty(value = "If the member played a part in the movie, then this is the name of the played character")
+    public String character;
 
-	@Column(name = "name")
-	@ApiModelProperty(value = "The name of the cast member")
-	public String name;
+    @Column(name = "name")
+    @ApiModelProperty(value = "The name of the cast member")
+    public String name;
 
-	@JsonProperty("profile_path")
-	@SerializedName("profile_path")
-	@Column(name = "profile_url")
-	@ApiModelProperty(value = "A url to an image with the members profile")
-	public String profileURL;
+    @JsonProperty("profile_path")
+    @SerializedName("profile_path")
+    @Column(name = "profile_url")
+    @ApiModelProperty(value = "A url to an image with the members profile")
+    public String profileURL;
 }
