@@ -1,6 +1,7 @@
 package se.mulander.cosmos.movies.impl;
 
 import se.mulander.cosmos.common.database.jpa.Database;
+import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.ExtendedMovie;
 import se.mulander.cosmos.common.model.movies.GenreList;
@@ -232,12 +233,29 @@ public class Movies {
         }
     }
 
-    public static Movie getMovie(String id) throws Exception {
-        Map<String, Object> param = new HashMap<>();
-        param.put("id", id);
-        List result = Database.getObjects("from Movie WHERE internalID = :id", param);
-        if (result.isEmpty()) return null;
-        return (Movie) result.get(0);
+    /**
+     * Fetches a movie object from the local database
+     *
+     * @param id the ID to look for
+     * @return a response object with status 200 and the movie if it was found.
+     */
+    public static Response getMovie(String id) {
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("id", id);
+            List result = Database.getObjects("from Movie WHERE internalID = :id", param);
+            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+                                                 .entity(new ErrorMessage("Could not fetch movie",
+                                                                          "The movie with ID " + id + " was not found" +
+                                                                                  " in the database"))
+                                                 .build();
+            return Response.ok(result.get(0)).build();
+        } catch (Exception e) {
+            return Response.serverError()
+                           .entity(new ErrorMessage("Could not fetch movie",
+                                                    "An exception was thrown from the database"))
+                           .build();
+        }
     }
 
     /**

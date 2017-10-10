@@ -41,16 +41,6 @@ public class Movies {
                                                                               "the database",
                                                                       response = ErrorMessage.class)})
     public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id) {
-        try {
-            Movie m = se.mulander.cosmos.movies.impl.Movies.getMovie(id);
-            if (m != null)
-                return Response.ok(m).build();
-            return Response.status(HttpServletResponse.SC_NOT_FOUND)
-                           .entity(new ErrorMessage("Not found",
-                                                    "Could not find an object in the database with the ID:" + id))
-                           .build();
-        } catch (Exception e) {
-            return Response.serverError().build();
-        }
+        return se.mulander.cosmos.movies.impl.Movies.getMovie(id);
     }
 }
