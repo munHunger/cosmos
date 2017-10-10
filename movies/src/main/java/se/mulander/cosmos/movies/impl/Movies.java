@@ -25,7 +25,15 @@ import java.util.stream.Collectors;
  */
 public class Movies {
 
-    public static Response getRecomendations() throws Exception {
+    /**
+     * Gets a list of recomended movies.
+     * The recomended movies are the most popular for the current year.
+     * This function will query the movie database and save the response in cosmos database
+     * Note that it will fetch and save extended objects, but this function only returns simple movie objects
+     *
+     * @return A response object with either a 200 OK and a list of popular movie objects or a 500 with an error message
+     */
+    public static Response getRecomendations() {
         String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
         String apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
 
