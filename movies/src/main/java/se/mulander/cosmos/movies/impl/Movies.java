@@ -1,6 +1,5 @@
 package se.mulander.cosmos.movies.impl;
 
-import se.mulander.cosmos.common.business.HttpRequest;
 import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.ExtendedMovie;
@@ -29,10 +28,10 @@ public class Movies {
     public static Response getRecomendations() throws Exception {
         String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
         String apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
-        GenreList genreList = getGenres();
 
         final Client client = ClientBuilder.newClient();
         try {
+            GenreList genreList = getGenres(client, theMovieDbURL, apiKey);
             TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL, apiKey);
 
             List<Movie> result = Arrays.stream(tmdbResponse.results)
@@ -233,9 +232,29 @@ public class Movies {
         return (Movie) result.get(0);
     }
 
-    private static GenreList getGenres() throws Exception {
-        return (GenreList) HttpRequest.getRequest(
-                Settings.getSettingsValue("movies.movie_db_api_uri") + "/3/genre/movie/list?api_key=" + Settings
-                        .getSettingsValue("movies.movie_db_api_key"), GenreList.class).data;
+    /**
+     * Fetches a list of genres from the movie database.
+     *
+     * @param client        A client to make requests with
+     * @param theMovieDbURL The base url to the movie database
+     * @param apiKey        The api key to authenticate with against the movie database
+     * @return A GenreList object
+     * @throws APIException If the movie database responded with something other than 200 OK
+     */
+    private static GenreList getGenres(Client client, String theMovieDbURL, String apiKey) throws APIException {
+        Response res = client.target(theMovieDbURL)
+                             .path("/3/genre/movie/list")
+                             .queryParam("api_key", apiKey)
+                             .request()
+                             .buildGet()
+                             .invoke();
+        try {
+            if (res.getStatus() != HttpServletResponse.SC_OK)
+                throw new APIException("Could not get genre list",
+                                       "Response from movie database was not 200 OK. code was:" + res.getStatus());
+            return res.readEntity(GenreList.class);
+        } finally {
+            res.close();
+        }
     }
 }
