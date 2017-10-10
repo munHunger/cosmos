@@ -31,7 +31,11 @@ public class MapCacheManager<T> implements CacheManager {
                 delete(key);
                 return Optional.empty();
             }
-            return returnOld.apply(entry.getAge()) ? Optional.ofNullable((T) entry.data) : Optional.empty();
+            if (returnOld.apply(entry.getAge())) {
+                return Optional.ofNullable((T) entry.data);
+            }
+            delete(key);
+            return Optional.empty();
         }
         return Optional.ofNullable((T) entry.data);
     }
