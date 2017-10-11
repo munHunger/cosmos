@@ -8,13 +8,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLHandshakeException;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.DataInputStream;
@@ -28,7 +29,6 @@ import java.util.Enumeration;
  * Created by Marcus Münger on 2017-07-20.
  */
 @Path("/discover")
-@Component
 @Api(value = "Discovery", description = "Endpoints for finding other services")
 public class Scanner {
     public static String getLocalAddress() throws SocketException {
@@ -58,12 +58,14 @@ public class Scanner {
      * @return An address to the service
      */
     public static String find(int port, String path) {
+        Client client = null;
         try {
             String localIP = getLocalAddress();
             if (localIP == null)
                 return "127.0.0.1";
             String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
             String sslGate = "https://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
+            client = ClientBuilder.newClient();
             RequestConfig.Builder requestBuilder = RequestConfig.custom();
             requestBuilder = requestBuilder.setConnectTimeout(10);
             requestBuilder = requestBuilder.setConnectionRequestTimeout(10);
@@ -94,6 +96,8 @@ public class Scanner {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            client.close();
         }
         return null;
     }

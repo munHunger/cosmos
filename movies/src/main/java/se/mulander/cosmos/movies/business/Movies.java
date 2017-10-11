@@ -21,6 +21,14 @@ import javax.ws.rs.core.Response;
 public class Movies {
 
     @GET
+    @Path("/cache")
+    @Cached
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response testCache() {
+        return Response.ok(System.currentTimeMillis()).build();
+    }
+
+    @GET
     @Path("/recomendations")
     @Cached
     @Produces(MediaType.APPLICATION_JSON)
