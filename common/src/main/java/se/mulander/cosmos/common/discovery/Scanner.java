@@ -30,84 +30,82 @@ import java.util.Enumeration;
 @Path("/discover")
 @Component
 @Api(value = "Discovery", description = "Endpoints for finding other services")
-public class Scanner
-{
-	public static String getLocalAddress() throws SocketException
-	{
-		Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
-		for(; n.hasMoreElements(); )
-		{
-			NetworkInterface e = n.nextElement();
-			Enumeration<InetAddress> a = e.getInetAddresses();
-			for(; a.hasMoreElements(); )
-			{
-				InetAddress addr = a.nextElement();
-				String address = addr.getHostAddress();
-				if(!address.contains(":") && !address.startsWith("127"))
-					return address;
-			}
-		}
-		return null;
-	}
+public class Scanner {
+    public static String getLocalAddress() throws SocketException {
+        Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+        for (; n.hasMoreElements(); ) {
+            NetworkInterface e = n.nextElement();
+            Enumeration<InetAddress> a = e.getInetAddresses();
+            for (; a.hasMoreElements(); ) {
+                InetAddress addr = a.nextElement();
+                String address = addr.getHostAddress();
+                if (!address.contains(":") && !address.startsWith("127"))
+                    return address;
+            }
+        }
+        return null;
+    }
 
-	public static String find(int port, String path)
-	{
-		try
-		{
-			String localIP = getLocalAddress();
-			String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
-			String sslGate = "https://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
-			RequestConfig.Builder requestBuilder = RequestConfig.custom();
-			requestBuilder = requestBuilder.setConnectTimeout(10);
-			requestBuilder = requestBuilder.setConnectionRequestTimeout(10);
+    /**
+     * Scans the network for a specific discovery service.
+     * It does this by using it's current IP, removing the last byte and iterating over networks.
+     * If anyone responds on the address with an OK and the entity "cosmos" then a service has been found.
+     * <p>
+     * If the computer is offline and thus doesn't have an IP, then 127.0.0.1 will be used
+     *
+     * @param port The port to scan on(this is ignored for local connections
+     * @param path The path to the discovery of the sought service
+     * @return An address to the service
+     */
+    public static String find(int port, String path) {
+        try {
+            String localIP = getLocalAddress();
+            if (localIP == null)
+                return "127.0.0.1";
+            String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
+            String sslGate = "https://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
+            RequestConfig.Builder requestBuilder = RequestConfig.custom();
+            requestBuilder = requestBuilder.setConnectTimeout(10);
+            requestBuilder = requestBuilder.setConnectionRequestTimeout(10);
 
-			HttpClientBuilder builder = HttpClientBuilder.create();
-			builder.setDefaultRequestConfig(requestBuilder.build());
-			HttpClient client = builder.build();
-			for(int i = 1; i < 255; i++)
-			{
-				try
-				{
-					org.apache.http.HttpResponse response;
-					try
-					{
-						String url = String.format("%s%d:%d%s", gate, i, port, path);
-						response = client.execute(new HttpGet(url));
-					}
-					catch(SSLHandshakeException e)
-					{
-						String url = String.format("%s%d:%d%s", sslGate, i, 443, path);
-						response = client.execute(new HttpGet(url));
-					}
-					int responseStatus = response.getStatusLine().getStatusCode();
-					byte[] byteData = new byte[response.getEntity().getContent().available()];
-					new DataInputStream(response.getEntity().getContent()).readFully(byteData);
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            builder.setDefaultRequestConfig(requestBuilder.build());
+            HttpClient client = builder.build();
+            for (int i = 1; i < 255; i++) {
+                try {
+                    org.apache.http.HttpResponse response;
+                    try {
+                        String url = String.format("%s%d:%d%s", gate, i, port, path);
+                        response = client.execute(new HttpGet(url));
+                    } catch (SSLHandshakeException e) {
+                        String url = String.format("%s%d:%d%s", sslGate, i, 443, path);
+                        response = client.execute(new HttpGet(url));
+                    }
+                    int responseStatus = response.getStatusLine().getStatusCode();
+                    byte[] byteData = new byte[response.getEntity().getContent().available()];
+                    new DataInputStream(response.getEntity().getContent()).readFully(byteData);
 
-					String data = new String(byteData);
+                    String data = new String(byteData);
 
-					if(responseStatus == 200 && data.equals("cosmos"))
-						return String.format("%s%d:%d", gate, i, port);
-				}
-				catch(Exception e)
-				{
-				}
-			}
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
+                    if (responseStatus == 200 && data.equals("cosmos"))
+                        return String.format("%s%d:%d", gate, i, port);
+                } catch (Exception e) {
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Discover",
-				  notes = "Static point that returns 200 OK, to note that this endpoint is alive. As this is common for all cosmos microservices")
-	@ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
-								message = "static OK to note that it is alive")})
-	public Response getRecomendations()
-	{
-		return Response.ok("cosmos").build();
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Discover",
+                  notes = "Static point that returns 200 OK, to note that this endpoint is alive. As this is common " +
+                          "for all cosmos microservices")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+                                message = "static OK to note that it is alive")})
+    public Response getRecomendations() {
+        return Response.ok("cosmos").build();
+    }
 }
