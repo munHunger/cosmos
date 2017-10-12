@@ -1,4 +1,4 @@
-package se.mulander.cosmos.common.cache;
+package se.mulander.cosmos.common.cache.simple;
 
 import java.util.Optional;
 

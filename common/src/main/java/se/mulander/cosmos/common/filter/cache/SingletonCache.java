@@ -1,6 +1,6 @@
 package se.mulander.cosmos.common.filter.cache;
 
-import se.mulander.cosmos.common.cache.CacheManager;
+import se.mulander.cosmos.common.cache.simple.CacheManager;
 
 import javax.ws.rs.container.ContainerResponseContext;
 

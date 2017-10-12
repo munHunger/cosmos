@@ -1,6 +1,6 @@
-package se.mulander.cosmos.common.cache.impl;
+package se.mulander.cosmos.common.cache.simple.impl;
 
-import se.mulander.cosmos.common.cache.CacheManager;
+import se.mulander.cosmos.common.cache.simple.CacheManager;
 
 import java.util.function.Function;
 

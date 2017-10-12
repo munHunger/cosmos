@@ -1,6 +1,6 @@
 package se.mulander.cosmos.common.filter.cache;
 
-import se.mulander.cosmos.common.cache.impl.MapCacheBuilder;
+import se.mulander.cosmos.common.cache.simple.impl.MapCacheBuilder;
 import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 
 import javax.annotation.Priority;

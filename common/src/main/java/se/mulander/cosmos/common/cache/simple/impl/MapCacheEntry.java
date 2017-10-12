@@ -1,4 +1,4 @@
-package se.mulander.cosmos.common.cache.impl;
+package se.mulander.cosmos.common.cache.simple.impl;
 
 /**
  * @author Marcus Münger
