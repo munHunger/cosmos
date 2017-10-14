@@ -21,6 +21,7 @@ public class PrefetchMapCacheManager<T> implements PrefetchCacheManager {
     }
 
     @Override
+    //TODO: Why can't the functions have argument types
     public void put(String key, long ttl, long prefetchTTL, Function fetchFunction, Map param) {
         cache.put(key, new PrefetchMapCacheEntry<>(fetchFunction.apply(param), ttl, prefetchTTL, param, fetchFunction));
     }
