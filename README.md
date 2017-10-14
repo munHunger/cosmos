@@ -1,13 +1,14 @@
 # Git repo for the Cosmos system. 
-This repo is intended for a micro-service based Movie/TV download system. Each service including the frontend web-interface has its own folder in the root of the repo. 
+This repo is intended for a micro-service based Movie/TV management system. Each service including the frontend web-interface has its own folder in the root of the repo. 
 
-# Colors
-Color-schema for the project is based on Dark-grey/orange
-
-Orange: <span style="color:#FF5733">#FF5733</span>
-
-Grey: <span style="color:#474747">#474747</span>
+# Backlog
+1: Refactor the common package to be more "modern"
+2: Finish prefetch cache function (create testing)
+3: Create Database access objects for each model.
+4: Add status to each movie object (wanted, released, downloading, done...)
+5: Add an endpoint to movies for searching for single movie.
+6: Investigate centralized logging functionality. Should be a microservice. Think appdynamics.
 
 # Building
-To build any service, run the grade build script for common as well as the gradle publish script before trying to build a service.
-For each service: run the gradle war script and deploy the war to a tomcat server. note that each service must be deployed with an application context matching its service name, i.e. hte movies service should have the application context "/movies"
+To build any service, run the gradle publish script for common as well as the gradle war script for any given service to build.
+For deployment move the war file to the tomcat webapps folder. Note that each service must be deployed with an application context matching its service name. i.e. the movies service should have the application context "/movies". This is achieved by renaming the war file to "movies" in the tomcat webapps folder.
