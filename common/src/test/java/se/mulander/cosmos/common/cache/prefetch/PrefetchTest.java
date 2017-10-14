@@ -47,6 +47,17 @@ public class PrefetchTest {
                                    return ((Map<String, Object>) args).get("input");
                                }, argMap);
                            });
+                describe("The entry has been deleted", () ->
+                {
+                    beforeEach(() ->
+                               {
+                                   underTest.delete("key");
+                               });
+                    it("Returns an empty optional", () ->
+                    {
+                        Assert.assertFalse(underTest.get("key").isPresent());
+                    });
+                });
                 describe("The prefetch ttl has not been reached", () ->
                 {
                     beforeEach(() ->
