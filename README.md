@@ -6,8 +6,9 @@ This repo is intended for a micro-service based Movie/TV management system. Each
 2: Finish prefetch cache function (create testing)
 3: Create Database access objects for each model.
 4: Add status to each movie object (wanted, released, downloading, done...)
-5: Add an endpoint to movies for searching for single movie.
-6: Investigate centralized logging functionality. Should be a microservice. Think appdynamics.
+5: Add test cases for movies
+6: Add an endpoint to movies for searching for single movie.
+7: Investigate centralized logging functionality. Should be a microservice. Think appdynamics.
 
 # Building
 To build any service, run the gradle publish script for common as well as the gradle war script for any given service to build.
