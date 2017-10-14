@@ -25,7 +25,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class PrefetchTest {
     private static PrefetchMapCacheManager<String> underTest;
 
-    static {
+    {
         describe("Has a full prefetchCache built from builder", () ->
         {
             beforeEach(() ->
@@ -44,9 +44,13 @@ public class PrefetchTest {
                                argMap.put("input", "value");
                                underTest.put("key", 10, 5, args ->
                                {
-                                   return ((Map<String, Object>) args).get("input");
+                                   if (System.currentTimeMillis() < 5)
+                                       return ((Map<String, Object>) args).get("input");
+                                   else
+                                       return "new";
                                }, argMap);
                            });
+                //region The entry has been deleted
                 describe("The entry has been deleted", () ->
                 {
                     beforeEach(() ->
@@ -58,6 +62,8 @@ public class PrefetchTest {
                         Assert.assertFalse(underTest.get("key").isPresent());
                     });
                 });
+                //endregion
+                //region The prefetch ttl has not been reached
                 describe("The prefetch ttl has not been reached", () ->
                 {
                     beforeEach(() ->
@@ -73,6 +79,49 @@ public class PrefetchTest {
                         Assert.assertEquals("value", underTest.get("key").get());
                     });
                 });
+                //endregion
+                //region The prefetch ttl has been reached
+                describe("The prefetch ttl has been reached", () ->
+                {
+                    beforeEach(() ->
+                               {
+                                   when(System.currentTimeMillis()).thenReturn(7l);
+                                   Thread.sleep(7);
+                               });
+                    it("Returns the old value", () ->
+                    {
+                        Assert.assertEquals("value", underTest.get("key").get());
+                    });
+                    //region The cache has been hit
+                    describe("The cache has been hit", () ->
+                    {
+                        beforeEach(() ->
+                                   {
+                                       underTest.get("key");
+                                       Thread.sleep(20); //TODO: How can we make this more stable?
+                                   });
+                        it("It updates the value", () ->
+                        {
+                            Assert.assertEquals("new", underTest.get("key").get());
+                        });
+                    });
+                    //endregion
+                });
+                //endregion
+                //region The ttl has been reached
+                describe("The ttl has been reached", () ->
+                {
+                    beforeEach(() ->
+                               {
+                                   when(System.currentTimeMillis()).thenReturn(15l);
+                                   Thread.sleep(15);
+                               });
+                    it("Updates and returns the new value", () ->
+                    {
+                        Assert.assertEquals("new", underTest.get("key").get());
+                    });
+                });
+                //endregion
             });
         });
     }

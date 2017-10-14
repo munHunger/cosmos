@@ -32,8 +32,7 @@ public class PrefetchMapCacheManager<T> implements PrefetchCacheManager {
             return Optional.empty();
         PrefetchMapCacheEntry entry = cache.get(key);
         if (entry.isOlderThanTTL()) {
-            entry.update(); //TODO: Don't do this when updating
-            return Optional.ofNullable(entry.data);
+            return Optional.ofNullable(entry.update());//TODO: Don't do this when updating
         } else {
             if (entry.isOlderThanPrefetchTTL() && !entry.isUpdating) {
                 entry.isUpdating = true;
