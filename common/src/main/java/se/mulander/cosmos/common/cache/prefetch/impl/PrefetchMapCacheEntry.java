@@ -35,9 +35,10 @@ public class PrefetchMapCacheEntry<T> {
         return System.currentTimeMillis() - timeCreated > ttl;
     }
 
-    public void update() {
+    public T update() {
         data = updateFunction.apply(parameters);
         timeCreated = System.currentTimeMillis();
         isUpdating = false;
+        return data;
     }
 }
