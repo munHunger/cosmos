@@ -63,6 +63,14 @@ dependencies {
 
 }
 
+test {
+    reports.junitXml.destination = '../testResults/'
+}
+
+publish {
+    dependsOn 'test'
+}
+
 war {
     dependsOn 'test'
     destinationDir(file('/build/'))

@@ -44,6 +44,10 @@ dependencies {
     compile group: 'se.mulander.cosmos', name: 'common', version: '2.0'
 }
 
+test {
+    reports.junitXml.destination = '../testResults/'
+}
+
 war {
     dependsOn 'test'
     destinationDir(file('build/'))
