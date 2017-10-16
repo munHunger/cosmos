@@ -3,7 +3,6 @@ package se.mulander.cosmos.folderscraper.test;
 import com.mscharhag.oleaster.matcher.matchers.ExceptionMatcher;
 import com.mscharhag.oleaster.runner.OleasterRunner;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -144,6 +143,7 @@ public class ScraperTest {
                                    when(fileMock.listFiles()).thenReturn(new File[]{fileMock, fileMock});
                                    when(fileMock.getPath()).thenReturn("abc");
                                    doNothing().when(Database.class, "saveObject", any());
+                                   doNothing().when(Database.class, "updateObject", any());
                                    doReturn(null).when(spied).searchMetaData(any());
                                });
                     //region Object is not in database
@@ -153,7 +153,7 @@ public class ScraperTest {
                                    {
                                        when(Database.getObjects(any(), any())).thenReturn(
                                                new ArrayList<>());
-                                       doNothing().when(Database.class, "updateObject", any());
+                                       spied.getFolderStatus();
                                    });
                         it("adds it to the result list", () -> expect(spied.getFolderStatus().size()).toEqual(2));
                         it("calls the update operation of the database on all objects",
@@ -168,7 +168,6 @@ public class ScraperTest {
                                verifyStatic(times(2));
                                Database.saveObject(any());
                            });
-                        after(() -> Mockito.reset(Database.class));
                     });
                     //endregion
                     //region Object is already in the database
@@ -179,6 +178,7 @@ public class ScraperTest {
                                        List<Object> returnList = new ArrayList<>();
                                        returnList.add(mock(FileObject.class));
                                        when(Database.getObjects(any(), any())).thenReturn(returnList);
+                                       spied.getFolderStatus();
                                    });
                         it("adds it to the result list", () -> expect(spied.getFolderStatus().size()).toEqual(2));
                         it("calls the save operation of the database on all objects",
@@ -187,7 +187,6 @@ public class ScraperTest {
                                verifyStatic(times(2));
                                Database.updateObject(any());
                            });
-                        after(() -> Mockito.reset(Database.class));
                     });
                     //endregion
                 });
