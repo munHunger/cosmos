@@ -64,5 +64,6 @@ dependencies {
 }
 
 war {
+    dependsOn 'test'
     destinationDir(file('/build/'))
 }
