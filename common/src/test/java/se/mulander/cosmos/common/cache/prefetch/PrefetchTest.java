@@ -42,7 +42,7 @@ public class PrefetchTest {
                            {
                                Map<String, String> argMap = new HashMap();
                                argMap.put("input", "value");
-                               underTest.put("key", 10, 5, args ->
+                               underTest.put("key", 13, 5, args ->
                                {
                                    if (System.currentTimeMillis() < 5)
                                        return ((Map<String, Object>) args).get("input");
