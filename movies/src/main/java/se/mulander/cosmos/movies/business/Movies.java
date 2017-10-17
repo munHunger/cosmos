@@ -1,6 +1,7 @@
 package se.mulander.cosmos.movies.business;
 
 import io.swagger.annotations.*;
+import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.movies.Movie;
 
@@ -18,8 +19,18 @@ import javax.ws.rs.core.Response;
 @Path("/movies")
 @Api(value = "Movies", description = "Endpoints for finding new movies and managing wishlists")
 public class Movies {
+
+    @GET
+    @Path("/cache")
+    @Cached
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response testCache() {
+        return Response.ok(System.currentTimeMillis()).build();
+    }
+
     @GET
     @Path("/recomendations")
+    @Cached
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
