@@ -11,6 +11,12 @@ public class TMDBResponse {
     public int total_pages;
     public Result[] results;
 
+    public Result buildResult(String type) {
+        Result result = new Result();
+        result.media_type = type;
+        return result;
+    }
+
     public class Result {
         public String poster_path;
         public boolean adult;

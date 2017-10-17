@@ -24,13 +24,13 @@ public abstract class DatabaseSettings {
 
     protected abstract Setting getDefaultSetting();
 
-    public static String getSettingsValue(String path) {
+    public static String getSettingsValue(String path) { //TODO: Should return optional
         if (settingValue == null)
-            return null;
+            return "";
         return getSettingsValue(path, settingValue);
     }
 
-    private static String getSettingsValue(String path, Setting setting) {
+    private static String getSettingsValue(String path, Setting setting) { //TODO: Should return optional
         String[] pathSplit = path.split("\\.");
         if (pathSplit[0].equals(setting.name)) {
             if (pathSplit.length == 1)
@@ -39,7 +39,7 @@ public abstract class DatabaseSettings {
                 if (pathSplit[1].equals(child.name))
                     return getSettingsValue(path.substring(path.indexOf(".") + 1), child);
         }
-        return null;
+        return "";
     }
 
     private static Consumer<String> settingsUpdater = (url) ->

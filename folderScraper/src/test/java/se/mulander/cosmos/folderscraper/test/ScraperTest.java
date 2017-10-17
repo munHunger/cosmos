@@ -8,9 +8,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import se.mulander.cosmos.common.database.jpa.Database;
+import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.folderscraper.impl.Scraper;
 import se.mulander.cosmos.folderscraper.model.FileObject;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -19,6 +25,7 @@ import java.util.List;
 import static com.mscharhag.oleaster.matcher.Matchers.expect;
 import static com.mscharhag.oleaster.runner.StaticRunnerSupport.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -28,7 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
  */
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(OleasterRunner.class)
-@PrepareForTest({Scraper.class, Database.class})
+@PrepareForTest({Scraper.class, Database.class, ClientBuilder.class})
 public class ScraperTest {
     {
         describe("Scraper", () ->
@@ -194,9 +201,8 @@ public class ScraperTest {
             });
             //endregion
             //region Fetching metadata
-            describe("Fetching metadata", () -> //TODO: add mock for this
+            describe("Fetching metadata", () ->
             {
-                /*
                 FileObject toSearchFor = new FileObject("random.path.exe");
                 beforeEach(() -> PowerMockito.whenNew(FileObject.class).withAnyArguments().thenReturn(toSearchFor));
                 //region Object cannot be found on omdbapi
@@ -204,13 +210,9 @@ public class ScraperTest {
                 {
                     beforeEach(() ->
                                {
-                                   OMDBResponse response = new OMDBResponse();
-                                   response.Response = "False";
-                                   mockStatic(HttpRequest.class);
-                                   when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(
-                                           new HttpResponse(
-                                                   response,
-                                                   200));
+                                   TMDBResponse tmdbResponse = new TMDBResponse();
+                                   tmdbResponse.results = new TMDBResponse.Result[0];
+                                   mockResponse(TMDBResponse.class, tmdbResponse);
                                });
                     it("Doesn't change the object",
                        () -> expect(underTest.searchMetaData(toSearchFor)).toEqual(toSearchFor));
@@ -219,20 +221,15 @@ public class ScraperTest {
                 //region Object can be found on omdbapi
                 describe("Object can be found on omdbapi", () ->
                 {
-                    OMDBResponse response = new OMDBResponse();
+                    TMDBResponse response = new TMDBResponse();
                     beforeEach(() ->
                                {
-                                   response.Response = "true";
-                                   mockStatic(HttpRequest.class);
-                                   when(HttpRequest.getRequest(any(String.class), any(Class.class))).thenReturn(
-                                           new HttpResponse(
-                                                   response,
-                                                   200));
+                                   response.results = new TMDBResponse.Result[]{new TMDBResponse().buildResult("TV")};
+                                   mockResponse(TMDBResponse.class, response);
                                });
                     //region Object is a tv/show
                     describe("Object is a tv-show", () ->
                     {
-                        beforeEach(() -> response.Type = "series");
                         it("Sets the tv-flag to true",
                            () -> expect(underTest.searchMetaData(toSearchFor).isTV).toBeTrue());
                         it("Sets the movie-flag to false",
@@ -241,7 +238,6 @@ public class ScraperTest {
                     //endregion
                 });
                 //endregion
-                */
             });
             //endregion
             //region Checking if file is downloaded
@@ -305,5 +301,23 @@ public class ScraperTest {
             });
             //endregion
         });
+    }
+
+    private static <T> void mockResponse(Class<T> type, T response) throws Exception {
+        mockStatic(ClientBuilder.class);
+        Client client = mock(Client.class);
+        when(ClientBuilder.class, "newClient").thenReturn(client);
+        WebTarget webTarget = mock(WebTarget.class);
+        when(client.target(anyString())).thenReturn(webTarget);
+        when(webTarget.path(anyString())).thenReturn(webTarget);
+        when(webTarget.queryParam(any(), any())).thenReturn(webTarget);
+        Invocation.Builder invocationBuilder = mock(Invocation.Builder.class);
+        when(webTarget.request()).thenReturn(invocationBuilder);
+        Invocation invocation = mock(Invocation.class);
+        when(invocationBuilder.buildGet()).thenReturn(invocation);
+
+        Response res = mock(Response.class);
+        when(invocation.invoke()).thenReturn(res);
+        when(res.readEntity(type)).thenReturn(response);
     }
 }
