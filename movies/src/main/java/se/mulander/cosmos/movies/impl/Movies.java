@@ -32,16 +32,27 @@ public class Movies {
      * @return A response object with either a 200 OK and a list of popular movie objects or a 500 with an error message
      */
     public static Response getRecomendations() {
-        String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
-        String apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+        Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
+        Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
 
+        if (!theMovieDbURL.isPresent())
+            return Response.serverError()
+                           .entity(new ErrorMessage("Could not get recomendations",
+                                                    "Couldn't get the settings for where to find themoviedb"))
+                           .build();
+        if (!apiKey.isPresent())
+            return Response.serverError()
+                           .entity(new ErrorMessage("Could not get recomendations",
+                                                    "Couldn't get the settings for the API key"))
+                           .build();
         final Client client = ClientBuilder.newClient();
         try {
-            GenreList genreList = getGenres(client, theMovieDbURL, apiKey);
-            TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL, apiKey);
+            GenreList genreList = getGenres(client, theMovieDbURL.get(), apiKey.get());
+            TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL.get(), apiKey.get());
 
             List<Movie> result = Arrays.stream(tmdbResponse.results)
-                                       .map(tmdb -> tmdbToInternal(tmdb, client, theMovieDbURL, apiKey, genreList))
+                                       .map(tmdb -> tmdbToInternal(tmdb, client, theMovieDbURL.get(), apiKey.get(),
+                                                                   genreList))
                                        .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
                                                m1.rating.get(0).rating))
                                        .collect(Collectors.toList());

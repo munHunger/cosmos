@@ -43,7 +43,8 @@ public class Scraper {
                                   try {
                                       new Scraper().getFolderStatus();
                                       Thread.sleep(Integer.parseInt(
-                                              Settings.getSettingsValue("screaper.update_delay")) * 1000);
+                                              Settings.getSettingsValue("screaper.update_delay")
+                                                      .orElse("120")) * 1000);
                                   } catch (Exception e) {
                                       System.err.println("Error while running watcher");
                                       e.printStackTrace();
@@ -129,7 +130,7 @@ public class Scraper {
      * @see #searchMetaData(FileObject) {@link #moveObject(FileObject)}
      */
     public List<FileObject> getFolderStatus() throws Exception {
-        return getFolderStatus(Settings.getSettingsValue("scraper.folders.downloads"));
+        return getFolderStatus(Settings.getSettingsValue("scraper.folders.downloads").orElse("./"));
     }
 
     /**
@@ -206,7 +207,8 @@ public class Scraper {
         else if (!o.isMovie && !o.isTV)
             throw new IllegalArgumentException("FileObject has not been classified as either a TV-Show or a Movie");
 
-        destination = o.isMovie ? Settings.getSettingsValue("scraper.folders.movies") : (Settings.getSettingsValue(
+        destination = o.isMovie ? Settings.getSettingsValue("scraper.folders.movies")
+                                          .orElse("/") : (Settings.getSettingsValue(
                 "scraper.folders.tv") + "\\" + o.title);
 
         destination = destination + o.filePath.substring(Math.max(0,
@@ -244,8 +246,9 @@ public class Scraper {
      * @throws Exception
      */
     public FileObject searchMetaData(FileObject o) throws Exception {
-        String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
-        String apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+        String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri")
+                                       .orElse(""); //TODO: Should throw Exception
+        String apiKey = Settings.getSettingsValue("movies.movie_db_api_key").orElse("");
         StringBuilder urlBuilder = new StringBuilder(theMovieDbURL).append("/3/search/multi");
         String name = o.filePath.substring(Math.max(0,
                                                     Math.max(o.filePath.lastIndexOf("\\"),
