@@ -1,4 +1,4 @@
-package se.mulander.cosmos.common.swagger;
+package se.mulander.cosmos.folderscraper.util.swagger;
 
 import io.swagger.jaxrs.config.BeanConfig;
 
@@ -18,9 +18,8 @@ public class Bootstrap extends HttpServlet
 
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1.0.0");
-        beanConfig.setSchemes(new String[]{"http, https"});
-        beanConfig.setHost("localhost");
-        beanConfig.setBasePath("/api");
+        beanConfig.setSchemes(new String[]{"http", "https"});
+        beanConfig.setBasePath("/folderscraper/api");
         beanConfig.setResourcePackage("se.mulander.cosmos");
         beanConfig.setScan(true);
     }
