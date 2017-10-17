@@ -1,5 +1,7 @@
 **/.idea/
 **/.gradle/
+**/out/
+**/testResults/
 *.class
 *.jar
 **/tmp
