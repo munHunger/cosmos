@@ -24,22 +24,22 @@ public abstract class DatabaseSettings {
 
     protected abstract Setting getDefaultSetting();
 
-    public static String getSettingsValue(String path) { //TODO: Should return optional
+    public static Optional<String> getSettingsValue(String path) {
         if (settingValue == null)
-            return "";
+            return Optional.empty();
         return getSettingsValue(path, settingValue);
     }
 
-    private static String getSettingsValue(String path, Setting setting) { //TODO: Should return optional
+    private static Optional<String> getSettingsValue(String path, Setting setting) {
         String[] pathSplit = path.split("\\.");
         if (pathSplit[0].equals(setting.name)) {
             if (pathSplit.length == 1)
-                return setting.value;
+                return Optional.of(setting.value);
             for (Setting child : setting.children)
                 if (pathSplit[1].equals(child.name))
                     return getSettingsValue(path.substring(path.indexOf(".") + 1), child);
         }
-        return "";
+        return Optional.empty();
     }
 
     private static Consumer<String> settingsUpdater = (url) ->
