@@ -181,8 +181,7 @@ public class Movies
 
                                                          .findFirst().get().name).forEach(name -> m.addGenre(name));
         ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
-                                                    "https://image.tmdb" + "" + ".org/t/p/w1920" + tmdb.backdropPath,
-                                                    "DEFAULT_STATUS");
+                                                    "https://image.tmdb" + "" + ".org/t/p/w1920" + tmdb.backdropPath);
         m.setExtended(exMovie);
 
         addCast(client, tmdb, exMovie, theMovieDbURL, apiKey);
