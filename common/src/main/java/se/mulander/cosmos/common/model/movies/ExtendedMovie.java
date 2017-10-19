@@ -41,7 +41,7 @@ public class ExtendedMovie {
 
     @ApiModelProperty(value = "Describing the status of the movie Can be SEARCHED, WANTED, RELEASED, IN LIBRARY")
     @JsonProperty("status")
-    @Column(name= "status")
+    @Column(name= "status", length = 16)
     public String status;
 
     public ExtendedMovie() {
