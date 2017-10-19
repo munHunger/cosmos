@@ -39,6 +39,11 @@ public class ExtendedMovie {
     @Column(name = "poster_url")
     public String posterURL;
 
+    @ApiModelProperty(value = "Describing the status of the movie Can be SEARCHED, WANTED, RELEASED, IN LIBRARY")
+    @JsonProperty("status")
+    @Column(name= "status")
+    public String status;
+
     public ExtendedMovie() {
     }
 
