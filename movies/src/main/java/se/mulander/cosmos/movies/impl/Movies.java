@@ -1,5 +1,6 @@
 package se.mulander.cosmos.movies.impl;
 
+import org.glassfish.jersey.message.internal.Statuses;
 import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
@@ -179,7 +180,7 @@ public class Movies
                                                          .findFirst().get().name).forEach(name -> m.addGenre(name));
         ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
                                                     "https://image.tmdb" + "" + ".org/t/p/w1920" + tmdb.backdropPath,
-                                                    Status.statuses.DEFAULT.toString());
+                                                    Status.DEFAULT);
         m.setExtended(exMovie);
 
         addCast(client, tmdb, exMovie, theMovieDbURL, apiKey);
