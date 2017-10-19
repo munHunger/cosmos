@@ -44,13 +44,21 @@ public class ExtendedMovie {
     @Column(name= "status")
     public String status;
 
+
+    private enum statuses {
+        SEARCHED,
+        WANTED,
+        RELEASED,
+        IN_LIBRARY;
+    }
+
     public ExtendedMovie() {
     }
 
-    public ExtendedMovie(String description, String posterURL, String status) {
+    public ExtendedMovie(String description, String posterURL) {
         this.description = description;
         this.posterURL = posterURL;
-        this.status = status;
+        this.status = statuses.SEARCHED.toString();
     }
 
     public ExtendedMovie addCastMember(Cast c) {
