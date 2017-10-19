@@ -47,10 +47,10 @@ public class ExtendedMovie {
     public ExtendedMovie() {
     }
 
-    public ExtendedMovie(String description, String posterURL, String status) {
+    public ExtendedMovie(String description, String posterURL, Status status) {
         this.description = description;
         this.posterURL = posterURL;
-        this.status = status;
+        this.status = status.name();
     }
 
     public ExtendedMovie addCastMember(Cast c) {
