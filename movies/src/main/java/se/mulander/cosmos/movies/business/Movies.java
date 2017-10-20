@@ -1,7 +1,7 @@
 package se.mulander.cosmos.movies.business;
 
 import io.swagger.annotations.*;
-import org.hibernate.boot.model.relational.Database;
+import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
@@ -59,17 +59,24 @@ public class Movies {
     @POST
     @Path("/{id}/{status}")
     @ApiOperation(value = "Sets the status of a certain movie object")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NO_CONTENT,
+                                message = "The given ID could not be found in the database",
+                                response = ErrorMessage.class),
+                    @ApiResponse(code = HttpServletResponse.SC_OK,
+                                message = "Status of movie with given ID has been changed to given status value",
+                                response = String.class)})
     public Response setMovieStatus(@ApiParam(value = "The id to search for") @PathParam("id") String id,
                                    @ApiParam(value = "The status to be set for the movie") @PathParam("status")
                                            String status) {
         Response response = se.mulander.cosmos.movies.impl.Movies.getMovie(id);
         if(response.getStatus() != HttpServletResponse.SC_OK) {
-            return Response.status(response.getStatus()).build();
+            return response;
         }
+
         Movie movie = (Movie)response.getEntity();
         movie.extendedMovie.status = status;
-        se.mulander.cosmos.common.database.jpa.Database.updateObject(movie);
+        Database.updateObject(movie);
 
-        return Response.ok(System.currentTimeMillis()).build();
+        return Response.ok("Status of movie with id: " + id + " has been changed to: " + status).build();
     }
 }
