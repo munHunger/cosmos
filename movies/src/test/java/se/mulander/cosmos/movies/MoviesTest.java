@@ -1,6 +1,7 @@
 package se.mulander.cosmos.movies;
 
 import com.mscharhag.oleaster.runner.OleasterRunner;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -13,9 +14,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import static com.mscharhag.oleaster.runner.StaticRunnerSupport.beforeEach;
-import static com.mscharhag.oleaster.runner.StaticRunnerSupport.describe;
-import static com.mscharhag.oleaster.runner.StaticRunnerSupport.it;
+import static com.mscharhag.oleaster.runner.StaticRunnerSupport.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -29,22 +28,26 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class MoviesTest {
 
     {
-        Movies underTest = spy(new Movies());
-        describe("MovieTest", () -> {
-            describe("Recomendations", () -> {
-                beforeEach(() -> {
-                    doReturn(null).when(underTest, "getGenres", any(), anyString(), anyString());
-                });
-                it("fetches a list of genres", () -> {
-
+        Movies underTest = new Movies();
+        describe("MovieTest", () ->
+        {
+            describe("Recomendations", () ->
+            {
+                beforeEach(() ->
+                           {
+                               doReturn(null).when(spy(underTest), "getGenres",
+                                                   any(Client.class), anyString(), anyString());
+                           });
+                it("fetches a list of genres", () ->
+                {
+                    Assert.assertTrue(true);
                 });
             });
         });
     }
 
     //TODO: Where to put this so that everyone can access it?
-    private static <T> void mockResponse(Class<T> type, T response) throws Exception
-    {
+    private static <T> void mockResponse(Class<T> type, T response) throws Exception {
         mockStatic(ClientBuilder.class);
         Client client = mock(Client.class);
         when(ClientBuilder.class, "newClient").thenReturn(client);
