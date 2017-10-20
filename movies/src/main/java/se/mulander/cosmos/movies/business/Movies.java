@@ -1,15 +1,16 @@
 package se.mulander.cosmos.movies.business;
 
 import io.swagger.annotations.*;
+import org.hibernate.boot.model.relational.Database;
 import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 import se.mulander.cosmos.common.model.ErrorMessage;
+import se.mulander.cosmos.common.model.exception.APIException;
+import se.mulander.cosmos.common.model.movies.ExtendedMovie;
 import se.mulander.cosmos.common.model.movies.Movie;
+import se.mulander.cosmos.common.model.movies.Status;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -53,5 +54,22 @@ public class Movies {
                                                                       response = ErrorMessage.class)})
     public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id) {
         return se.mulander.cosmos.movies.impl.Movies.getMovie(id);
+    }
+
+    @POST
+    @Path("/{id}/{status}")
+    @ApiOperation(value = "Sets the status of a certain movie object")
+    public Response setMovieStatus(@ApiParam(value = "The id to search for") @PathParam("id") String id,
+                                   @ApiParam(value = "The status to be set for the movie") @PathParam("status")
+                                           String status) {
+        Response response = se.mulander.cosmos.movies.impl.Movies.getMovie(id);
+        if(response.getStatus() != HttpServletResponse.SC_OK) {
+            return Response.status(response.getStatus()).build();
+        }
+        Movie movie = (Movie)response.getEntity();
+        movie.extendedMovie.status = status;
+        se.mulander.cosmos.common.database.jpa.Database.updateObject(movie);
+
+        return Response.ok(System.currentTimeMillis()).build();
     }
 }
