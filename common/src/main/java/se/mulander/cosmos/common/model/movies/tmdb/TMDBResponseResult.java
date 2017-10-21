@@ -39,8 +39,23 @@ public class TMDBResponseResult
 
     public TMDBResponseResult(String posterPath, boolean adult, String overview, String releaseDate,
                               List<Integer> genreIds, int id, String mediaType, String originalTitle,
-                              String originalLanguage)
+                              String originalLanguage, String title, String backdropPath, float popularity,
+                              int voteCount, boolean video, float voteAverage)
     {
-
+        this.posterPath = posterPath;
+        this.adult = adult;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.genreIds = genreIds;
+        this.id = id;
+        this.mediaType = mediaType;
+        this.originalTitle = originalTitle;
+        this.originalLanguage = originalLanguage;
+        this.title = title;
+        this.backdropPath = backdropPath;
+        this.popularity = popularity;
+        this.voteCount = voteCount;
+        this.video = video;
+        this.voteAverage = voteAverage;
     }
 }
