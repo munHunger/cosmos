@@ -28,14 +28,14 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class MoviesTest {
 
     {
-        Movies underTest = new Movies();
         describe("MovieTest", () ->
         {
             describe("Recomendations", () ->
             {
                 beforeEach(() ->
                            {
-                               doReturn(null).when(spy(underTest), "getGenres",
+                               mockStatic(Movies.class);
+                               doReturn(null).when(Movies.class, "getGenres",
                                                    any(Client.class), anyString(), anyString());
                            });
                 it("fetches a list of genres", () ->
