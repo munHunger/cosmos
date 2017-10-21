@@ -258,6 +258,13 @@ public class Movies
         }
     }
 
+    /**
+     * Updates the status of a movie object in the local database
+     *
+     * @param id the ID of the movie
+     * @param status the status to be set
+     * @return a response object with status 200 if movie found and status set ok.
+     */
     public static Response setMovieStatus(String id, String status)
     {
         Response response = getMovie(id);
