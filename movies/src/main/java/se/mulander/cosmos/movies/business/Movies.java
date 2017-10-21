@@ -57,9 +57,13 @@ public class Movies {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get a list of movie objects", notes = "Gets a list with movies associated with the status")
-    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
+            message = "The given ID could not be found in the database",
+            response = ErrorMessage.class),
+            @ApiResponse(code = HttpServletResponse.SC_OK,
                                 message = "The list of movies",
-                                response = List.class)})
+                                responseContainer = "Array",
+                                response = Movie.class)})
     public Response getMoviesWithStatus(@ApiParam(value = "The status to search for") @QueryParam("status") String status) {
         return se.mulander.cosmos.movies.impl.Movies.getMoviesWithStatus(status);
     }

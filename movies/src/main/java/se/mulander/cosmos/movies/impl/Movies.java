@@ -284,28 +284,15 @@ public class Movies
      */
     public static Response getMoviesWithStatus(String status)
     {
-
         try {
             Map<String, Object> param = new HashMap<>();
             param.put("status", status);
-            List ex_movies = Database.getObjects("from ExtendedMovie WHERE status = :status", param);
-
-            if (ex_movies.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+            List result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
+            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
                             "No movies with status " + status + " was found in the database"))
                     .build();
-            else {
-                List result = null;
-                for(Object ex_movie : ex_movies) {
-                    String id = ((ExtendedMovie)ex_movie).movieID;
-                    result.add(getMovie(id));
-                }
-                if(result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
-                        .entity(new ErrorMessage("Could not fetch movies",
-                                "No movies in result"))
-                        .build();
-                else return Response.ok(result).build();
-            }
+            return Response.ok(result).build();
         } catch (Exception e)
         {
             return Response.serverError()
@@ -313,26 +300,6 @@ public class Movies
                                             "An exception was thrown from the database"))
                     .build();
         }
-
-        /*
-        try
-        {
-            Map<String, Object> param = new HashMap<>();
-            param.put("id", id);
-            List result = Database.getObjects("from Movie WHERE internalID = :id", param);
-            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
-                                                 .entity(new ErrorMessage("Could not fetch movie",
-                                                                          "The movie with ID " + id + " was not found" + " in the database"))
-                                                 .build();
-            return Response.ok(result.get(0)).build();
-        } catch (Exception e)
-        {
-            return Response.serverError()
-                           .entity(new ErrorMessage("Could not fetch movie",
-                                                    "An exception was thrown from the database"))
-                           .build();
-        }
-         */
     }
 
     /**
