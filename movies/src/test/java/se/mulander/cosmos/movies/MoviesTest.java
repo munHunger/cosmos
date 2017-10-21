@@ -1,11 +1,12 @@
 package se.mulander.cosmos.movies;
 
 import com.mscharhag.oleaster.runner.OleasterRunner;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.powermock.reflect.Whitebox;
+import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.movies.impl.Movies;
 
 import javax.ws.rs.client.Client;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Response;
 import static com.mscharhag.oleaster.runner.StaticRunnerSupport.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
@@ -30,17 +32,23 @@ public class MoviesTest {
     {
         describe("MovieTest", () ->
         {
-            describe("Recomendations", () ->
+            describe("Getting recomendations", () ->
             {
                 beforeEach(() ->
                            {
                                mockStatic(Movies.class);
                                doReturn(null).when(Movies.class, "getGenres",
                                                    any(Client.class), anyString(), anyString());
+                               TMDBResponse tmdbResponse = new TMDBResponse();
+                               doReturn(tmdbResponse).when(Movies.class, "getTopMovies", any(), anyString(),
+                                                           anyString());
+                               doNothing().when(Movies.class, "saveListInDatabase", any());
+                               Movies.getRecomendations();
                            });
                 it("fetches a list of genres", () ->
                 {
-                    Assert.assertTrue(true);
+                    verifyStatic(times(1));
+                    Whitebox.invokeMethod(Movies.class, "getGenres", new Object[]{null, "", ""});
                 });
             });
         });
