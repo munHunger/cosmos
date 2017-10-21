@@ -1,13 +1,9 @@
 package se.mulander.cosmos.movies.business;
 
 import io.swagger.annotations.*;
-import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 import se.mulander.cosmos.common.model.ErrorMessage;
-import se.mulander.cosmos.common.model.exception.APIException;
-import se.mulander.cosmos.common.model.movies.ExtendedMovie;
 import se.mulander.cosmos.common.model.movies.Movie;
-import se.mulander.cosmos.common.model.movies.Status;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
