@@ -32,17 +32,17 @@ public class Movies {
      *
      * @return A response object with either a 200 OK and a list of popular movie objects or a 500 with an error message
      */
-    public static Response getRecomendations() {
+    public static Response getRecommendations() {
         Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
         Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
 
         if (!theMovieDbURL.isPresent()) return Response.serverError()
-                                                       .entity(new ErrorMessage("Could not get recomendations",
+                                                       .entity(new ErrorMessage("Could not get recommendations",
                                                                                 "Couldn't get the settings for where " +
                                                                                         "to find themoviedb"))
                                                        .build();
         if (!apiKey.isPresent()) return Response.serverError()
-                                                .entity(new ErrorMessage("Could not get recomendations",
+                                                .entity(new ErrorMessage("Could not get recommendations",
                                                                          "Couldn't get the settings for the API key"))
                                                 .build();
         final Client client = ClientBuilder.newClient();
@@ -270,6 +270,7 @@ public class Movies {
                              .request()
                              .buildGet()
                              .invoke();
+        
         try {
             if (res.getStatus() != HttpServletResponse.SC_OK) throw new APIException("Could not get genre list",
                                                                                      "Response from movie database " +

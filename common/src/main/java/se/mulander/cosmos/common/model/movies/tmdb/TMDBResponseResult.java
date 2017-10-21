@@ -32,4 +32,15 @@ public class TMDBResponseResult
     public boolean video;
     @JsonProperty("vote_average")
     public float voteAverage;
+
+    public TMDBResponseResult()
+    {
+    }
+
+    public TMDBResponseResult(String posterPath, boolean adult, String overview, String releaseDate,
+                              List<Integer> genreIds, int id, String mediaType, String originalTitle,
+                              String originalLanguage)
+    {
+
+    }
 }

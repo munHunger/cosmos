@@ -1,5 +1,7 @@
 package se.mulander.cosmos.common.model.movies;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -8,4 +10,13 @@ import java.util.List;
 public class GenreList
 {
 	public List<Genre> genres;
+
+	public GenreList()
+	{}
+
+	public GenreList(Genre... genres)
+	{
+		this.genres = new ArrayList<>();
+		Collections.addAll(this.genres, genres);
+	}
 }
