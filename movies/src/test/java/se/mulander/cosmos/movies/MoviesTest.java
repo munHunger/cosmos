@@ -7,13 +7,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.reflect.Whitebox;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
+import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponseResult;
+import se.mulander.cosmos.common.settings.DatabaseSettings;
 import se.mulander.cosmos.movies.impl.Movies;
+import se.mulander.cosmos.movies.util.Settings;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+
+import java.util.Optional;
 
 import static com.mscharhag.oleaster.runner.StaticRunnerSupport.*;
 import static org.mockito.Matchers.any;
@@ -26,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
  */
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(OleasterRunner.class)
-@PrepareForTest({Movies.class})
+@PrepareForTest({Movies.class, Settings.class, DatabaseSettings.class})
 public class MoviesTest {
 
     {
@@ -36,19 +41,26 @@ public class MoviesTest {
             {
                 beforeEach(() ->
                            {
+                               mockStatic(Settings.class);
+                               mockStatic(DatabaseSettings.class);
+                               //doReturn(Optional.of("")).when(Settings.class, "getSettingsValue", any());
+                               when(Settings.class, "getSettingsValue", any()).thenReturn(Optional.of(""));
+
                                mockStatic(Movies.class);
                                doReturn(null).when(Movies.class, "getGenres",
                                                    any(Client.class), anyString(), anyString());
                                TMDBResponse tmdbResponse = new TMDBResponse();
+                               tmdbResponse.results = new TMDBResponseResult[0];
                                doReturn(tmdbResponse).when(Movies.class, "getTopMovies", any(), anyString(),
                                                            anyString());
                                doNothing().when(Movies.class, "saveListInDatabase", any());
+                               doCallRealMethod().when(Movies.class, "getRecomendations");
                                Movies.getRecomendations();
                            });
                 it("fetches a list of genres", () ->
                 {
                     verifyStatic(times(1));
-                    Whitebox.invokeMethod(Movies.class, "getGenres", new Object[]{null, "", ""});
+                    Whitebox.invokeMethod(Movies.class, "getGenres", new Object[]{any(), anyString(), anyString()});
                 });
             });
         });
