@@ -258,6 +258,18 @@ public class Movies
         }
     }
 
+    public static Response setMovieStatus(String id, String status)
+    {
+        Response response = getMovie(id);
+        if(response.getStatus() != HttpServletResponse.SC_OK) {
+            return response;
+        }
+        Movie movie = (Movie)response.getEntity();
+        movie.extendedMovie.status = status;
+        Database.updateObject(movie);
+        return Response.ok().build();
+    }
+
     /**
      * Fetches a list of genres from the movie database.
      *

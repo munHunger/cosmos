@@ -57,26 +57,15 @@ public class Movies {
     }
 
     @POST
-    @Path("/{id}/{status}")
+    @Path("/{id}")
     @ApiOperation(value = "Sets the status of a certain movie object")
-    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NO_CONTENT,
-                                message = "The given ID could not be found in the database",
-                                response = ErrorMessage.class),
-                    @ApiResponse(code = HttpServletResponse.SC_OK,
-                                message = "Status of movie with given ID has been changed to given status value",
-                                response = String.class)})
-    public Response setMovieStatus(@ApiParam(value = "The id to search for") @PathParam("id") String id,
-                                   @ApiParam(value = "The status to be set for the movie") @PathParam("status")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
+            message = "The given ID could not be found in the database",
+            response = ErrorMessage.class)})
+    public Response setMovieObjectStatus(@ApiParam(value = "The id to search for") @PathParam("id") String id,
+                                   @ApiParam(value = "The status to be set for the movie") @FormParam("status")
                                            String status) {
-        Response response = se.mulander.cosmos.movies.impl.Movies.getMovie(id);
-        if(response.getStatus() != HttpServletResponse.SC_OK) {
-            return response;
-        }
-
-        Movie movie = (Movie)response.getEntity();
-        movie.extendedMovie.status = status;
-        Database.updateObject(movie);
-
-        return Response.ok("Status of movie with id: " + id + " has been changed to: " + status).build();
+        return se.mulander.cosmos.movies.impl.Movies.setMovieStatus(id, status);
     }
 }
+
