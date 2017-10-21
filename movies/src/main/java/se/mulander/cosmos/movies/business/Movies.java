@@ -6,10 +6,7 @@ import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.movies.Movie;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -54,4 +51,18 @@ public class Movies {
     public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id) {
         return se.mulander.cosmos.movies.impl.Movies.getMovie(id);
     }
+
+    @POST
+    @Path("/{id}")
+    @ApiOperation(value = "Sets the status of a certain movie object")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
+            message = "The given ID could not be found in the database",
+            response = ErrorMessage.class),
+            @ApiResponse(code = HttpServletResponse.SC_OK, message = "")})
+    public Response setMovieObjectStatus(@ApiParam(value = "The id to search for") @PathParam("id") String id,
+                                   @ApiParam(value = "The status to be set for the movie") @FormParam("status")
+                                           String status) {
+        return se.mulander.cosmos.movies.impl.Movies.setMovieStatus(id, status);
+    }
 }
+

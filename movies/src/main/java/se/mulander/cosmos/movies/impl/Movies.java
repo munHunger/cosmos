@@ -259,6 +259,25 @@ public class Movies
     }
 
     /**
+     * Updates the status of a movie object in the local database
+     *
+     * @param id the ID of the movie
+     * @param status the status to be set
+     * @return a response object with status 200 if movie found and status set ok.
+     */
+    public static Response setMovieStatus(String id, String status)
+    {
+        Response response = getMovie(id);
+        if(response.getStatus() != HttpServletResponse.SC_OK) {
+            return response;
+        }
+        Movie movie = (Movie)response.getEntity();
+        movie.extendedMovie.status = status;
+        Database.updateObject(movie);
+        return Response.ok().build();
+    }
+
+    /**
      * Fetches a list of genres from the movie database.
      *
      * @param client        A client to make requests with
