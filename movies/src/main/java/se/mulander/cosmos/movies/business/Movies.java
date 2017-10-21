@@ -57,7 +57,8 @@ public class Movies {
     @ApiOperation(value = "Sets the status of a certain movie object")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
             message = "The given ID could not be found in the database",
-            response = ErrorMessage.class)})
+            response = ErrorMessage.class),
+            @ApiResponse(code = HttpServletResponse.SC_OK, message = "")})
     public Response setMovieObjectStatus(@ApiParam(value = "The id to search for") @PathParam("id") String id,
                                    @ApiParam(value = "The status to be set for the movie") @FormParam("status")
                                            String status) {
