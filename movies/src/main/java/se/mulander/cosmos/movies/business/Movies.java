@@ -54,13 +54,13 @@ public class Movies {
     }
 
     @GET
-    @Path("/{status}")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get a list of movie objects", notes = "Gets a list with movies associated with the status")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
                                 message = "The list of movies",
                                 response = List.class)})
-    public Response getMoviesWithStatus(@ApiParam(value = "The status to search for") @PathParam("status") String status) {
+    public Response getMoviesWithStatus(@ApiParam(value = "The status to search for") @QueryParam("status") String status) {
         return se.mulander.cosmos.movies.impl.Movies.getMoviesWithStatus(status);
     }
 

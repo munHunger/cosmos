@@ -288,12 +288,24 @@ public class Movies
         try {
             Map<String, Object> param = new HashMap<>();
             param.put("status", status);
-            List result = Database.getObjects("from Movie WHERE status = :status", param);
-            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+            List ex_movies = Database.getObjects("from ExtendedMovie WHERE status = :status", param);
+
+            if (ex_movies.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
                             "No movies with status " + status + " was found in the database"))
                     .build();
-            return Response.ok(result).build();
+            else {
+                List result = null;
+                for(Object ex_movie : ex_movies) {
+                    String id = ((ExtendedMovie)ex_movie).movieID;
+                    result.add(getMovie(id));
+                }
+                if(result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+                        .entity(new ErrorMessage("Could not fetch movies",
+                                "No movies in result"))
+                        .build();
+                else return Response.ok(result).build();
+            }
         } catch (Exception e)
         {
             return Response.serverError()
