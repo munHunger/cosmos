@@ -278,6 +278,52 @@ public class Movies
     }
 
     /**
+     * Fetches all movie objects with certain status
+     * @param status the status to filter movies by
+     * @return a response object with status 200 and a list of movies with certain status
+     */
+    public static Response getMoviesWithStatus(String status)
+    {
+
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("status", status);
+            List result = Database.getObjects("from Movie WHERE status = :status", param);
+            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+                    .entity(new ErrorMessage("Could not fetch movies",
+                            "No movies with status " + status + " was found in the database"))
+                    .build();
+            return Response.ok(result).build();
+        } catch (Exception e)
+        {
+            return Response.serverError()
+                    .entity(new ErrorMessage("could not fetch movies",
+                                            "An exception was thrown from the database"))
+                    .build();
+        }
+
+        /*
+        try
+        {
+            Map<String, Object> param = new HashMap<>();
+            param.put("id", id);
+            List result = Database.getObjects("from Movie WHERE internalID = :id", param);
+            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+                                                 .entity(new ErrorMessage("Could not fetch movie",
+                                                                          "The movie with ID " + id + " was not found" + " in the database"))
+                                                 .build();
+            return Response.ok(result.get(0)).build();
+        } catch (Exception e)
+        {
+            return Response.serverError()
+                           .entity(new ErrorMessage("Could not fetch movie",
+                                                    "An exception was thrown from the database"))
+                           .build();
+        }
+         */
+    }
+
+    /**
      * Fetches a list of genres from the movie database.
      *
      * @param client        A client to make requests with

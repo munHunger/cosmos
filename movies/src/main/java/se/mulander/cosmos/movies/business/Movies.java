@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created by marcu on 2017-04-02.
@@ -50,6 +51,17 @@ public class Movies {
                                                                       response = ErrorMessage.class)})
     public Response getMovieObject(@ApiParam(value = "The id to search for") @PathParam("id") String id) {
         return se.mulander.cosmos.movies.impl.Movies.getMovie(id);
+    }
+
+    @GET
+    @Path("/{status}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get a list of movie objects", notes = "Gets a list with movies associated with the status")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
+                                message = "The list of movies",
+                                response = List.class)})
+    public Response getMoviesWithStatus(@ApiParam(value = "The status to search for") @PathParam("status") String status) {
+        return se.mulander.cosmos.movies.impl.Movies.getMoviesWithStatus(status);
     }
 
     @POST
