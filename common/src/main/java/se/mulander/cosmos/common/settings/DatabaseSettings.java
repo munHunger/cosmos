@@ -77,7 +77,7 @@ public abstract class DatabaseSettings
         new Thread(() -> {
             while (settingsURL == null)
             {
-                settingsURL = Scanner.find(80, "/settings/api/discover");
+                settingsURL = Scanner.find("/settings/api/discover");
                 try
                 {
                     Thread.sleep(1000);

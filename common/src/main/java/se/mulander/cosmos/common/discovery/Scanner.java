@@ -20,6 +20,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.UUID;
 
 /**
  * Created by Marcus Münger on 2017-07-20.
@@ -52,15 +53,15 @@ public class Scanner
      * <p>
      * If the computer is offline and thus doesn't have an IP, then 127.0.0.1 will be used
      *
-     * @param port The port to scan on(this is ignored for local connections
      * @param path The path to the discovery of the sought service
      * @return An address to the service
      */
-    public static String find(int port, String path)
+    public static String find(String path)
     {
         Client client = null;
         try
         {
+            int port = findPort();
             String localIP = getLocalAddress();
             if (localIP == null) return "127.0.0.1";
             String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
@@ -99,11 +100,55 @@ public class Scanner
         return null;
     }
 
+    private static int findPort()
+    {
+        Client client = ClientBuilder.newClient();
+        try
+        {
+            for (int i = 9999; i > 0; i--)
+            {
+                Response response = null;
+                try
+                {
+                    response = client.target(String.format("127.0.0.1:%d", i)).path("/discover/self").request().get();
+                    int responseStatus = response.getStatus();
+                    String data = response.readEntity(String.class);
+
+                    if (responseStatus == 200 && data.equals(id)) return i;
+                } catch (ProcessingException e)
+                {
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                } finally
+                {
+                    if (response != null) response.close();
+                }
+            }
+        } finally
+        {
+            client.close();
+        }
+        return 80;
+    }
+
+    private static String id = UUID.randomUUID().toString();
+
+    @GET
+    @Path("/self")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Self discovery", notes = "Static point that returns a unique ID that only this service is aware of. This can be used for the service to scan and find what port it is being hosted on")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK, message = "static OK with a unique ID for this service instance")})
+    public Response selfDiscover()
+    {
+        return Response.ok(id).build();
+    }
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @ApiOperation(value = "Discover", notes = "Static point that returns 200 OK, to note that this endpoint is alive. As this is common " + "for all cosmos microservices")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK, message = "static OK to note that it is alive")})
-    public Response getRecomendations()
+    public Response discover()
     {
         return Response.ok("cosmos").build();
     }
