@@ -64,7 +64,6 @@ public class Scanner
             String localIP = getLocalAddress();
             if (localIP == null) return "127.0.0.1";
             String gate = "http://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
-            String sslGate = "https://" + localIP.substring(localIP.indexOf("/") + 1, localIP.lastIndexOf(".") + 1);
 
             client = ClientBuilder.newClient();
             client.property(ClientProperties.CONNECT_TIMEOUT, 3);
