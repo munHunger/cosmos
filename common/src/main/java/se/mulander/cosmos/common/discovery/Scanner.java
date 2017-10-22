@@ -100,6 +100,12 @@ public class Scanner
         return null;
     }
 
+    /**
+     * Searches on localhost for itself.
+     * This starts on 9999 and going down.
+     * If multiple instances are running on the same machine, it will still find itself.
+     * @return the port that the current instance is running on
+     */
     private static int findPort()
     {
         Client client = ClientBuilder.newClient();
