@@ -21,6 +21,6 @@ public class Settings extends DatabaseSettings
     public Settings()
     {
         DatabaseSettings.singleton = this;
-        DatabaseSettings.init();
+        DatabaseSettings.init("movies");
     }
 }
