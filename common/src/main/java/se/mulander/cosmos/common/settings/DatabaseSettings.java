@@ -78,12 +78,26 @@ public abstract class DatabaseSettings
             while (settingsURL == null)
             {
                 settingsURL = Scanner.find(80, "/settings/api/discover");
+                try
+                {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
             settingsURL += "/settings/api";
             settingsUpdater.accept(settingsURL + "/settings/structure");
             while (true)
             {
                 settingsUpdater.accept(settingsURL + "/settings/structure/poll");
+                try
+                {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
