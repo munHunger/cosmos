@@ -56,7 +56,7 @@ public class MoviesTest
                     doCallRealMethod().when(Movies.class, "getGenres", any(), anyString(), anyString());
                     doCallRealMethod().when(Movies.class, "getTopMovies", any(), anyString(), anyString());
                     doCallRealMethod().when(Movies.class, "tmdbToInternal", any(), any(), any(), any(), any());
-                    doNothing().when(Movies.class, "addCast", any(), any(), any(), any(), any());
+                    doNothing().when(Movies.class, "addCast", any(), any(), any(), any());
 
                     TMDBResponse tmdbResponse = new TMDBResponse();
                     tmdbResponse.results = new TMDBResponseResult[]{
