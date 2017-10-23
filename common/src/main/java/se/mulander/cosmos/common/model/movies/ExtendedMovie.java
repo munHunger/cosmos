@@ -20,7 +20,6 @@ public class ExtendedMovie {
     @Column(name = "movie_id", length = 64)
     @JsonIgnore
     public String movieID;
-
     @OneToOne(fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     @JsonIgnore
@@ -43,14 +42,18 @@ public class ExtendedMovie {
     @JsonProperty("status")
     @Column(name= "status", length = 16)
     public String status;
+    @JsonIgnore
+    @Column(name= "tmdbID")
+    public int tmdbID;
 
     public ExtendedMovie() {
     }
 
-    public ExtendedMovie(String description, String posterURL, Status status) {
+    public ExtendedMovie(String description, String posterURL, Status status, int tmbdID) {
         this.description = description;
         this.posterURL = posterURL;
         this.status = status.name();
+        this.tmdbID = tmbdID;
     }
 
     public ExtendedMovie addCastMember(Cast c) {
