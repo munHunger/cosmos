@@ -179,7 +179,8 @@ public class Movies
                                                          .findFirst().get().name).forEach(name -> m.addGenre(name));
         ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
                                                     "https://image.tmdb" + "" + ".org/t/p/w1920" + tmdb.backdropPath,
-                                                    Status.DEFAULT);
+                                                    Status.DEFAULT,
+                                                    tmdb.id);
         m.setExtended(exMovie);
         return m;
     }
@@ -200,7 +201,7 @@ public class Movies
         ExtendedMovie exMovie = movie.extendedMovie;
         Response castResponse = client.target(theMovieDbURL)
                                       .path("/3/movie")
-                                      .path("/" + movie.internalID)
+                                      .path("/" + exMovie.tmdbID)
                                       .path("/credits")
                                       .queryParam("api_key", apiKey)
                                       .request()
@@ -244,13 +245,13 @@ public class Movies
                                                  .entity(new ErrorMessage("Could not fetch movie",
                                                                           "The movie with ID " + id + " was not found" + " in the database"))
                                                  .build();
-            Movie exMovie = (Movie)result.get(0);
+            Movie movie = (Movie)result.get(0);
             final Client client = ClientBuilder.newClient();
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
-            addCast(client, exMovie, theMovieDbURL.get(), apiKey.get());
+            addCast(client, movie, theMovieDbURL.get(), apiKey.get());
 
-            return Response.ok(exMovie).build();
+            return Response.ok(movie).build();
         } catch (Exception e)
         {
             return Response.serverError()

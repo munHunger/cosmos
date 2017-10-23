@@ -22,6 +22,7 @@ public class Movies {
     @Path("/cache")
     @Cached
     @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Pure test call, does nothing", notes = "Gets current time in milliseconds")
     public Response testCache() {
         return Response.ok(System.currentTimeMillis()).build();
     }
