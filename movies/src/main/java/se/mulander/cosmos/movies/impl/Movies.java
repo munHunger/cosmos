@@ -48,14 +48,14 @@ public class Movies {
             TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL.get(), apiKey.get());
 
             List<Movie> result = Arrays.stream(tmdbResponse.results)
-                                       .map(tmdb -> tmdbToInternal(tmdb,
-                                                                   client,
-                                                                   theMovieDbURL.get(),
-                                                                   apiKey.get(),
-                                                                   genreList))
-                                       .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
-                                               m1.rating.get(0).rating))
-                                       .collect(Collectors.toList());
+                    .map(tmdb -> tmdbToInternal(tmdb,
+                            client,
+                            theMovieDbURL.get(),
+                            apiKey.get(),
+                            genreList))
+                    .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
+                            m1.rating.get(0).rating))
+                    .collect(Collectors.toList());
             saveListInDatabase(result);
 
             return Response.ok(clearExtended(result)).build();
@@ -336,5 +336,53 @@ public class Movies {
         } finally {
             res.close();
         }
+    }
+    /**
+     * Fetches a list of movie object from external library
+     *
+     * @param query the query filtering results
+     * @return a response object with status 200 and the movie/movies if it was found.
+     */
+    public static Response findMovie(String query) throws Exception {
+        List result = new ArrayList<>();
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("title", query);
+            result = Database.getObjects("from Movie WHERE movie.title = :title", param);
+        } catch (Exception e) {}
+        if (result.isEmpty()) {
+
+            String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri").get();
+            String apiKey = Settings.getSettingsValue("movies.movie_db_api_key").get();
+            final Client client = ClientBuilder.newClient();
+
+            Response res = client.target(theMovieDbURL)
+                    .path("/3/search/movie")
+                    .queryParam("query", query)
+                    .queryParam("api_key", apiKey)
+                    .queryParam("include_adult", false)
+                    .request()
+                    .buildGet()
+                    .invoke();
+
+            try {
+                if (res.getStatus() != HttpServletResponse.SC_OK) throw new APIException(
+                        "Could not get movie",
+                        "Response from movie database was not 200 " + "OK. code was:" + res.getStatus());
+                TMDBResponse tmdbResponse = res.readEntity(TMDBResponse.class);
+                GenreList genreList = getGenres(client, theMovieDbURL, apiKey);
+                List<Movie> resulting = Arrays.stream(tmdbResponse.results)
+                        .map(tmdb -> tmdbToInternal(tmdb,
+                                client,
+                                theMovieDbURL,
+                                apiKey,
+                                genreList))
+                        .collect(Collectors.toList());
+                return Response.ok(resulting).build();
+            } finally {
+                res.close();
+            }
+        }
+        return Response.ok(result.get(0)).build();
     }
 }

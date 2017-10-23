@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.movies.Movie;
+import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -80,6 +81,18 @@ public class Movies {
                                    @ApiParam(value = "The status to be set for the movie") @FormParam("status")
                                            String status) {
         return se.mulander.cosmos.movies.impl.Movies.setMovieStatus(id, status);
+    }
+
+    @GET
+    @Path("/search/{query}")
+    @ApiOperation(value = "Finds a movie not in library", notes = "Searches in external library for movies matching query")
+    @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
+            message = "Could not find movie based on query",
+            response = ErrorMessage.class),
+            @ApiResponse(code = HttpServletResponse.SC_OK, message = "")})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMovie(@ApiParam(value = "The query to search for") @PathParam("query") String query) throws Exception {
+        return se.mulander.cosmos.movies.impl.Movies.findMovie(query);
     }
 }
 
