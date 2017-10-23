@@ -181,7 +181,7 @@ public class Movies {
      * Adds a cast to a given movie object.
      *
      * @param client        The client to create the movie API request with
-     * @param movie       the movie object to further expand with cast
+     * @param movie         the movie object to further expand with cast
      * @param theMovieDbURL url to the movie database
      * @param apiKey        the api key for the movie database
      * @throws APIException if tmdb couldn't respond with a 200 OK
