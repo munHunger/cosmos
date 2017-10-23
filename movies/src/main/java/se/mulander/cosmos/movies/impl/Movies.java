@@ -239,12 +239,12 @@ public class Movies {
             final Client client = ClientBuilder.newClient();
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
             if (!theMovieDbURL.isPresent()) return Response.serverError()
-                    .entity(new ErrorMessage("Could not get recomendations",
+                    .entity(new ErrorMessage("Could not get movie",
                             "Couldn't get the settings for where to find themoviedb"))
                     .build();
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
             if (!apiKey.isPresent()) return Response.serverError()
-                    .entity(new ErrorMessage("Could not get recomendations",
+                    .entity(new ErrorMessage("Could not get movie",
                             "Couldn't get the settings for the API key"))
                     .build();
             addCast(client, movie, theMovieDbURL.get(), apiKey.get());
