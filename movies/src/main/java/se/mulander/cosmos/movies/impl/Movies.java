@@ -20,8 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by marcu on 2017-03-17.
  */
-public class Movies
-{
+public class Movies {
 
     /**
      * Gets a list of recomended movies.
@@ -31,22 +30,21 @@ public class Movies
      *
      * @return A response object with either a 200 OK and a list of popular movie objects or a 500 with an error message
      */
-    public static Response getRecomendations()
-    {
+    public static Response getRecommendations() {
         Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
         Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
 
         if (!theMovieDbURL.isPresent()) return Response.serverError()
-                                                       .entity(new ErrorMessage("Could not get recomendations",
-                                                                                "Couldn't get the settings for where to find themoviedb"))
+                                                       .entity(new ErrorMessage("Could not get recommendations",
+                                                                                "Couldn't get the settings for where " +
+                                                                                        "to find themoviedb"))
                                                        .build();
         if (!apiKey.isPresent()) return Response.serverError()
-                                                .entity(new ErrorMessage("Could not get recomendations",
+                                                .entity(new ErrorMessage("Could not get recommendations",
                                                                          "Couldn't get the settings for the API key"))
                                                 .build();
         final Client client = ClientBuilder.newClient();
-        try
-        {
+        try {
             GenreList genreList = getGenres(client, theMovieDbURL.get(), apiKey.get());
             TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL.get(), apiKey.get());
 
@@ -56,20 +54,18 @@ public class Movies
                                                                    theMovieDbURL.get(),
                                                                    apiKey.get(),
                                                                    genreList))
-                                       .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(m1.rating.get(0).rating))
+                                       .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
+                                               m1.rating.get(0).rating))
                                        .collect(Collectors.toList());
             saveListInDatabase(result);
 
             return Response.ok(clearExtended(result)).build();
-        } catch (APIException e)
-        {
+        } catch (APIException e) {
             return Response.serverError().entity(e.toErrorMessage()).build();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity(new ErrorMessage("Nope", "Something went wrong")).build();
-        } finally
-        {
+        } finally {
             client.close();
         }
     }
@@ -83,8 +79,7 @@ public class Movies
      * @return the response object of the movie database
      * @throws APIException if the movie db did not reply with a 200 OK.
      */
-    private static TMDBResponse getTopMovies(Client client, String theMovieDbURL, String apiKey) throws APIException
-    {
+    private static TMDBResponse getTopMovies(Client client, String theMovieDbURL, String apiKey) throws APIException {
         Response res = client.target(theMovieDbURL)
                              .path("/3/discover/movie")
                              .queryParam("api_key", apiKey)
@@ -96,14 +91,14 @@ public class Movies
                              .request()
                              .buildGet()
                              .invoke();
-        try
-        {
+        try {
             if (res.getStatus() != HttpServletResponse.SC_OK) throw new APIException("Could not get recommendations",
-                                                                                     "Response from movie database was not 200 OK. code was:" + res
+                                                                                     "Response from movie database " +
+                                                                                             "was not 200 OK. code " +
+                                                                                             "was:" + res
                                                                                              .getStatus());
             return res.readEntity(TMDBResponse.class);
-        } finally
-        {
+        } finally {
             res.close();
         }
     }
@@ -114,27 +109,25 @@ public class Movies
      *
      * @param movies a list of movies to save
      */
-    private static void saveListInDatabase(List<Movie> movies)
-    {
-        movies.forEach(m -> {
-            Map<String, Object> param = new HashMap<>();
-            param.put("title", m.title);
-            param.put("year", m.year);
-            try
-            {
-                List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year", param);
-                if (dbMovies.isEmpty()) Database.saveObject(m);
-                else
-                {
-                    Movie oldMovie = (Movie) dbMovies.get(0);
-                    m.setID(oldMovie.internalID);
-                    Database.updateObject(m);
-                }
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        });
+    private static void saveListInDatabase(List<Movie> movies) {
+        movies.forEach(m ->
+                       {
+                           Map<String, Object> param = new HashMap<>();
+                           param.put("title", m.title);
+                           param.put("year", m.year);
+                           try {
+                               List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year",
+                                                                   param);
+                               if (dbMovies.isEmpty()) Database.saveObject(m);
+                               else {
+                                   Movie oldMovie = (Movie) dbMovies.get(0);
+                                   m.setID(oldMovie.internalID);
+                                   Database.updateObject(m);
+                               }
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+                       });
     }
 
     /**
@@ -144,12 +137,12 @@ public class Movies
      * @param movies A list of movies to clear the extended movie object of
      * @return The supplied list but with the extended movie objects set to null
      */
-    private static List<Movie> clearExtended(List<Movie> movies)
-    {
-        return movies.stream().map(m -> {
-            m.extendedMovie = null;
-            return m;
-        }).collect(Collectors.toList());
+    private static List<Movie> clearExtended(List<Movie> movies) {
+        return movies.stream().map(m ->
+                                   {
+                                       m.extendedMovie = null;
+                                       return m;
+                                   }).collect(Collectors.toList());
     }
 
     /**
@@ -164,8 +157,7 @@ public class Movies
      * @return a fully expanded and mapped object
      */
     private static Movie tmdbToInternal(TMDBResponseResult tmdb, Client client, String theMovieDbURL, String apiKey,
-                                        GenreList genreList)
-    {
+                                        GenreList genreList) {
 
         String year = tmdb.releaseDate.trim().substring(0, 4);
         Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.posterPath,
@@ -210,8 +202,7 @@ public class Movies
                                       .request()
                                       .buildGet()
                                       .invoke();
-        try
-        {
+        try {
 
             if (castResponse.getStatus() != HttpServletResponse.SC_OK) throw new APIException(
                     "Could not get cast for movie " + tmdb.title,
@@ -220,13 +211,13 @@ public class Movies
             TMDBCastResponse castList = castResponse.readEntity(TMDBCastResponse.class);
             castList.cast.forEach(exMovie::addCastMember);
             castList.crew.forEach(exMovie::addCastMember);
-            exMovie.cast.forEach(c -> {
-                c.generateID();
-                if (c.profileURL != null && !c.profileURL.toUpperCase().equals("NULL"))
-                    c.profileURL = "https://image" + ".tmdb.org/t/p/w185" + c.profileURL;
-            });
-        } finally
-        {
+            exMovie.cast.forEach(c ->
+                                 {
+                                     c.generateID();
+                                     if (c.profileURL != null && !c.profileURL.toUpperCase().equals("NULL"))
+                                         c.profileURL = "https://image" + ".tmdb.org/t/p/w185" + c.profileURL;
+                                 });
+        } finally {
             castResponse.close();
         }
     }
@@ -237,20 +228,18 @@ public class Movies
      * @param id the ID to look for
      * @return a response object with status 200 and the movie if it was found.
      */
-    public static Response getMovie(String id)
-    {
-        try
-        {
+    public static Response getMovie(String id) {
+        try {
             Map<String, Object> param = new HashMap<>();
             param.put("id", id);
             List result = Database.getObjects("from Movie WHERE internalID = :id", param);
             if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                                                  .entity(new ErrorMessage("Could not fetch movie",
-                                                                          "The movie with ID " + id + " was not found" + " in the database"))
+                                                                          "The movie with ID " + id + " was not " +
+                                                                                  "found" + " in the database"))
                                                  .build();
             return Response.ok(result.get(0)).build();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return Response.serverError()
                            .entity(new ErrorMessage("Could not fetch movie",
                                                     "An exception was thrown from the database"))
@@ -311,22 +300,28 @@ public class Movies
      * @return A GenreList object
      * @throws APIException If the movie database responded with something other than 200 OK
      */
-    private static GenreList getGenres(Client client, String theMovieDbURL, String apiKey) throws APIException
-    {
+    private static GenreList getGenres(Client client, String theMovieDbURL, String apiKey) throws APIException {
+        if (theMovieDbURL == null)
+            throw new APIException("Could not get genre list", "movieDBurl is null");
+        if (apiKey == null)
+            throw new APIException("Could not get genre list", "api key is null");
+        if (client == null)
+            throw new APIException("Could not get genre list", "Client is null");
         Response res = client.target(theMovieDbURL)
                              .path("/3/genre/movie/list")
                              .queryParam("api_key", apiKey)
                              .request()
                              .buildGet()
                              .invoke();
-        try
-        {
+        
+        try {
             if (res.getStatus() != HttpServletResponse.SC_OK) throw new APIException("Could not get genre list",
-                                                                                     "Response from movie database was not 200 OK. code was:" + res
+                                                                                     "Response from movie database " +
+                                                                                             "was not 200 OK. code " +
+                                                                                             "was:" + res
                                                                                              .getStatus());
             return res.readEntity(GenreList.class);
-        } finally
-        {
+        } finally {
             res.close();
         }
     }
