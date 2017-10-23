@@ -20,7 +20,7 @@ public class Movies {
 
     @GET
     @Path("/recomendations")
-    @Cached
+    @Cached(86400000) //24Hours
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,

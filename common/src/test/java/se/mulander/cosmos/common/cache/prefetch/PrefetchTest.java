@@ -11,6 +11,7 @@ import se.mulander.cosmos.common.cache.prefetch.impl.PrefetchMapCacheManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import static com.mscharhag.oleaster.runner.StaticRunnerSupport.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -25,6 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class PrefetchTest {
     private static PrefetchMapCacheManager<String> underTest;
 
+    private static Semaphore lock = new Semaphore(0);
     {
         describe("Has a full prefetchCache built from builder", () ->
         {
@@ -44,10 +46,14 @@ public class PrefetchTest {
                                argMap.put("input", "value");
                                underTest.put("key", 13, 5, args ->
                                {
-                                   if (System.currentTimeMillis() < 5)
-                                       return ((Map<String, Object>) args).get("input");
-                                   else
-                                       return "new";
+                                   try
+                                   {
+                                       if (System.currentTimeMillis() < 5) return ((Map<String, Object>) args).get("input");
+                                       else return "new";
+                                   }finally
+                                   {
+                                       lock.release();
+                                   }
                                }, argMap);
                            });
                 //region The entry has been deleted
@@ -97,8 +103,9 @@ public class PrefetchTest {
                     {
                         beforeEach(() ->
                                    {
+                                       lock = new Semaphore(0);
                                        underTest.get("key");
-                                       Thread.sleep(20); //TODO: How can we make this more stable?
+                                       lock.acquire();
                                    });
                         it("It updates the value", () ->
                         {

@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Cached {
-    long value = 3600000; //Default to an hour in milliseconds
+    long value() default 3600000; //Default to an hour in milliseconds
 }
