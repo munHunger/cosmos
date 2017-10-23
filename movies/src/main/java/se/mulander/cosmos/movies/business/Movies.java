@@ -37,7 +37,7 @@ public class Movies {
                                 responseContainer = "Array",
                                 response = Movie.class)})
     public Response getRecomendations() {
-        return se.mulander.cosmos.movies.impl.Movies.getRecomendations();
+        return se.mulander.cosmos.movies.impl.Movies.getRecommendations();
     }
 
     @GET
