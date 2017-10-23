@@ -89,9 +89,12 @@ public class Movies {
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
             message = "Could not find movie based on query",
             response = ErrorMessage.class),
-            @ApiResponse(code = HttpServletResponse.SC_OK, message = "")})
+            @ApiResponse(code = HttpServletResponse.SC_OK,
+                    message = "The movie/movies found",
+                    responseContainer = "Array",
+                    response = Movie.class)})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMovie(@ApiParam(value = "The query to search for") @PathParam("query") String query) throws Exception {
+    public Response getMovie(@ApiParam(value = "The query to search for") @QueryParam("query") String query) throws Exception {
         return se.mulander.cosmos.movies.impl.Movies.findMovie(query);
     }
 }

@@ -352,30 +352,39 @@ public class Movies {
         } catch (Exception e) {}
         if (result.isEmpty()) {
 
-            String theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri").get();
-            String apiKey = Settings.getSettingsValue("movies.movie_db_api_key").get();
-            final Client client = ClientBuilder.newClient();
+            Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
+            Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+            if (!theMovieDbURL.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get recommendations",
+                            "Couldn't get the settings for where " +
+                                    "to find themoviedb"))
+                    .build();
+            if (!apiKey.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get recommendations",
+                            "Couldn't get the settings for the API key"))
+                    .build();
+            Client client = ClientBuilder.newClient();
 
-            Response res = client.target(theMovieDbURL)
+            Response res = client.target(theMovieDbURL.get())
                     .path("/3/search/movie")
                     .queryParam("query", query)
-                    .queryParam("api_key", apiKey)
+                    .queryParam("api_key", apiKey.get())
                     .queryParam("include_adult", false)
                     .request()
                     .buildGet()
                     .invoke();
 
             try {
-                if (res.getStatus() != HttpServletResponse.SC_OK) throw new APIException(
-                        "Could not get movie",
-                        "Response from movie database was not 200 " + "OK. code was:" + res.getStatus());
+                if (res.getStatus() != HttpServletResponse.SC_OK) return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+                        .entity(new ErrorMessage("Nope", "Something went wrong"))
+                        .build();
                 TMDBResponse tmdbResponse = res.readEntity(TMDBResponse.class);
-                GenreList genreList = getGenres(client, theMovieDbURL, apiKey);
+                GenreList genreList = getGenres(client, theMovieDbURL.get(), apiKey.get());
                 List<Movie> resulting = Arrays.stream(tmdbResponse.results)
                         .map(tmdb -> tmdbToInternal(tmdb,
                                 client,
-                                theMovieDbURL,
-                                apiKey,
+                                theMovieDbURL.get(),
+                                apiKey.get(),
                                 genreList))
                         .collect(Collectors.toList());
                 return Response.ok(resulting).build();
