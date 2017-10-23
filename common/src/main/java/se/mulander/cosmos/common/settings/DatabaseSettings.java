@@ -72,12 +72,14 @@ public abstract class DatabaseSettings
         return Optional.empty();
     }
 
-    public static void init(String serviceName)
+    public static void init()
     {
         new Thread(() -> {
             while (settingsURL == null)
             {
-                settingsURL = Scanner.find("/settings/api/discover", serviceName);
+                Optional<String> optionalURL = Scanner.find("/settings/api/discover");
+                if(optionalURL.isPresent())
+                    settingsURL = optionalURL.get();
                 try
                 {
                     Thread.sleep(1000);
