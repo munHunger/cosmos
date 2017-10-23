@@ -43,7 +43,7 @@ public class ExtendedMovie {
     @Column(name= "status", length = 16)
     public String status;
     @JsonIgnore
-    @Column(name= "tmdbID")
+    @Column(name= "tmdb_ID")
     public int tmdbID;
 
     public ExtendedMovie() {
