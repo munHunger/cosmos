@@ -1,6 +1,5 @@
 package se.mulander.cosmos.movies.impl;
 
-import org.glassfish.jersey.message.internal.Statuses;
 import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
@@ -172,11 +171,9 @@ public class Movies {
                                                          .findFirst().get().name).forEach(name -> m.addGenre(name));
         ExtendedMovie exMovie = new ExtendedMovie(tmdb.overview,
                                                     "https://image.tmdb" + "" + ".org/t/p/w1920" + tmdb.backdropPath,
-                                                    Status.DEFAULT);
+                                                    Status.DEFAULT,
+                                                    tmdb.id);
         m.setExtended(exMovie);
-
-        addCast(client, tmdb, exMovie, theMovieDbURL, apiKey);
-
         return m;
     }
 
@@ -184,19 +181,19 @@ public class Movies {
      * Adds a cast to a given movie object.
      *
      * @param client        The client to create the movie API request with
-     * @param tmdb          the tmdb response for the movie object.
-     * @param exMovie       the extended movie object to further expand with cast
+     * @param movie       the movie object to further expand with cast
      * @param theMovieDbURL url to the movie database
      * @param apiKey        the api key for the movie database
      * @throws APIException if tmdb couldn't respond with a 200 OK
      */
-    private static void addCast(Client client, TMDBResponseResult tmdb, ExtendedMovie exMovie, String theMovieDbURL,
+    private static void addCast(Client client, Movie movie, String theMovieDbURL,
                                 String apiKey) throws APIException
 
     {
+        ExtendedMovie exMovie = movie.extendedMovie;
         Response castResponse = client.target(theMovieDbURL)
                                       .path("/3/movie")
-                                      .path("/" + tmdb.id)
+                                      .path("/" + exMovie.tmdbID)
                                       .path("/credits")
                                       .queryParam("api_key", apiKey)
                                       .request()
@@ -205,7 +202,7 @@ public class Movies {
         try {
 
             if (castResponse.getStatus() != HttpServletResponse.SC_OK) throw new APIException(
-                    "Could not get cast for movie " + tmdb.title,
+                    "Could not get cast for movie",
                     "Response from movie database was not 200 " + "OK. code was:" + castResponse.getStatus());
 
             TMDBCastResponse castList = castResponse.readEntity(TMDBCastResponse.class);
@@ -238,8 +235,23 @@ public class Movies {
                                                                           "The movie with ID " + id + " was not " +
                                                                                   "found" + " in the database"))
                                                  .build();
-            return Response.ok(result.get(0)).build();
-        } catch (Exception e) {
+            Movie movie = (Movie)result.get(0);
+            final Client client = ClientBuilder.newClient();
+            Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
+            if (!theMovieDbURL.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get movie",
+                            "Couldn't get the settings for where to find themoviedb"))
+                    .build();
+            Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+            if (!apiKey.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get movie",
+                            "Couldn't get the settings for the API key"))
+                    .build();
+            addCast(client, movie, theMovieDbURL.get(), apiKey.get());
+
+            return Response.ok(movie).build();
+        } catch (Exception e)
+        {
             return Response.serverError()
                            .entity(new ErrorMessage("Could not fetch movie",
                                                     "An exception was thrown from the database"))
