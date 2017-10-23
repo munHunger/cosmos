@@ -189,7 +189,7 @@ public class Movies
      * Adds a cast to a given movie object.
      *
      * @param client        The client to create the movie API request with
-     * @param movie       the extended movie object to further expand with cast
+     * @param movie       the movie object to further expand with cast
      * @param theMovieDbURL url to the movie database
      * @param apiKey        the api key for the movie database
      * @throws APIException if tmdb couldn't respond with a 200 OK
@@ -248,7 +248,15 @@ public class Movies
             Movie movie = (Movie)result.get(0);
             final Client client = ClientBuilder.newClient();
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
+            if (!theMovieDbURL.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get recomendations",
+                            "Couldn't get the settings for where to find themoviedb"))
+                    .build();
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+            if (!apiKey.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get recomendations",
+                            "Couldn't get the settings for the API key"))
+                    .build();
             addCast(client, movie, theMovieDbURL.get(), apiKey.get());
 
             return Response.ok(movie).build();
