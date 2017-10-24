@@ -19,17 +19,8 @@ import java.util.List;
 public class Movies {
 
     @GET
-    @Path("/cache")
-    @Cached
-    @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Pure test call, does nothing", notes = "Gets current time in milliseconds")
-    public Response testCache() {
-        return Response.ok(System.currentTimeMillis()).build();
-    }
-
-    @GET
     @Path("/recomendations")
-    @Cached
+    @Cached(86400000) //24Hours
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,

@@ -36,9 +36,10 @@ public class CachePreFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Method method = resourceInfo.getResourceMethod();
         if (method.isAnnotationPresent(Cached.class)) {
+            Cached cacheAnnotation = method.getAnnotation(Cached.class);
             if (SingletonCache.cache == null) {
                 SingletonCache.cache = MapCacheBuilder.createOfType(ContainerResponseContext.class)
-                                                      .setTTL(10000)
+                                                      .setTTL(cacheAnnotation.value())
                                                       .build();
             }
             Optional<ContainerResponseContext> cacheData = SingletonCache.cache.get(method.getName());
