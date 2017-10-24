@@ -84,7 +84,7 @@ public class Movies {
     }
 
     @GET
-    @Path("/search/{query}")
+    @Path("/search")
     @ApiOperation(value = "Finds a movie by title", notes = "Searches in database/external library for movies matching query")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND,
             message = "Could not find movie based on query",
