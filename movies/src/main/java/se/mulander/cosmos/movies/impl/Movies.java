@@ -48,14 +48,14 @@ public class Movies {
             TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL.get(), apiKey.get());
 
             List<Movie> result = Arrays.stream(tmdbResponse.results)
-                                       .map(tmdb -> tmdbToInternal(tmdb,
-                                                                   client,
-                                                                   theMovieDbURL.get(),
-                                                                   apiKey.get(),
-                                                                   genreList))
-                                       .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
-                                               m1.rating.get(0).rating))
-                                       .collect(Collectors.toList());
+                    .map(tmdb -> tmdbToInternal(tmdb,
+                            client,
+                            theMovieDbURL.get(),
+                            apiKey.get(),
+                            genreList))
+                    .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
+                            m1.rating.get(0).rating))
+                    .collect(Collectors.toList());
             saveListInDatabase(result);
 
             return Response.ok(clearExtended(result)).build();
@@ -336,5 +336,66 @@ public class Movies {
         } finally {
             res.close();
         }
+    }
+    /**
+     * Fetches a movie/list of movies from external library if not found in local database
+     *
+     * @param query the query filtering results
+     * @return a response object with status 200 and the movie/movies if it was found.
+     */
+    public static Response findMovie(String query) throws Exception {
+        List result = new ArrayList<>();
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("title", query);
+            result = Database.getObjects("from Movie WHERE title = title", param);
+        } catch (Exception e) {}
+        if (result.isEmpty()) {
+            Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
+            Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
+            if (!theMovieDbURL.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get recommendations",
+                            "Couldn't get the settings for where " +
+                                    "to find themoviedb"))
+                    .build();
+            if (!apiKey.isPresent()) return Response.serverError()
+                    .entity(new ErrorMessage("Could not get recommendations",
+                            "Couldn't get the settings for the API key"))
+                    .build();
+            Client client = ClientBuilder.newClient();
+            Response res = client.target(theMovieDbURL.get())
+                    .path("/3/search/movie")
+                    .queryParam("query", query)
+                    .queryParam("api_key", apiKey.get())
+                    .queryParam("include_adult", false)
+                    .queryParam("page", 1)
+                    .queryParam("primary_release_year", Calendar.getInstance().get(Calendar.YEAR))
+                    .request()
+                    .buildGet()
+                    .invoke();
+            try {
+                if (res.getStatus() != HttpServletResponse.SC_OK) return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+                        .entity(new ErrorMessage("Nope", "Something went wrong"))
+                        .build();
+                TMDBResponse tmdbResponse = res.readEntity(TMDBResponse.class);
+                GenreList genreList = getGenres(client, theMovieDbURL.get(), apiKey.get());
+                List<Movie> resulting = Arrays.stream(tmdbResponse.results)
+                        .map(tmdb -> tmdbToInternal(tmdb,
+                                client,
+                                theMovieDbURL.get(),
+                                apiKey.get(),
+                                genreList))
+                        .collect(Collectors.toList());
+                if (resulting.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
+                        .entity(new ErrorMessage("Could not fetch movie",
+                                "The movie was not " +
+                                        "found in the database or in external library"))
+                        .build();
+                return Response.ok(resulting).build();
+            } finally {
+                res.close();
+            }
+        }
+        return Response.ok(result).build();
     }
 }
