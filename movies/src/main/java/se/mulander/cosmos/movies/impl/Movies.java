@@ -5,6 +5,7 @@ import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.*;
 import se.mulander.cosmos.common.model.movies.Movie.Movie;
+import se.mulander.cosmos.common.model.movies.Movie.MovieDaoImpl;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBCastResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponseResult;
@@ -286,6 +287,11 @@ public class Movies {
      */
     public static Response getMoviesWithStatus(String status)
     {
+        MovieDaoImpl movies = new MovieDaoImpl();
+        List result = movies.getAllMovies();
+        return Response.ok(result).build();
+    }
+        /*
         try {
             Map<String, Object> param = new HashMap<>();
             param.put("status", status);
@@ -302,6 +308,7 @@ public class Movies {
                                             "An exception was thrown from the database"))
                     .build();
         }
+        /*
     }
 
     /**
