@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import se.mulander.cosmos.common.model.movies.Movie.Movie;
 
 import javax.persistence.*;
 import java.util.ArrayList;
