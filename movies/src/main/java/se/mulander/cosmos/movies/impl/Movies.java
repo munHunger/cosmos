@@ -4,6 +4,9 @@ import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.*;
+import se.mulander.cosmos.common.model.movies.movie.Movie;
+import se.mulander.cosmos.common.model.movies.movie.MovieDao;
+import se.mulander.cosmos.common.model.movies.movie.MovieDaoImpl;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBCastResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponseResult;
@@ -337,6 +340,17 @@ public class Movies {
             res.close();
         }
     }
+    /**
+     * Fetches a list containing all movies in the local database
+     *
+     * @return a response object with status 200 and a list with all movie objects from local db
+     */
+    public static Response getAllMoviesInDatabase() {
+        MovieDao movies = new MovieDaoImpl();
+        List result = movies.getAllMovies();
+        return Response.ok(movies.getAllMovies()).build();
+    }
+
     /**
      * Fetches a movie/list of movies from external library if not found in local database
      *
