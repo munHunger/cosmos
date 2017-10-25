@@ -3,14 +3,12 @@ package se.mulander.cosmos.movies.business;
 import io.swagger.annotations.*;
 import se.mulander.cosmos.common.filter.cache.annotations.Cached;
 import se.mulander.cosmos.common.model.ErrorMessage;
-import se.mulander.cosmos.common.model.movies.Movie;
-import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
+import se.mulander.cosmos.common.model.movies.Movie.Movie;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
  * Created by marcu on 2017-04-02.

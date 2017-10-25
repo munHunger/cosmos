@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.reflect.Whitebox;
 import se.mulander.cosmos.common.model.movies.Genre;
 import se.mulander.cosmos.common.model.movies.GenreList;
-import se.mulander.cosmos.common.model.movies.Movie;
+import se.mulander.cosmos.common.model.movies.Movie.Movie;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponseResult;
 import se.mulander.cosmos.common.settings.DatabaseSettings;
