@@ -289,12 +289,10 @@ public class Movies {
     public static Response getMoviesWithStatus(String status)
     {
         try {
-            Map<String, Object> param = new HashMap<>();
-            param.put("status", status);
-            List result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
+            List<Movie> result = new MovieDaoImpl().getMoviesByStatus(status);
             if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
-                            "No movies with status " + status + " was found in the database"))
+                            "No movies with the status" + status +  "was found in the database"))
                     .build();
             return Response.ok(result).build();
         } catch (Exception e)
@@ -347,7 +345,6 @@ public class Movies {
      */
     public static Response getAllMoviesInDatabase() {
         MovieDao movies = new MovieDaoImpl();
-        List result = movies.getAllMovies();
         return Response.ok(movies.getAllMovies()).build();
     }
 
@@ -358,7 +355,7 @@ public class Movies {
      * @return a response object with status 200 and the movie/movies if it was found.
      */
     public static Response findMovie(String query) throws Exception {
-        List result = new ArrayList<>();
+        List<Movie> result = new ArrayList<>();
         try {
             Map<String, Object> param = new HashMap<>();
             param.put("title", query);
@@ -405,11 +402,13 @@ public class Movies {
                                 "The movie was not " +
                                         "found in the database or in external library"))
                         .build();
+                clearExtended(resulting);
                 return Response.ok(resulting).build();
             } finally {
                 res.close();
             }
         }
+        clearExtended(result);
         return Response.ok(result).build();
     }
 }
