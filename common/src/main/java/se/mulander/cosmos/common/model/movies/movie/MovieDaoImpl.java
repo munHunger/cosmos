@@ -22,6 +22,19 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
     }
 
     @Override
+    public List<Movie> getMoviesByStatus(String status) {
+        List<Movie> result = new ArrayList<>();
+        Map<String, Object> param = new HashMap<>();
+        param.put("status", status);
+        try {
+            result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
     public Movie getMovieById(String id) {
         List<Movie> result = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
