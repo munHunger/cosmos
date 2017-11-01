@@ -30,6 +30,10 @@
             <param-value>1.0.0</param-value>
         </init-param>
         <init-param>
+            <param-name>api.title</param-name>
+            <param-value>Cosmos</param-value>
+        </init-param>
+        <init-param>
             <param-name>swagger.api.basepath</param-name>
             <param-value>/api</param-value>
         </init-param>
