@@ -59,8 +59,19 @@ public class Movies {
                     .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
                             m1.rating.get(0).rating))
                     .collect(Collectors.toList());
-            saveListInDatabase(result);
+            List<Movie> moviesInDb = new MovieDaoImpl().getAllMovies();
+            System.out.println(result.size());
 
+            Iterator<Movie> iter = result.iterator();
+            while (iter.hasNext()) {
+                Movie m1 = iter.next();
+                for(Movie m2 : moviesInDb) {
+                    if(m1.extendedMovie.tmdbID == m2.extendedMovie.tmdbID) {
+                        iter.remove();
+                    }
+                }
+            }
+            saveListInDatabase(result);
             return Response.ok(clearExtended(result)).build();
         } catch (APIException e) {
             return Response.serverError().entity(e.toErrorMessage()).build();
