@@ -289,7 +289,7 @@ public class Movies {
     public static Response getMoviesWithStatus(String status)
     {
         try {
-            List<Movie> result = new MovieDaoImpl().getMoviesByStatus(status);
+            List<Optional> result = new MovieDaoImpl().getMoviesByStatus(status);
             if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
                             "No movies with the status " + status +  " was found in the database"))
@@ -345,7 +345,14 @@ public class Movies {
      */
     public static Response getAllMoviesInDatabase() {
         MovieDao movies = new MovieDaoImpl();
-        return Response.ok(movies.getAllMovies()).build();
+        try {
+            return Response.ok(movies.getAllMovies()).build();
+        } catch (Exception e) {
+            return Response.serverError()
+                    .entity(new ErrorMessage("Could not get movies",
+                            "Couldn't get the movies from the database"))
+                    .build();
+        }
     }
 
     /**
