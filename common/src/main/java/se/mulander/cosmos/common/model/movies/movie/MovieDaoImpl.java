@@ -3,17 +3,14 @@ package se.mulander.cosmos.common.model.movies.movie;
 import io.swagger.annotations.ApiModel;
 import se.mulander.cosmos.common.database.jpa.Database;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ApiModel(description = "The implementation of movie data access object")
 public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movie.MovieDao {
 
     @Override
-    public List<Movie> getAllMovies() throws Exception {
-        List<Movie> result = new ArrayList<>();
+    public List<Optional> getAllMovies() throws Exception {
+        List<Optional> result;
         try {
             result = Database.getObjects("from Movie");
         } catch (Exception e) {
@@ -24,8 +21,8 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
     }
 
     @Override
-    public List<Movie> getMoviesByStatus(String status) throws Exception {
-        List<Movie> result;
+    public List<Optional> getMoviesByStatus(String status) throws Exception {
+        List<Optional> result;
         Map<String, Object> param = new HashMap<>();
         param.put("status", status);
         try {
@@ -38,8 +35,8 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
     }
 
     @Override
-    public Movie getMovieById(String id) throws Exception {
-        List<Movie> result = new ArrayList<>();
+    public Optional getMovieById(String id) throws Exception {
+        List<Optional> result;
         Map<String, Object> param = new HashMap<>();
         param.put("id", id);
         try {
@@ -51,8 +48,8 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
     }
 
     @Override
-    public Movie getMovieByTitle(String title) throws Exception {
-        List<Movie> result = new ArrayList<>();
+    public Optional getMovieByTitle(String title) throws Exception {
+        List<Optional> result;
         Map<String, Object> param = new HashMap<>();
         param.put("title", title);
         try {
