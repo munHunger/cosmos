@@ -60,8 +60,6 @@ public class Movies {
                             m1.rating.get(0).rating))
                     .collect(Collectors.toList());
             List<Movie> moviesInDb = new MovieDaoImpl().getAllMovies();
-            System.out.println(result.size());
-
             Iterator<Movie> iter = result.iterator();
             while (iter.hasNext()) {
                 Movie m1 = iter.next();
