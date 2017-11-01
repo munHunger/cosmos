@@ -292,7 +292,7 @@ public class Movies {
             List<Movie> result = new MovieDaoImpl().getMoviesByStatus(status);
             if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
-                            "No movies with the status" + status +  "was found in the database"))
+                            "No movies with the status " + status +  " was found in the database"))
                     .build();
             return Response.ok(result).build();
         } catch (Exception e)
