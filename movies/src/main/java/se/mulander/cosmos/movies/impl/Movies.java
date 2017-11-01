@@ -4,6 +4,9 @@ import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.*;
+import se.mulander.cosmos.common.model.movies.movie.Movie;
+import se.mulander.cosmos.common.model.movies.movie.MovieDao;
+import se.mulander.cosmos.common.model.movies.movie.MovieDaoImpl;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBCastResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponseResult;
@@ -22,8 +25,8 @@ import java.util.stream.Collectors;
 public class Movies {
 
     /**
-     * Gets a list of recomended movies.
-     * The recomended movies are the most popular for the current year.
+     * Gets a list of recommended movies.
+     * The recommended movies are the most popular for the current year.
      * This function will query the movie database and save the response in cosmos database
      * Note that it will fetch and save extended objects, but this function only returns simple movie objects
      *
@@ -131,7 +134,7 @@ public class Movies {
 
     /**
      * Sets the extended movie objects to null for all movies in the list.
-     * This is usefull for when you don't want to send too much data down to the user
+     * This is useful for when you don't want to send too much data down to the user
      *
      * @param movies A list of movies to clear the extended movie object of
      * @return The supplied list but with the extended movie objects set to null
@@ -286,12 +289,10 @@ public class Movies {
     public static Response getMoviesWithStatus(String status)
     {
         try {
-            Map<String, Object> param = new HashMap<>();
-            param.put("status", status);
-            List result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
+            List<Optional> result = new MovieDaoImpl().getMoviesByStatus(status);
             if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
-                            "No movies with status " + status + " was found in the database"))
+                            "No movies with the status " + status +  " was found in the database"))
                     .build();
             return Response.ok(result).build();
         } catch (Exception e)
@@ -338,13 +339,30 @@ public class Movies {
         }
     }
     /**
+     * Fetches a list containing all movies in the local database
+     *
+     * @return a response object with status 200 and a list with all movie objects from local db
+     */
+    public static Response getAllMoviesInDatabase() {
+        MovieDao movies = new MovieDaoImpl();
+        try {
+            return Response.ok(movies.getAllMovies()).build();
+        } catch (Exception e) {
+            return Response.serverError()
+                    .entity(new ErrorMessage("Could not get movies",
+                            "Couldn't get the movies from the database"))
+                    .build();
+        }
+    }
+
+    /**
      * Fetches a movie/list of movies from external library if not found in local database
      *
      * @param query the query filtering results
      * @return a response object with status 200 and the movie/movies if it was found.
      */
     public static Response findMovie(String query) throws Exception {
-        List result = new ArrayList<>();
+        List<Movie> result = new ArrayList<>();
         try {
             Map<String, Object> param = new HashMap<>();
             param.put("title", query);
@@ -391,11 +409,13 @@ public class Movies {
                                 "The movie was not " +
                                         "found in the database or in external library"))
                         .build();
+                clearExtended(resulting);
                 return Response.ok(resulting).build();
             } finally {
                 res.close();
             }
         }
+        clearExtended(result);
         return Response.ok(result).build();
     }
 }
