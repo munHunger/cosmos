@@ -9,8 +9,8 @@ import java.util.*;
 public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movie.MovieDao {
 
     @Override
-    public List<Optional> getAllMovies() throws Exception {
-        List<Optional> result;
+    public List<Movie> getAllMovies() throws Exception {
+        List<Movie> result;
         try {
             result = Database.getObjects("from Movie");
         } catch (Exception e) {
