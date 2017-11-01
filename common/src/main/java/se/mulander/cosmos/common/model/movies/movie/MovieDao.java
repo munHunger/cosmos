@@ -1,8 +1,9 @@
 package se.mulander.cosmos.common.model.movies.movie;
 
-
+import io.swagger.annotations.ApiModel;
 import java.util.List;
 
+@ApiModel(description = "An interface for movie data access object")
 public interface MovieDao {
 
     public List<Movie> getAllMovies();

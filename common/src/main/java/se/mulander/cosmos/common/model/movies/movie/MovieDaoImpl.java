@@ -1,5 +1,6 @@
 package se.mulander.cosmos.common.model.movies.movie;
 
+import io.swagger.annotations.ApiModel;
 import se.mulander.cosmos.common.database.jpa.Database;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@ApiModel(description = "The implementation of movie data access object")
 public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movie.MovieDao {
 
     @Override
