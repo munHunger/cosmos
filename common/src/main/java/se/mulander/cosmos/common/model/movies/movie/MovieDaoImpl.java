@@ -12,67 +12,66 @@ import java.util.Map;
 public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movie.MovieDao {
 
     @Override
-    public List<Movie> getAllMovies() {
+    public List<Movie> getAllMovies() throws Exception {
         List<Movie> result = new ArrayList<>();
         try {
             result = Database.getObjects("from Movie");
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
 
         return result;
     }
 
     @Override
-    public List<Movie> getMoviesByStatus(String status) {
-        List<Movie> result = new ArrayList<>();
+    public List<Movie> getMoviesByStatus(String status) throws Exception {
+        List<Movie> result;
         Map<String, Object> param = new HashMap<>();
         param.put("status", status);
         try {
             result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e){
+            throw e;
         }
+
         return result;
     }
 
     @Override
-    public Movie getMovieById(String id) {
+    public Movie getMovieById(String id) throws Exception {
         List<Movie> result = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
         param.put("id", id);
         try {
             result = Database.getObjects("from Movie WHERE internalID = :id", param);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
         return result.get(0);
     }
 
     @Override
-    public Movie getMovieByTitle(String title) {
+    public Movie getMovieByTitle(String title) throws Exception {
         List<Movie> result = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
         param.put("title", title);
         try {
             result = Database.getObjects("from Movie WHERE title = :title", param);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
         return result.get(0);
     }
 
     @Override
-    public void updateMovie(Movie movie) {
-        Database.updateObject(movie);
-    }
+    public void updateMovie(Movie movie) { Database.updateObject(movie); }
 
     @Override
-    public void deleteMovie(Movie movie) {
+    public void deleteMovie(Movie movie) throws Exception {
         try {
             Database.deleteObject(movie);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
