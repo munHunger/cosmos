@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 public class Movies {
 
     /**
-     * Gets a list of recomended movies.
-     * The recomended movies are the most popular for the current year.
+     * Gets a list of recommended movies.
+     * The recommended movies are the most popular for the current year.
      * This function will query the movie database and save the response in cosmos database
      * Note that it will fetch and save extended objects, but this function only returns simple movie objects
      *
@@ -134,7 +134,7 @@ public class Movies {
 
     /**
      * Sets the extended movie objects to null for all movies in the list.
-     * This is usefull for when you don't want to send too much data down to the user
+     * This is useful for when you don't want to send too much data down to the user
      *
      * @param movies A list of movies to clear the extended movie object of
      * @return The supplied list but with the extended movie objects set to null
