@@ -298,7 +298,7 @@ public class Movies {
     public static Response getMoviesWithStatus(String status)
     {
         try {
-            List<Optional> result = new MovieDaoImpl().getMoviesByStatus(status);
+            List<Movie> result = new MovieDaoImpl().getMoviesByStatus(status);
             if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                     .entity(new ErrorMessage("Could not fetch movies",
                             "No movies with the status " + status +  " was found in the database"))
