@@ -1,4 +1,4 @@
-package se.mulander.cosmos.common.model.movies;
+package se.mulander.cosmos.common.model.movies.movie;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import se.mulander.cosmos.common.model.movies.ExtendedMovie;
+import se.mulander.cosmos.common.model.movies.Rating;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by marcu on 2017-06-25.
+ * Created by marcus on 2017-06-25.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "Movie", description = "A movie object containing all relevant information about a particular movie")
