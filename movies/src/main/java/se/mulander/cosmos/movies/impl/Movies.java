@@ -29,7 +29,7 @@ public class Movies {
      * The recommended movies are the most popular for the current year.
      * This function will query the movie database and save the response in cosmos database
      * Note that it will fetch and save extended objects, but this function only returns simple movie objects
-     *
+     * Also note that recommended movies that are already stored in library will not be returned
      * @return A response object with either a 200 OK and a list of popular movie objects or a 500 with an error message
      */
     public static Response getRecommendations() {
@@ -59,17 +59,19 @@ public class Movies {
                     .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
                             m1.rating.get(0).rating))
                     .collect(Collectors.toList());
-            List<Movie> moviesInDb = new MovieDaoImpl().getAllMovies();
-            Iterator<Movie> iter = result.iterator();
-            while (iter.hasNext()) {
-                Movie m1 = iter.next();
-                for(Movie m2 : moviesInDb) {
-                    if(m1.extendedMovie.tmdbID == m2.extendedMovie.tmdbID) {
-                        iter.remove();
-                    }
+
+            List<Movie> alreadyInLibrary = new ArrayList<>();
+            for(Movie incoming : result) {
+                Movie existing = new MovieDaoImpl().getMovieByTitle(incoming.title);
+                System.out.println(existing.extendedMovie.status);
+                System.out.println(incoming.title);
+                if (existing != null && existing.extendedMovie.status == Status.IN_LIBRARY.toString()) {
+                    alreadyInLibrary.add(incoming);
                 }
             }
+            result.removeAll(alreadyInLibrary);
             saveListInDatabase(result);
+
             return Response.ok(clearExtended(result)).build();
         } catch (APIException e) {
             return Response.serverError().entity(e.toErrorMessage()).build();
