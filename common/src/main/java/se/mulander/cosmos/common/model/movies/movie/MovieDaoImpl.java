@@ -27,12 +27,7 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
         List<Movie> result;
         Map<String, Object> param = new HashMap<>();
         param.put("status", status);
-        try {
-            result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
-        } catch (Exception e){
-            throw e;
-        }
-
+        result = Database.getObjects("from Movie WHERE extendedMovie.status = :status", param);
         return result;
     }
 
@@ -43,25 +38,29 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
         param.put("id", id);
         try {
             result = Database.getObjects("from Movie WHERE internalID = :id", param);
-            return result.get(0);
         } catch (Exception e) {
             throw e;
         }
-
+        if(!result.isEmpty()) {
+            return result.get(0);
+        }
+        return null;
     }
 
     @Override
     public Movie getMovieByTitle(String title) throws Exception {
-        List<Movie> result;
+        Movie movie;
         Map<String, Object> param = new HashMap<>();
         param.put("title", title);
         try {
-            result = Database.getObjects("from Movie WHERE title = :title", param);
-            return result.get(0);
+            movie = (Movie)Database.getObjects("from Movie WHERE title = :title", param).get(0);
+            if(movie != null) {
+                return movie;
+            }
         } catch (Exception e) {
             throw e;
         }
-
+        return null;
     }
 
     @Override

@@ -5,5 +5,5 @@ public enum Status {
     SEARCHED,
     WANTED,
     RELEASED,
-    IN_LIBRARY;
+    IN_LIBRARY
 }
