@@ -51,11 +51,7 @@ public class Movies {
             TMDBResponse tmdbResponse = getTopMovies(client, theMovieDbURL.get(), apiKey.get());
 
             List<Movie> result = Arrays.stream(tmdbResponse.results)
-                    .map(tmdb -> tmdbToInternal(tmdb,
-                            client,
-                            theMovieDbURL.get(),
-                            apiKey.get(),
-                            genreList))
+                    .map(tmdb -> tmdbToInternal(tmdb, genreList))
                     .sorted((m1, m2) -> new Double(m2.rating.get(0).rating).compareTo(
                             m1.rating.get(0).rating))
                     .collect(Collectors.toList());
@@ -163,14 +159,10 @@ public class Movies {
      * This will fix poster paths, add extended movie object and cast for everyone who worked on the movie
      *
      * @param tmdb          the raw tmdb result movie to map
-     * @param client        A client to use when adding more data. Note that this client will not be closed.
-     * @param theMovieDbURL the base url to the movie database api
-     * @param apiKey        the API key to the movie database.
      * @param genreList     A list of genres used to map the tmdb genre int to a full genre name.
      * @return a fully expanded and mapped object
      */
-    private static Movie tmdbToInternal(TMDBResponseResult tmdb, Client client, String theMovieDbURL, String apiKey,
-                                        GenreList genreList) {
+    private static Movie tmdbToInternal(TMDBResponseResult tmdb, GenreList genreList) {
 
         String year = tmdb.releaseDate.trim().substring(0, 4);
         Movie m = new Movie("https://image.tmdb.org/t/p/w185/" + tmdb.posterPath,
@@ -409,11 +401,7 @@ public class Movies {
                 TMDBResponse tmdbResponse = res.readEntity(TMDBResponse.class);
                 GenreList genreList = getGenres(client, theMovieDbURL.get(), apiKey.get());
                 List<Movie> resulting = Arrays.stream(tmdbResponse.results)
-                        .map(tmdb -> tmdbToInternal(tmdb,
-                                client,
-                                theMovieDbURL.get(),
-                                apiKey.get(),
-                                genreList))
+                        .map(tmdb -> tmdbToInternal(tmdb, genreList))
                         .collect(Collectors.toList());
                 if (resulting.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
                         .entity(new ErrorMessage("Could not fetch movie",
