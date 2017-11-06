@@ -11,22 +11,22 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Created by marcu on 2017-04-02.
+ * Created by marcus on 2017-04-02.
  */
 @Path("/movies")
 @Api(value = "Movies", description = "Endpoints for finding new movies and managing wishlists")
 public class Movies {
 
     @GET
-    @Path("/recomendations")
+    @Path("/recommendations")
     @Cached(86400000) //24Hours
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get recomendations", notes = "Gets recomendations based on new releases.")
+    @ApiOperation(value = "Get recommendations", notes = "Gets recommendations based on new releases.")
     @ApiResponses({@ApiResponse(code = HttpServletResponse.SC_OK,
-                                message = "A list of movie recomendations",
+                                message = "A list of movie recommendations",
                                 responseContainer = "Array",
                                 response = Movie.class)})
-    public Response getRecomendations() {
+    public Response getRecommendations() {
         return se.mulander.cosmos.movies.impl.Movies.getRecommendations();
     }
 
