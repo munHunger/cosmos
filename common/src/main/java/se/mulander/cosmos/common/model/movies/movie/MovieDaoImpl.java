@@ -84,11 +84,11 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
         try {
             List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year",
                     param);
-            if (dbMovies.isEmpty()) Database.saveObject(movie);
+            if (dbMovies.isEmpty()) saveMovie(movie);
             else {
                 Movie oldMovie = (Movie) dbMovies.get(0);
                 movie.setID(oldMovie.internalID);
-                Database.updateObject(movie);
+                updateMovie(movie);
             }
         } catch (Exception e) {
             e.printStackTrace();

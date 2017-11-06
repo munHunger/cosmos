@@ -58,6 +58,10 @@ public interface MovieDao {
      */
     void deleteMovie(Movie movie) throws Exception;
 
+    /**
+     * Either saves or updates a specified movie object in the database
+     * @param movie the movie object to save or update
+     */
     void saveOrUpdateMovie(Movie movie);
 
     /**
