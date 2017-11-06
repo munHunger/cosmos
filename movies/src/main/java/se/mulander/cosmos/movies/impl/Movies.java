@@ -325,9 +325,8 @@ public class Movies {
      * @return a response object with status 200 and a list with all movie objects from local db
      */
     public static Response getAllMoviesInDatabase() {
-        MovieDao movies = new MovieDaoImpl();
         try {
-            return Response.ok(movies.getAllMovies()).build();
+            return Response.ok(new MovieDaoImpl().getAllMovies()).build();
         } catch (Exception e) {
             return Response.serverError()
                     .entity(new ErrorMessage("Could not get movies",
@@ -339,17 +338,16 @@ public class Movies {
     /**
      * Fetches a movie/list of movies from external library if not found in local database
      *
-     * @param query the query filtering results
+     * @param query the query filtering results, in current solution filters on title
      * @return a response object with status 200 and the movie/movies if it was found.
      */
     public static Response findMovie(String query) throws Exception {
-        List<Movie> result = new ArrayList<>();
+        Movie movie = new Movie();
         try {
-            Map<String, Object> param = new HashMap<>();
-            param.put("title", query);
-            result = Database.getObjects("from Movie WHERE title = title", param);
+            movie = new MovieDaoImpl().getMovieByTitle(query);
+
         } catch (Exception e) {}
-        if (result.isEmpty()) {
+        if (movie == null) {
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
 
@@ -387,7 +385,9 @@ public class Movies {
                 res.close();
             }
         }
+        List result = new ArrayList<Movies>();
+        result.add(movie);
         clearExtended(result);
-        return Response.ok(result).build();
+        return Response.ok(result.get(0)).build();
     }
 }
