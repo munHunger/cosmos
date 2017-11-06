@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by marcu on 2017-03-17.
+ * Created by marcus on 2017-03-17.
  */
 public class Movies {
 
@@ -36,15 +36,9 @@ public class Movies {
         Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
         Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
 
-        if (!theMovieDbURL.isPresent()) return Response.serverError()
-                                                       .entity(new ErrorMessage("Could not get recommendations",
-                                                                                "Couldn't get the settings for where " +
-                                                                                        "to find themoviedb"))
-                                                       .build();
-        if (!apiKey.isPresent()) return Response.serverError()
-                                                .entity(new ErrorMessage("Could not get recommendations",
-                                                                         "Couldn't get the settings for the API key"))
-                                                .build();
+        Response error = presenceCheck(theMovieDbURL, apiKey);
+        if(error != null) { return error; }
+
         final Client client = ClientBuilder.newClient();
         try {
             GenreList genreList = getGenres(client, theMovieDbURL.get(), apiKey.get());
@@ -77,6 +71,20 @@ public class Movies {
         } finally {
             client.close();
         }
+    }
+
+    private static Response presenceCheck(Optional<String> theMovieDbURL, Optional<String> apiKey) {
+        if (!theMovieDbURL.isPresent()) return Response.serverError()
+                .entity(new ErrorMessage("Could not get recommendations",
+                        "Couldn't get the settings for where " +
+                                "to find themoviedb"))
+                .build();
+        if (!apiKey.isPresent()) return Response.serverError()
+                .entity(new ErrorMessage("Could not get recommendations",
+                        "Couldn't get the settings for the API key"))
+                .entity(Boolean.FALSE)
+                .build();
+        return null;
     }
 
     /**
@@ -244,15 +252,10 @@ public class Movies {
             Movie movie = (Movie)result.get(0);
             final Client client = ClientBuilder.newClient();
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
-            if (!theMovieDbURL.isPresent()) return Response.serverError()
-                    .entity(new ErrorMessage("Could not get movie",
-                            "Couldn't get the settings for where to find themoviedb"))
-                    .build();
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
-            if (!apiKey.isPresent()) return Response.serverError()
-                    .entity(new ErrorMessage("Could not get movie",
-                            "Couldn't get the settings for the API key"))
-                    .build();
+            Response error = presenceCheck(theMovieDbURL, apiKey);
+            if(error != null) { return error; }
+
             addCast(client, movie, theMovieDbURL.get(), apiKey.get());
 
             return Response.ok(movie).build();
@@ -374,15 +377,10 @@ public class Movies {
         if (result.isEmpty()) {
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
-            if (!theMovieDbURL.isPresent()) return Response.serverError()
-                    .entity(new ErrorMessage("Could not get recommendations",
-                            "Couldn't get the settings for where " +
-                                    "to find themoviedb"))
-                    .build();
-            if (!apiKey.isPresent()) return Response.serverError()
-                    .entity(new ErrorMessage("Could not get recommendations",
-                            "Couldn't get the settings for the API key"))
-                    .build();
+
+            Response error = presenceCheck(theMovieDbURL, apiKey);
+            if(error != null) { return error; }
+
             Client client = ClientBuilder.newClient();
             Response res = client.target(theMovieDbURL.get())
                     .path("/3/search/movie")
