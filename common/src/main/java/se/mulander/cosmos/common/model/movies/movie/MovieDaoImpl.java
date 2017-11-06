@@ -76,6 +76,27 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
     }
 
     @Override
+    public void saveOrUpdateMovie(Movie movie) {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("title", movie.title);
+        param.put("year", movie.year);
+        try {
+            List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year",
+                    param);
+            if (dbMovies.isEmpty()) Database.saveObject(movie);
+            else {
+                Movie oldMovie = (Movie) dbMovies.get(0);
+                movie.setID(oldMovie.internalID);
+                Database.updateObject(movie);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
     public void saveMovie(Movie movie) {
         Database.saveObject(movie);
     }

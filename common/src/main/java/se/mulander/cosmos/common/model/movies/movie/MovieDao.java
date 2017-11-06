@@ -14,7 +14,7 @@ public interface MovieDao {
      * @return A list with all the movie objects
      * @throws Exception if the database fails to return for some reason
      */
-    public List<Movie> getAllMovies() throws Exception;
+    List<Movie> getAllMovies() throws Exception;
 
     /**
      * Fetches a list with movie objects from the database, with specified status
@@ -23,7 +23,7 @@ public interface MovieDao {
      * @return A list with movie objects, with specified status
      * @throws Exception if the database fails to return for some reason
      */
-    public List<Movie> getMoviesByStatus(String status) throws Exception;
+    List<Movie> getMoviesByStatus(String status) throws Exception;
 
     /**
      * Fetches a movie object from the database, with specified id
@@ -32,7 +32,7 @@ public interface MovieDao {
      * @return A movie object, with specified id
      * @throws Exception if the database fails to return for some reason
      */
-    public Movie getMovieById(String id) throws Exception;
+    Movie getMovieById(String id) throws Exception;
 
     /**
      * Fetches a movie object from the database, with specified title
@@ -41,14 +41,14 @@ public interface MovieDao {
      * @return A movie object, with specified title
      * @throws Exception if the database fails for some reason
      */
-    public Movie getMovieByTitle(String title) throws Exception;
+    Movie getMovieByTitle(String title) throws Exception;
 
     /**
      * Updates a specified movie object in the database
      *
      * @param movie the movie object to update
      */
-    public void updateMovie(Movie movie);
+    void updateMovie(Movie movie);
 
     /**
      * Deletes a specified movie object in the database
@@ -56,13 +56,15 @@ public interface MovieDao {
      * @param movie the movie object to delete
      * @throws Exception if the database fails for some reason
      */
-    public void deleteMovie(Movie movie) throws Exception;
+    void deleteMovie(Movie movie) throws Exception;
+
+    void saveOrUpdateMovie(Movie movie);
 
     /**
      * Saves a specified movie object in the database
      *
      * @param movie the movie object to save
      */
-    public void saveMovie(Movie movie);
+    void saveMovie(Movie movie);
 
 }
