@@ -125,24 +125,7 @@ public class Movies {
      * @param movies a list of movies to save
      */
     private static void saveListInDatabase(List<Movie> movies) {
-        movies.forEach(m ->
-                       {
-                           Map<String, Object> param = new HashMap<>();
-                           param.put("title", m.title);
-                           param.put("year", m.year);
-                           try {
-                               List dbMovies = Database.getObjects("from Movie WHERE title = :title AND year = :year",
-                                                                   param);
-                               if (dbMovies.isEmpty()) Database.saveObject(m);
-                               else {
-                                   Movie oldMovie = (Movie) dbMovies.get(0);
-                                   m.setID(oldMovie.internalID);
-                                   Database.updateObject(m);
-                               }
-                           } catch (Exception e) {
-                               e.printStackTrace();
-                           }
-                       });
+        movies.forEach(m -> new MovieDaoImpl().saveOrUpdateMovie(m));
     }
 
     /**
@@ -239,15 +222,9 @@ public class Movies {
      */
     public static Response getMovie(String id) {
         try {
-            Map<String, Object> param = new HashMap<>();
-            param.put("id", id);
-            List result = Database.getObjects("from Movie WHERE internalID = :id", param);
-            if (result.isEmpty()) return Response.status(HttpServletResponse.SC_NOT_FOUND)
-                                                 .entity(new ErrorMessage("Could not fetch movie",
-                                                                          "The movie with ID " + id + " was not " +
-                                                                                  "found" + " in the database"))
-                                                 .build();
-            Movie movie = (Movie)result.get(0);
+
+            Movie movie = new MovieDaoImpl().getMovieById(id);
+
             final Client client = ClientBuilder.newClient();
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
