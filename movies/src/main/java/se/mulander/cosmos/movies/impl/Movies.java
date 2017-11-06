@@ -53,8 +53,6 @@ public class Movies {
             List<Movie> alreadyInLibrary = new ArrayList<>();
             for(Movie incoming : result) {
                 Movie existing = new MovieDaoImpl().getMovieByTitle(incoming.title);
-                System.out.println(existing.extendedMovie.status);
-                System.out.println(incoming.title);
                 if (existing != null && existing.extendedMovie.status == Status.IN_LIBRARY.toString()) {
                     alreadyInLibrary.add(incoming);
                 }
