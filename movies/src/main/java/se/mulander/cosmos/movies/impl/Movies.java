@@ -1,11 +1,9 @@
 package se.mulander.cosmos.movies.impl;
 
-import se.mulander.cosmos.common.database.jpa.Database;
 import se.mulander.cosmos.common.model.ErrorMessage;
 import se.mulander.cosmos.common.model.exception.APIException;
 import se.mulander.cosmos.common.model.movies.*;
 import se.mulander.cosmos.common.model.movies.movie.Movie;
-import se.mulander.cosmos.common.model.movies.movie.MovieDao;
 import se.mulander.cosmos.common.model.movies.movie.MovieDaoImpl;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBCastResponse;
 import se.mulander.cosmos.common.model.movies.tmdb.TMDBResponse;
@@ -258,7 +256,7 @@ public class Movies {
         }
         Movie movie = (Movie)response.getEntity();
         movie.extendedMovie.status = status;
-        Database.updateObject(movie);
+        new MovieDaoImpl().updateMovie(movie);
         return Response.ok().build();
     }
 
