@@ -69,14 +69,21 @@ public class Movies {
         }
     }
 
+    /**
+     * Verifies that themoviedb can be called
+     * @param theMovieDbURL the url of themoviedb
+     * @param apiKey the apikey to authorize calls to themoviedb
+     * @return errormsg if either url or apikey is missing for some reason, otherwise null
+     */
+
     private static Response presenceCheck(Optional<String> theMovieDbURL, Optional<String> apiKey) {
         if (!theMovieDbURL.isPresent()) return Response.serverError()
-                .entity(new ErrorMessage("Could not get recommendations",
+                .entity(new ErrorMessage("Could not get data from themoviedb",
                         "Couldn't get the settings for where " +
                                 "to find themoviedb"))
                 .build();
         if (!apiKey.isPresent()) return Response.serverError()
-                .entity(new ErrorMessage("Could not get recommendations",
+                .entity(new ErrorMessage("Could not get data from themoviedb",
                         "Couldn't get the settings for the API key"))
                 .entity(Boolean.FALSE)
                 .build();
@@ -139,6 +146,16 @@ public class Movies {
                                        m.extendedMovie = null;
                                        return m;
                                    }).collect(Collectors.toList());
+    }
+
+    /**
+     * Sets the extended movie object to null for the specified movie object
+     * @param movie the movie object to clear
+     * @return movie object with cleared extended movie object
+     */
+    private static Movie clearExtended(Movie movie) {
+        movie.extendedMovie = null;
+        return movie;
     }
 
     /**
@@ -305,7 +322,7 @@ public class Movies {
                              .request()
                              .buildGet()
                              .invoke();
-        
+
         try {
             if (res.getStatus() != HttpServletResponse.SC_OK) throw new APIException("Could not get genre list",
                                                                                      "Response from movie database " +
@@ -336,15 +353,14 @@ public class Movies {
     /**
      * Fetches a movie/list of movies from external library if not found in local database
      *
-     * @param query the query filtering results, in current solution filters on title
+     * @param query the query filtering results, filters on title
      * @return a response object with status 200 and the movie/movies if it was found.
      */
     public static Response findMovie(String query) throws Exception {
-        Movie movie = new Movie();
+        Movie movie;
         try {
             movie = new MovieDaoImpl().getMovieByTitle(query);
-
-        } catch (Exception e) {}
+        } catch (Exception e) {throw e;}
         if (movie == null) {
             Optional<String> theMovieDbURL = Settings.getSettingsValue("movies.movie_db_api_uri");
             Optional<String> apiKey = Settings.getSettingsValue("movies.movie_db_api_key");
@@ -383,9 +399,8 @@ public class Movies {
                 res.close();
             }
         }
-        List result = new ArrayList<Movies>();
-        result.add(movie);
-        clearExtended(result);
-        return Response.ok(result.get(0)).build();
+
+        clearExtended(movie);
+        return Response.ok(movie).build();
     }
 }
