@@ -49,13 +49,13 @@ public class MovieDaoImpl implements se.mulander.cosmos.common.model.movies.movi
 
     @Override
     public Movie getMovieByTitle(String title) throws Exception {
-        Movie movie;
+        List<Movie> movie;
         Map<String, Object> param = new HashMap<>();
         param.put("title", title);
         try {
-            movie = (Movie)Database.getObjects("from Movie WHERE title = :title", param).get(0);
-            if(movie != null) {
-                return movie;
+            movie = Database.getObjects("from Movie WHERE title = :title", param);
+            if(!movie.isEmpty()) {
+                return movie.get(0);
             }
         } catch (Exception e) {
             throw e;
