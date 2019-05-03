@@ -1,0 +1,17 @@
+type Query {
+  movie: [Movie]
+}
+
+type Movie {
+  id: Int
+  title: String
+  tagline: String
+  overview: String
+  budget: Int
+  genre: [String]
+}
+
+type Rating {
+  average: Int
+  count: Int
+}
