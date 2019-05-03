@@ -1,1 +1,0 @@
-consul.exe agent -config-file ../server.json
