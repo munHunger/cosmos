@@ -19,3 +19,30 @@ serviceDiscovery.waitFor("tmdb", tmdb =>
     console.log(data)
   )
 );
+
+var express = require("express");
+
+var path = require("path");
+var bodyParser = require("body-parser");
+var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+/* GET home page. */
+app.get("/", function(req, res, next) {
+  //Path to your main file
+  res
+    .status(200)
+    .sendFile(path.join(__dirname + "../../../app/dist/cosmos/index.html"));
+});
+app.get("*", (req, res, next) => {
+  res
+    .status(200)
+    .sendFile(path.join(__dirname + "../../../app/dist/cosmos/" + req.url));
+});
+
+app.listen(8080);
+
+module.exports = app;
