@@ -9,3 +9,4 @@ testResults/
 **/maven/
 **/build/
 *.iml
+node_modules/
