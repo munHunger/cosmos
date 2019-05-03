@@ -9,8 +9,9 @@
   "author": "munHunger",
   "license": "MIT",
   "dependencies": {
+    "sd": "file:../../serviceDiscovery/",
+    "graphql-request": "^1.8.2",
     "express": "^4.16.4",
-    "graphql": "^14.2.1",
     "nodemon": "^1.19.0"
   }
 }

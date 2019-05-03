@@ -3,6 +3,9 @@ var express = require("express");
 var graphqlHTTP = require("express-graphql");
 var { buildSchema } = require("graphql");
 
+const serviceDiscovery = require("sd");
+serviceDiscovery.start("tmdb", 3341);
+
 const db = require("./tmdb/db");
 
 const server = () => {
