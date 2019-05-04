@@ -10,14 +10,7 @@ export class MovieService {
 
   public popular(): Observable<Movie[]> {
     return this.http.get<Movie[]>("/api/popular").pipe(
-      map((data: any) => {
-        return data.movie.map(movie => {
-          return {
-            ...movie,
-            poster: "https://image.tmdb.org/t/p/w500/" + movie.poster
-          };
-        });
-      }),
+      map((data: any) => data.movie),
       catchError(error => {
         return this.handleError(error);
       })

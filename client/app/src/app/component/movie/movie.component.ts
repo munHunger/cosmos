@@ -1,6 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ViewChild, ElementRef } from "@angular/core";
 import { MovieService } from "src/app/service/movie.service";
 import { Movie } from "src/app/model/movie.model";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
   selector: "movie",
@@ -10,5 +11,10 @@ import { Movie } from "src/app/model/movie.model";
 export class MovieComponent {
   @Input()
   private movie: Movie;
-  constructor(private service: MovieService) {}
+  constructor(private service: MovieService, private snackBar: MatSnackBar) {}
+
+  private select() {
+    console.log("an attempt was made");
+    this.snackBar.open("Hello! :)", "ok", { duration: 2000 });
+  }
 }

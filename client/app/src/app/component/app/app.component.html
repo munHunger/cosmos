@@ -1,11 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>Welcome to {{ title }}!</h1>
-  <div class="mdl-grid">
-    <movie
-      class="mdl-cell mdl-cell--2-col"
-      *ngFor="let movie of popular"
-      [movie]="movie"
-    ></movie>
-  </div>
+  <mat-grid-list cols="5" rowHeight="3:5">
+    <mat-grid-tile *ngFor="let movie of popular">
+      <movie class="mdl-cell mdl-cell--2-col" [movie]="movie"></movie
+    ></mat-grid-tile>
+  </mat-grid-list>
 </div>

@@ -1,6 +1,12 @@
-<div class="container">
+<div class="container" (click)="select()">
+  <div class="rating">
+    {{ movie.rating.average }}
+  </div>
   <img [src]="movie.poster" class="poster" />
   <div class="title">
     {{ movie.title }}
+  </div>
+  <div class="genre">
+    {{ movie.genre.join(" ") }}
   </div>
 </div>

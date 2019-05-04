@@ -6,5 +6,9 @@ export class Movie {
   backdrop: String;
   year: number;
   genre: String[];
-  rating: number;
+  rating: Rating;
+}
+
+export class Rating {
+  average: number;
 }

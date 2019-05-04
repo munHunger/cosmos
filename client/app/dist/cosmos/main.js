@@ -40,6 +40,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _service_movie_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./service/movie.service */ "./src/app/service/movie.service.ts");
 /* harmony import */ var _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/movie/movie.component */ "./src/app/component/movie/movie.component.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+
+
 
 
 
@@ -53,7 +57,13 @@ var AppModule = /** @class */ (function () {
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
             declarations: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"], _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_5__["MovieComponent"]],
-            imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpClientModule"]],
+            imports: [
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpClientModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_7__["BrowserAnimationsModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatGridListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSnackBarModule"]
+            ],
             providers: [_service_movie_service__WEBPACK_IMPORTED_MODULE_4__["MovieService"]],
             bootstrap: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
         })
@@ -72,7 +82,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>Welcome to {{ title }}!</h1>\n  <div class=\"mdl-grid\">\n    <movie\n      class=\"mdl-cell mdl-cell--2-col\"\n      *ngFor=\"let movie of popular\"\n      [movie]=\"movie\"\n    ></movie>\n  </div>\n</div>\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>Welcome to {{ title }}!</h1>\n  <mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n    <mat-grid-tile *ngFor=\"let movie of popular\">\n      <movie class=\"mdl-cell mdl-cell--2-col\" [movie]=\"movie\"></movie\n    ></mat-grid-tile>\n  </mat-grid-list>\n</div>\n"
 
 /***/ }),
 
@@ -135,7 +145,7 @@ var AppComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <img [src]=\"movie.poster\" class=\"poster\" />\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\" (click)=\"select()\">\n  <div class=\"rating\">\n    {{ movie.rating.average }}\n  </div>\n  <img [src]=\"movie.poster\" class=\"poster\" />\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -146,7 +156,7 @@ module.exports = "<div class=\"container\">\n  <img [src]=\"movie.poster\" class
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".poster {\n  width: 100%;\n  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5); }\n\n.container {\n  padding: 15px; }\n\n.title {\n  margin-top: 10px;\n  color: rgba(255, 255, 255, 0.8);\n  text-align: left;\n  font-weight: 700;\n  font-size: 16px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL21vdmllLmNvbXBvbmVudC5zYXNzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksV0FBVztFQUNYLCtDQUE0QyxFQUFBOztBQUVoRDtFQUNJLGFBQWEsRUFBQTs7QUFFakI7RUFDSSxnQkFBZ0I7RUFDaEIsK0JBQTRCO0VBQzVCLGdCQUFnQjtFQUNoQixnQkFBZ0I7RUFDaEIsZUFBZSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50L21vdmllL21vdmllLmNvbXBvbmVudC5zYXNzIiwic291cmNlc0NvbnRlbnQiOlsiLnBvc3RlciB7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgYm94LXNoYWRvdzogMHB4IDBweCAxMHB4IDFweCByZ2JhKDAsMCwwLDAuNSk7IH1cblxuLmNvbnRhaW5lciB7XG4gICAgcGFkZGluZzogMTVweDsgfVxuXG4udGl0bGUge1xuICAgIG1hcmdpbi10b3A6IDEwcHg7XG4gICAgY29sb3I6IHJnYmEoMjU1LDI1NSwyNTUsMC44KTtcbiAgICB0ZXh0LWFsaWduOiBsZWZ0O1xuICAgIGZvbnQtd2VpZ2h0OiA3MDA7XG4gICAgZm9udC1zaXplOiAxNnB4OyB9XG4iXX0= */"
+module.exports = ".poster {\n  width: 100%;\n  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);\n  cursor: pointer;\n  transition: all 0.2s; }\n\n.poster:hover {\n  box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.5); }\n\n.container {\n  padding: 15px;\n  position: relative; }\n\n.title {\n  margin-top: 10px;\n  color: rgba(255, 255, 255, 0.8);\n  text-align: left;\n  font-weight: 700;\n  font-size: 16px; }\n\n.genre {\n  text-align: left;\n  font-size: 12px;\n  color: rgba(255, 255, 255, 0.4); }\n\n.rating {\n  position: absolute;\n  right: 15px;\n  padding: 10px;\n  background-color: rgba(255, 255, 255, 0.3);\n  font-size: 18px;\n  font-weight: 900;\n  color: rgba(255, 255, 255, 0.9);\n  box-shadow: -2px 2px 4px 0px rgba(0, 0, 0, 0.3);\n  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3), 1px -1px 0 rgba(0, 0, 0, 0.3), -1px 1px 0 rgba(0, 0, 0, 0.3), 1px 1px 0 rgba(0, 0, 0, 0.3); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL21vdmllLmNvbXBvbmVudC5zYXNzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNBO0VBQ0ksV0FBVztFQUNYLCtDQUE0QztFQUM1QyxlQUFlO0VBQ2Ysb0JBQW9CLEVBQUE7O0FBRXhCO0VBQ0ksK0NBQTRDLEVBQUE7O0FBRWhEO0VBQ0ksYUFYVTtFQVlWLGtCQUFrQixFQUFBOztBQUV0QjtFQUNJLGdCQUFnQjtFQUNoQiwrQkFBNEI7RUFDNUIsZ0JBQWdCO0VBQ2hCLGdCQUFnQjtFQUNoQixlQUFlLEVBQUE7O0FBRW5CO0VBQ0ksZ0JBQWdCO0VBQ2hCLGVBQWU7RUFDZiwrQkFBNEIsRUFBQTs7QUFFaEM7RUFDSSxrQkFBa0I7RUFDbEIsV0E1QlU7RUE2QlYsYUFBYTtFQUNiLDBDQUF1QztFQUN2QyxlQUFlO0VBQ2YsZ0JBQWdCO0VBQ2hCLCtCQUE0QjtFQUM1QiwrQ0FBNEM7RUFFNUMsdUlBRHlCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnQvbW92aWUvbW92aWUuY29tcG9uZW50LnNhc3MiLCJzb3VyY2VzQ29udGVudCI6WyIkcGFkZGluZzogMTVweDtcbi5wb3N0ZXIge1xuICAgIHdpZHRoOiAxMDAlO1xuICAgIGJveC1zaGFkb3c6IDBweCAwcHggMTBweCAxcHggcmdiYSgwLDAsMCwwLjUpO1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB0cmFuc2l0aW9uOiBhbGwgMC4yczsgfVxuXG4ucG9zdGVyOmhvdmVyIHtcbiAgICBib3gtc2hhZG93OiAwcHggMHB4IDE1cHggM3B4IHJnYmEoMCwwLDAsMC41KTsgfVxuXG4uY29udGFpbmVyIHtcbiAgICBwYWRkaW5nOiAkcGFkZGluZztcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7IH1cblxuLnRpdGxlIHtcbiAgICBtYXJnaW4tdG9wOiAxMHB4O1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuOCk7XG4gICAgdGV4dC1hbGlnbjogbGVmdDtcbiAgICBmb250LXdlaWdodDogNzAwO1xuICAgIGZvbnQtc2l6ZTogMTZweDsgfVxuXG4uZ2VucmUge1xuICAgIHRleHQtYWxpZ246IGxlZnQ7XG4gICAgZm9udC1zaXplOiAxMnB4O1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuNCk7IH1cblxuLnJhdGluZyB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIHJpZ2h0OiAkcGFkZGluZztcbiAgICBwYWRkaW5nOiAxMHB4O1xuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMjU1LDI1NSwyNTUsMC4zKTtcbiAgICBmb250LXNpemU6IDE4cHg7XG4gICAgZm9udC13ZWlnaHQ6IDkwMDtcbiAgICBjb2xvcjogcmdiYSgyNTUsMjU1LDI1NSwwLjkpO1xuICAgIGJveC1zaGFkb3c6IC0ycHggMnB4IDRweCAwcHggcmdiYSgwLDAsMCwwLjMpO1xuICAgICRvdXRsaW5lOiByZ2JhKDAsMCwwLDAuMyk7XG4gICAgdGV4dC1zaGFkb3c6IC0xcHggLTFweCAwICRvdXRsaW5lLCAxcHggLTFweCAwICRvdXRsaW5lLCAtMXB4IDFweCAwICRvdXRsaW5lLCAxcHggMXB4IDAgJG91dGxpbmU7IH1cbiJdfQ== */"
 
 /***/ }),
 
@@ -164,14 +174,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/movie.service */ "./src/app/service/movie.service.ts");
 /* harmony import */ var src_app_model_movie_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/model/movie.model */ "./src/app/model/movie.model.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+
 
 
 
 
 var MovieComponent = /** @class */ (function () {
-    function MovieComponent(service) {
+    function MovieComponent(service, snackBar) {
         this.service = service;
+        this.snackBar = snackBar;
     }
+    MovieComponent.prototype.select = function () {
+        console.log("an attempt was made");
+        this.snackBar.open("Hello! :)", "ok", { duration: 2000 });
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", src_app_model_movie_model__WEBPACK_IMPORTED_MODULE_3__["Movie"])
@@ -182,7 +199,7 @@ var MovieComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./movie.component.html */ "./src/app/component/movie/movie.component.html"),
             styles: [__webpack_require__(/*! ./movie.component.sass */ "./src/app/component/movie/movie.component.sass")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSnackBar"]])
     ], MovieComponent);
     return MovieComponent;
 }());
@@ -195,16 +212,23 @@ var MovieComponent = /** @class */ (function () {
 /*!**************************************!*\
   !*** ./src/app/model/movie.model.ts ***!
   \**************************************/
-/*! exports provided: Movie */
+/*! exports provided: Movie, Rating */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Movie", function() { return Movie; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rating", function() { return Rating; });
 var Movie = /** @class */ (function () {
     function Movie() {
     }
     return Movie;
+}());
+
+var Rating = /** @class */ (function () {
+    function Rating() {
+    }
+    return Rating;
 }());
 
 
@@ -237,11 +261,7 @@ var MovieService = /** @class */ (function () {
     }
     MovieService.prototype.popular = function () {
         var _this = this;
-        return this.http.get("/api/popular").pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
-            return data.movie.map(function (movie) {
-                return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, movie, { poster: "https://image.tmdb.org/t/p/w500/" + movie.poster });
-            });
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
+        return this.http.get("/api/popular").pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) { return data.movie; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
             return _this.handleError(error);
         }));
     };

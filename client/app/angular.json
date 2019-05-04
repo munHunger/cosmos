@@ -23,11 +23,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/styles.sass",
-              "node_modules/material-design-lite/material.min.css"
-            ],
-            "scripts": ["/node_modules/material-design-lite/material.min.js"]
+            "styles": ["src/styles.sass"],
+            "scripts": []
           },
           "configurations": {
             "production": {
