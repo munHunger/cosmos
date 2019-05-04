@@ -14,35 +14,34 @@ query{
   }
 }`;
 
-serviceDiscovery.waitFor("tmdb", tmdb =>
-  request(`http://${tmdb.ip}:${tmdb.port}/graphql`, query).then(data =>
-    console.log(data)
-  )
-);
+serviceDiscovery.waitFor("tmdb", tmdb => {
+  var express = require("express");
 
-var express = require("express");
+  var path = require("path");
+  var bodyParser = require("body-parser");
+  var app = express();
 
-var path = require("path");
-var bodyParser = require("body-parser");
-var app = express();
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(express.static(path.join(__dirname, "public")));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+  app.get("/api/popular", (req, res) => {
+    request(`http://${tmdb.ip}:${tmdb.port}/graphql`, query).then(data =>
+      res.status(200).json(data)
+    );
+  });
+  /* GET home page. */
+  app.get("/", function(req, res, next) {
+    //Path to your main file
+    res
+      .status(200)
+      .sendFile(path.join(__dirname + "../../../app/dist/cosmos/index.html"));
+  });
+  app.get("*", (req, res, next) => {
+    res
+      .status(200)
+      .sendFile(path.join(__dirname + "../../../app/dist/cosmos/" + req.url));
+  });
 
-/* GET home page. */
-app.get("/", function(req, res, next) {
-  //Path to your main file
-  res
-    .status(200)
-    .sendFile(path.join(__dirname + "../../../app/dist/cosmos/index.html"));
+  app.listen(8080);
 });
-app.get("*", (req, res, next) => {
-  res
-    .status(200)
-    .sendFile(path.join(__dirname + "../../../app/dist/cosmos/" + req.url));
-});
-
-app.listen(8080);
-
-module.exports = app;

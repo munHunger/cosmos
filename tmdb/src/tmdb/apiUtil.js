@@ -12,6 +12,7 @@ const query = url => {
       }api_key=${auth.v3}`
     )
     .then(res => {
+      console.log(res.data);
       if (res.status === 200) return res.data;
     });
 };
