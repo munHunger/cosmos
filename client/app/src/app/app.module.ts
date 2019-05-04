@@ -6,7 +6,17 @@ import { MovieService } from "./service/movie.service";
 import { MovieComponent } from "./component/movie/movie.component";
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatGridListModule, MatSnackBarModule } from "@angular/material";
+import {
+  MatGridListModule,
+  MatSnackBarModule,
+  MatToolbarModule,
+  MatSidenavModule,
+  MatOptionModule,
+  MatSelectModule,
+  MatIconModule,
+  MatButtonModule,
+  MatExpansionModule
+} from "@angular/material";
 import { MatBadgeModule } from "@angular/material/badge";
 
 @NgModule({
@@ -17,7 +27,14 @@ import { MatBadgeModule } from "@angular/material/badge";
     BrowserAnimationsModule,
     MatGridListModule,
     MatSnackBarModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
+    MatExpansionModule
   ],
   providers: [MovieService],
   bootstrap: [AppComponent]

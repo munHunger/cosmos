@@ -7,10 +7,19 @@ const serviceDiscovery = require("sd");
 serviceDiscovery.start("tmdb", 3341);
 
 const db = require("./tmdb/db");
+const transformer = require("./tmdb/transformer");
 
 const server = () => {
   return {
-    movie: () => db.getMovies()
+    movie: () =>
+      db.getMovies().map(m => {
+        return transformer.transform(m);
+        // return {
+        //   title: () => m.title,
+        //   release: input =>
+        //     input.format === "year" ? m.release.substring(0, 4) : m.release
+        // };
+      })
   };
 };
 

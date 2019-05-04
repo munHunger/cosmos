@@ -65,7 +65,14 @@ var AppModule = /** @class */ (function () {
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_7__["BrowserAnimationsModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatGridListModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSnackBarModule"],
-                _angular_material_badge__WEBPACK_IMPORTED_MODULE_9__["MatBadgeModule"]
+                _angular_material_badge__WEBPACK_IMPORTED_MODULE_9__["MatBadgeModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatToolbarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSidenavModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatOptionModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatExpansionModule"]
             ],
             providers: [_service_movie_service__WEBPACK_IMPORTED_MODULE_4__["MovieService"]],
             bootstrap: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
@@ -85,7 +92,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n  <mat-grid-tile *ngFor=\"let movie of popular\">\n    <movie class=\"mdl-cell mdl-cell--2-col\" [movie]=\"movie\"></movie\n  ></mat-grid-tile>\n</mat-grid-list>\n"
+module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p><button mat-button>Popular</button></p>\n      <p><button mat-button>My List</button></p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n      <mat-grid-tile *ngFor=\"let movie of popular\">\n        <movie [movie]=\"movie\"></movie\n      ></mat-grid-tile>\n    </mat-grid-list>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
 
 /***/ }),
 
@@ -96,7 +103,7 @@ module.exports = "<mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n  <mat-grid-tile
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudC9hcHAvYXBwLmNvbXBvbmVudC5zYXNzIn0= */"
+module.exports = ":host {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n  width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L2FwcC9hcHAuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUM7RUFDRyxrQkFBa0I7RUFDbEIsU0FBUztFQUNULFFBQVE7RUFDUixXQUFXLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnQvYXBwL2FwcC5jb21wb25lbnQuc2FzcyIsInNvdXJjZXNDb250ZW50IjpbIiA6aG9zdCB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGxlZnQ6IDBweDtcbiAgICB0b3A6IDBweDtcbiAgICB3aWR0aDogMTAwJTsgfVxuIl19 */"
 
 /***/ }),
 

@@ -8,8 +8,11 @@ type Movie {
   tagline: String
   overview: String
   backdrop: String
+  poster(width: Int): String
   budget: Int
   genre: [String]
+  rating: Rating
+  release(format: String): String
 }
 
 type Rating {

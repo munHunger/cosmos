@@ -4,6 +4,8 @@ const auth = JSON.parse(
   fs.readFileSync(process.env.HOME + "/.config/cosmos/tmdb.json", "utf8")
 ).auth;
 
+const genres = JSON.parse(fs.readFileSync("assets/genres.json", "utf8"));
+
 const query = url => {
   return axios
     .get(
@@ -12,9 +14,31 @@ const query = url => {
       }api_key=${auth.v3}`
     )
     .then(res => {
-      console.log(res.data);
-      if (res.status === 200) return res.data;
+      if (res.status === 200) {
+        res.data.results = res.data.results.map(movie => movieMapper(movie));
+        return res.data;
+      }
     });
+};
+
+const movieMapper = tmdbMovie => {
+  return {
+    id: tmdbMovie.id,
+    title: tmdbMovie.title,
+    tagline: tmdbMovie.tagline,
+    overview: tmdbMovie.overview,
+    backdrop: tmdbMovie.backdrop_path,
+    poster: tmdbMovie.poster_path,
+    budget: tmdbMovie.budget,
+    rating: {
+      average: Math.floor(tmdbMovie.vote_average * 10),
+      count: tmdbMovie.vote_count
+    },
+    release: tmdbMovie.release_date,
+    genre: tmdbMovie.genre_ids
+      .map(g => genres.find(g2 => g2.id === g))
+      .map(g => g.name)
+  };
 };
 
 module.exports = {

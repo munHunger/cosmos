@@ -7,9 +7,12 @@ query{
   movie{
     id
     title
-    tagline
     overview
-    budget
+    poster
+    rating {
+      average
+    }
+    release(format: "year")
     genre
   }
 }`;
