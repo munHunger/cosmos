@@ -2,7 +2,18 @@
   <div class="rating">
     {{ movie.rating.average }}
   </div>
-  <img [src]="movie.poster" class="poster" />
+  <div class="poster">
+    <img [src]="movie.poster" />
+    <button mat-mini-fab color="accent">
+      <mat-icon>favorite</mat-icon>
+    </button>
+    <button mat-fab color="primary">
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+    <button mat-mini-fab color="accent">
+      <mat-icon>cloud-download</mat-icon>
+    </button>
+  </div>
   <div class="title">
     {{ movie.title }}
   </div>
