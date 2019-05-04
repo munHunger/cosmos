@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { MovieService } from "src/app/service/movie.service";
+import { Movie } from "src/app/model/movie.model";
 
 @Component({
   selector: "movie",
@@ -7,9 +8,7 @@ import { MovieService } from "src/app/service/movie.service";
   styleUrls: ["./movie.component.sass"]
 })
 export class MovieComponent {
-  constructor(private service: MovieService) {
-    service.popular().subscribe(list => {
-      console.log(list);
-    });
-  }
+  @Input()
+  private movie: Movie;
+  constructor(private service: MovieService) {}
 }
