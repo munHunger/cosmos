@@ -8,18 +8,17 @@ serviceDiscovery.start("tmdb", 3341);
 
 const db = require("./tmdb/db");
 const transformer = require("./tmdb/transformer");
+const filter = require("./tmdb/filter");
 
 const server = () => {
   return {
-    movie: () =>
-      db.getMovies().map(m => {
-        return transformer.transform(m);
-        // return {
-        //   title: () => m.title,
-        //   release: input =>
-        //     input.format === "year" ? m.release.substring(0, 4) : m.release
-        // };
-      })
+    movie: input =>
+      db
+        .getMovies()
+        .filter(m => filter.movieFilter(input, m))
+        .map(m => {
+          return transformer.transform(m);
+        })
   };
 };
 

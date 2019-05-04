@@ -1,0 +1,20 @@
+type Query {
+  movies: [Movie]
+}
+
+type Mutation {
+  addToWishlist(id: Int): String
+}
+
+enum Status {
+  IN_LIBRARY
+  DOWNLOADING
+  WISHLIST
+}
+
+type Movie {
+  id: Int
+  status: Status
+  title: String
+  poster(width: Int): String
+}

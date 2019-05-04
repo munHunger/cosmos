@@ -1,5 +1,31 @@
 type Query {
-  movie: [Movie]
+  movie(filter: MovieFilter): [Movie]
+}
+
+input MovieFilter {
+  id: NumberFilter
+  title: StringFilter
+  budget: NumberFilter
+  release: StringFilter
+  rating: RatingFilter
+}
+
+input RatingFilter {
+  average: NumberFilter
+  count: NumberFilter
+}
+
+input NumberFilter {
+  eq: Int
+  lt: Int
+  gt: Int
+  in: [Int]
+}
+
+input StringFilter {
+  eq: String
+  contains: String
+  in: [String]
 }
 
 type Movie {
