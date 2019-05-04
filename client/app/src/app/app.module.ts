@@ -7,6 +7,7 @@ import { MovieComponent } from "./component/movie/movie.component";
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatGridListModule, MatSnackBarModule } from "@angular/material";
+import { MatBadgeModule } from "@angular/material/badge";
 
 @NgModule({
   declarations: [AppComponent, MovieComponent],
@@ -15,7 +16,8 @@ import { MatGridListModule, MatSnackBarModule } from "@angular/material";
     HttpClientModule,
     BrowserAnimationsModule,
     MatGridListModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatBadgeModule
   ],
   providers: [MovieService],
   bootstrap: [AppComponent]
