@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "sd": "file:../serviceDiscovery/",
+    "graphql-request": "^1.8.2",
     "axios": "^0.18.0",
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",

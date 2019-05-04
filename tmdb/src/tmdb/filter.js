@@ -1,4 +1,5 @@
 const movieFilter = (input, movie) => {
+  if (!input.filter) return true;
   return Object.keys(input.filter)
     .map(key => {
       return Object.keys(input.filter[key])

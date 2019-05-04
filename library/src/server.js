@@ -2,17 +2,42 @@ const fs = require("fs");
 var express = require("express");
 var graphqlHTTP = require("express-graphql");
 var { buildSchema } = require("graphql");
+const { request } = require("graphql-request");
 
 const port = 3342;
 const sdClient = require("sd").start("library", port);
 
-const tmdb = undefined;
-sdClient.waitFor("tmdb", config => (this.tmdb = config));
+let tmdb = undefined;
+sdClient.waitFor("tmdb", config => (tmdb = config));
 
 let data = [];
 const server = () => {
   return {
-    movies: () => data,
+    movies: async () => {
+      let res = await request(
+        `http://${tmdb.ip}:${tmdb.port}/graphql`,
+        `
+query{
+  movie(filter: {
+    id:{
+      in:[${data.map(d => d.id).join(",")}]
+    }
+  }){
+    id
+    title
+    overview
+    poster
+    rating {
+      average
+    }
+    release(format: "year")
+    genre
+  }
+}`
+      ).then(data => data.movie);
+      console.log(res);
+      return res;
+    },
     addToWishlist: input => {
       data.push({
         id: input.id
