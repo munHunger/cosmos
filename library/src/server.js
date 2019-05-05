@@ -18,17 +18,30 @@ let data = [
     status: "WISHLIST"
   }
 ];
+function queryParser(query) {
+  console.log(query);
+  return query
+    .split("\n")
+    .slice(1, -1)
+    .slice(1, -1)
+    .map(line => ({ name: line.match(/\w+/)[0], value: line }));
+}
 const server = (req, param) => {
-  console.log(param);
   return {
     movie: async () => {
       let structure = merge(
         toJSON(fs.readFileSync("assets/schema.graphql", "utf8"), "this"),
         toJSON(fs.readFileSync("assets/other.graphql", "utf8"), "tmdb")
       ).movie;
-      let res = await request(
-        `http://${tmdb.ip}:${tmdb.port}/graphql`,
-        `
+      let parameters = queryParser(param.query)
+        .filter(p => structure[p.name] !== "this")
+        .map(p => p.value)
+        .join("\n");
+      let res = undefined;
+      if (parameters.length > 0)
+        res = await request(
+          `http://${tmdb.ip}:${tmdb.port}/graphql`,
+          `
 query{
   movie(filter: {
     id:{
@@ -36,24 +49,19 @@ query{
     }
   }){
     id
-    title
-    overview
-    poster
-    rating {
-      average
-    }
-    release(format: "year")
-    genre
+    ${parameters}
   }
 }`
-      ).then(data => data.movie);
+        ).then(data => data.movie);
       return data.map(data =>
         Object.keys(structure)
           .map(key => ({
             name: key,
-            value: input => {
+            value: async input => {
               if (structure[key] === "this") return data[key];
-              else return res.find(r => r.id === data.id)[key];
+              else {
+                return res.find(r => r.id === data.id)[key];
+              }
             }
           }))
           .reduce((acc, val) => {

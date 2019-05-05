@@ -15,6 +15,4 @@ enum Status {
 type Movie {
   id: Int
   status: Status
-  title: String
-  poster(width: Int): String
 }

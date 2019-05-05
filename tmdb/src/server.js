@@ -10,7 +10,8 @@ const db = require("./tmdb/db");
 const transformer = require("./tmdb/transformer");
 const filter = require("./tmdb/filter");
 
-const server = () => {
+const server = (req, param) => {
+  console.log(param);
   return {
     movie: input =>
       db
@@ -55,11 +56,11 @@ function startServer(port) {
   var app = express();
   app.use(
     "/graphql",
-    graphqlHTTP({
+    graphqlHTTP(async (req, res, graphQLParams) => ({
       schema: loadSchema(),
-      rootValue: server(),
+      rootValue: await server(req, graphQLParams),
       graphiql: true
-    })
+    }))
   );
   app.listen(port);
   console.log(`TMDB server up and running on localhost:${port}/graphql`);
