@@ -64,8 +64,6 @@ function toJSON(schema, endpoint) {
 }
 
 async function resolveOthers(type, query, ids, services) {
-  console.log(getStructure());
-  console.log(queryParser(query));
   let parameters = queryParser(query)
     .filter(p => getStructure()[type][p.name] !== "this")
     .map(p => p.value)
@@ -88,8 +86,26 @@ ${parameters}
   return undefined;
 }
 
+async function compositeQuery(type, query, services, data, transformer) {
+  let res = await resolveOthers(type, query, data.map(d => d.id), services);
+  return data.map(data => ({
+    ...Object.keys(getStructure()[type])
+      .filter(key => getStructure()[type][key] !== "this")
+      .map(key => ({
+        name: key,
+        value: async () => res.find(r => r.id === data.id)[key]
+      }))
+      .reduce((acc, val) => {
+        acc[val.name] = val.value;
+        return acc;
+      }, {}),
+    ...transformer(data)
+  }));
+}
+
 function load() {
   structure = toJSON(fs.readFileSync("assets/schema.graphql", "utf8"), "this");
+  merge(toJSON(fs.readFileSync("assets/other.graphql", "utf8"), "tmdb"));
   return structure;
 }
 
@@ -101,5 +117,6 @@ module.exports = {
   merge,
   toJSON,
   getStructure,
-  resolveOthers
+  resolveOthers,
+  compositeQuery
 };

@@ -23,33 +23,12 @@ let data = [
 const server = (req, param) => {
   return {
     movie: async () => {
-      let structure = graphqlHelper.merge(
-        graphqlHelper.toJSON(
-          fs.readFileSync("assets/other.graphql", "utf8"),
-          "tmdb"
-        )
-      ).movie;
-      let res = await graphqlHelper.resolveOthers(
+      return graphqlHelper.compositeQuery(
         "movie",
         param.query,
-        data.map(d => d.id),
-        services
-      );
-      return data.map(data =>
-        Object.keys(structure)
-          .map(key => ({
-            name: key,
-            value: async input => {
-              if (structure[key] === "this") return data[key];
-              else {
-                return res.find(r => r.id === data.id)[key];
-              }
-            }
-          }))
-          .reduce((acc, val) => {
-            acc[val.name] = val.value;
-            return acc;
-          }, {})
+        services,
+        data,
+        data => data
       );
     },
     addToWishlist: input => {
