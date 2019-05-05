@@ -13,6 +13,16 @@ export class MovieComponent {
   private movie: Movie;
   constructor(private service: MovieService, private snackBar: MatSnackBar) {}
 
+  private wish() {
+    this.service
+      .addToWishlist(this.movie.id)
+      .subscribe(() =>
+        this.snackBar.open(`Added ${this.movie.title} to wishlist`, "", {
+          duration: 2000
+        })
+      );
+  }
+
   private select() {
     console.log("an attempt was made");
     this.snackBar.open("Hello! :)", "ok", { duration: 2000 });

@@ -155,7 +155,7 @@ var AppComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\" (click)=\"select()\">\n  <div class=\"rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -195,6 +195,16 @@ var MovieComponent = /** @class */ (function () {
         this.service = service;
         this.snackBar = snackBar;
     }
+    MovieComponent.prototype.wish = function () {
+        var _this = this;
+        this.service
+            .addToWishlist(this.movie.id)
+            .subscribe(function () {
+            return _this.snackBar.open("Added " + _this.movie.title + " to wishlist", "", {
+                duration: 2000
+            });
+        });
+    };
     MovieComponent.prototype.select = function () {
         console.log("an attempt was made");
         this.snackBar.open("Hello! :)", "ok", { duration: 2000 });
@@ -274,6 +284,18 @@ var MovieService = /** @class */ (function () {
         return this.http.get("/api/popular").pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) { return data.movie; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
             return _this.handleError(error);
         }));
+    };
+    MovieService.prototype.library = function () {
+        var _this = this;
+        return this.http.get("/api/wish").pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) { return data.movie; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
+            return _this.handleError(error);
+        }));
+    };
+    MovieService.prototype.addToWishlist = function (id) {
+        var _this = this;
+        return this.http
+            .post("/api/wish", { id: id })
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) { return _this.handleError(error); }));
     };
     MovieService.prototype.handleError = function (error) {
         var errMsg;

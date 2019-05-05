@@ -13,12 +13,7 @@ const sdClient = require("sd").start("library", port);
 let services = undefined;
 sdClient.waitFor("tmdb", config => (services = { tmdb: config }));
 
-let data = [
-  {
-    id: 299534,
-    status: "WISHLIST"
-  }
-];
+let data = [];
 
 const server = (req, param) => {
   return {
@@ -33,7 +28,8 @@ const server = (req, param) => {
     },
     addToWishlist: input => {
       data.push({
-        id: input.id
+        id: input.id,
+        status: "WISHLIST"
       });
       return "OK";
     }

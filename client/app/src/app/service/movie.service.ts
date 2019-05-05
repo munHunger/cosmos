@@ -16,6 +16,20 @@ export class MovieService {
       })
     );
   }
+  public library(): Observable<Movie[]> {
+    return this.http.get<Movie[]>("/api/wish").pipe(
+      map((data: any) => data.movie),
+      catchError(error => {
+        return this.handleError(error);
+      })
+    );
+  }
+
+  public addToWishlist(id: number): Observable<any> {
+    return this.http
+      .post<any>("/api/wish", { id })
+      .pipe(catchError(error => this.handleError(error)));
+  }
 
   private handleError(error: Response | any) {
     let errMsg: string;
