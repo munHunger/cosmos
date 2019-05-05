@@ -17,6 +17,7 @@
     "graphql-request": "^1.8.2",
     "merge-graphql-schemas": "^1.5.8",
     "nodemon": "^1.19.0",
-    "sd": "file:../serviceDiscovery/"
+    "sd": "file:../serviceDiscovery/",
+    "graphql-helper": "file:../graphqlHelper"
   }
 }
