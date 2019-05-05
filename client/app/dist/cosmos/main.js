@@ -38,11 +38,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _component_app_app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./component/app/app.component */ "./src/app/component/app/app.component.ts");
 /* harmony import */ var _service_movie_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./service/movie.service */ "./src/app/service/movie.service.ts");
-/* harmony import */ var _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/movie/movie.component */ "./src/app/component/movie/movie.component.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_material_badge__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/badge */ "./node_modules/@angular/material/esm5/badge.es5.js");
+/* harmony import */ var _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/movie/grid/movieGrid.component */ "./src/app/component/movie/grid/movieGrid.component.ts");
+/* harmony import */ var _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/movie/movie.component */ "./src/app/component/movie/movie.component.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_material_badge__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/badge */ "./node_modules/@angular/material/esm5/badge.es5.js");
 
 
 
@@ -53,26 +55,33 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+var appRoutes = [
+    { path: "grid/:list", component: _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__["MovieGridComponent"] },
+    { path: "**", component: _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__["MovieGridComponent"] }
+];
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
-            declarations: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"], _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_5__["MovieComponent"]],
+            declarations: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"], _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_6__["MovieComponent"], _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__["MovieGridComponent"]],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpClientModule"],
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_7__["BrowserAnimationsModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatGridListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSnackBarModule"],
-                _angular_material_badge__WEBPACK_IMPORTED_MODULE_9__["MatBadgeModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatToolbarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSidenavModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatOptionModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatExpansionModule"]
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClientModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_8__["BrowserAnimationsModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatGridListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatSnackBarModule"],
+                _angular_material_badge__WEBPACK_IMPORTED_MODULE_11__["MatBadgeModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatToolbarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatSidenavModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatOptionModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatExpansionModule"],
+                _angular_router__WEBPACK_IMPORTED_MODULE_9__["RouterModule"].forRoot(appRoutes)
             ],
             providers: [_service_movie_service__WEBPACK_IMPORTED_MODULE_4__["MovieService"]],
             bootstrap: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
@@ -92,7 +101,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-icon-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p><button mat-button>Popular</button></p>\n      <p><button mat-button>My List</button></p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n      <mat-grid-tile *ngFor=\"let movie of popular\">\n        <movie [movie]=\"movie\"></movie\n      ></mat-grid-tile>\n    </mat-grid-list>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
+module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-icon-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p><button mat-button>Popular</button></p>\n      <p><button mat-button>My List</button></p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <router-outlet></router-outlet>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
 
 /***/ }),
 
@@ -142,6 +151,68 @@ var AppComponent = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"]])
     ], AppComponent);
     return AppComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/component/movie/grid/movieGrid.component.html":
+/*!***************************************************************!*\
+  !*** ./src/app/component/movie/grid/movieGrid.component.html ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n  <mat-grid-tile *ngFor=\"let movie of popular\">\n    <movie [movie]=\"movie\"></movie\n  ></mat-grid-tile>\n</mat-grid-list>\n"
+
+/***/ }),
+
+/***/ "./src/app/component/movie/grid/movieGrid.component.sass":
+/*!***************************************************************!*\
+  !*** ./src/app/component/movie/grid/movieGrid.component.sass ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudC9tb3ZpZS9ncmlkL21vdmllR3JpZC5jb21wb25lbnQuc2FzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/component/movie/grid/movieGrid.component.ts":
+/*!*************************************************************!*\
+  !*** ./src/app/component/movie/grid/movieGrid.component.ts ***!
+  \*************************************************************/
+/*! exports provided: MovieGridComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MovieGridComponent", function() { return MovieGridComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/movie.service */ "./src/app/service/movie.service.ts");
+
+
+
+var MovieGridComponent = /** @class */ (function () {
+    function MovieGridComponent(service) {
+        var _this = this;
+        this.service = service;
+        this.popular = [];
+        service.popular().subscribe(function (list) {
+            _this.popular = list;
+        });
+    }
+    MovieGridComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: "movie-grid",
+            template: __webpack_require__(/*! ./movieGrid.component.html */ "./src/app/component/movie/grid/movieGrid.component.html"),
+            styles: [__webpack_require__(/*! ./movieGrid.component.sass */ "./src/app/component/movie/grid/movieGrid.component.sass")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"]])
+    ], MovieGridComponent);
+    return MovieGridComponent;
 }());
 
 

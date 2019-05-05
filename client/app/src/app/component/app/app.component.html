@@ -19,10 +19,6 @@
     </mat-expansion-panel>
   </mat-drawer>
   <mat-drawer-content>
-    <mat-grid-list cols="5" rowHeight="3:5">
-      <mat-grid-tile *ngFor="let movie of popular">
-        <movie [movie]="movie"></movie
-      ></mat-grid-tile>
-    </mat-grid-list>
+    <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
