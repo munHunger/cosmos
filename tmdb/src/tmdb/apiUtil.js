@@ -15,13 +15,16 @@ const query = url => {
     )
     .then(res => {
       if (res.status === 200) {
-        res.data.results = res.data.results.map(movie => movieMapper(movie));
+        if (res.data.results)
+          res.data.results = res.data.results.map(movie => movieMapper(movie));
+        else res.data = movieMapper(res.data);
         return res.data;
       }
     });
 };
 
 const movieMapper = tmdbMovie => {
+  console.log(tmdbMovie);
   return {
     id: tmdbMovie.id,
     title: tmdbMovie.title,
@@ -35,8 +38,8 @@ const movieMapper = tmdbMovie => {
       count: tmdbMovie.vote_count
     },
     release: tmdbMovie.release_date,
-    genre: tmdbMovie.genre_ids
-      .map(g => genres.find(g2 => g2.id === g))
+    genre: (tmdbMovie.genre_ids || tmdbMovie.genres)
+      .map(g => genres.find(g2 => g2.id === (g.id || g)))
       .map(g => g.name)
   };
 };

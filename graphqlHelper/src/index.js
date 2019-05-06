@@ -86,26 +86,27 @@ ${parameters}
   return undefined;
 }
 
-async function compositeQuery(type, query, services, data, transformer) {
+function compositeQuery(type, query, services, data, transformer) {
   query = query
     .split("\n")
     .map(s => s.trim())
     .filter(s => s.length > 0)
     .join("\n");
-  let res = await resolveOthers(type, query, data.map(d => d.id), services);
-  return data.map(data => ({
-    ...Object.keys(getStructure()[type])
-      .filter(key => getStructure()[type][key] !== "this")
-      .map(key => ({
-        name: key,
-        value: async () => res.find(r => r.id === data.id)[key]
-      }))
-      .reduce((acc, val) => {
-        acc[val.name] = val.value;
-        return acc;
-      }, {}),
-    ...transformer(data)
-  }));
+  return resolveOthers(type, query, data.map(d => d.id), services).then(res =>
+    data.map(data => ({
+      ...Object.keys(getStructure()[type])
+        .filter(key => getStructure()[type][key] !== "this")
+        .map(key => ({
+          name: key,
+          value: async () => res.find(r => r.id === data.id)[key]
+        }))
+        .reduce((acc, val) => {
+          acc[val.name] = val.value;
+          return acc;
+        }, {}),
+      ...transformer(data)
+    }))
+  );
 }
 
 function load() {

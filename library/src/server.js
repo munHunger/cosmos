@@ -4,16 +4,22 @@ const fs = require("fs");
 var express = require("express");
 var graphqlHTTP = require("express-graphql");
 var { buildSchema } = require("graphql");
-const { request } = require("graphql-request");
 const graphqlHelper = require("graphql-helper");
+
+const movieScraper = require("./scraper/movieScraper");
 
 const port = 3342;
 const sdClient = require("sd").start("library", port);
 
-let services = undefined;
-sdClient.waitFor("tmdb", config => (services = { tmdb: config }));
-
 let data = [];
+
+let services = undefined;
+sdClient.waitFor("tmdb", config => {
+  services = { tmdb: config };
+  movieScraper.scrapeMovies("../movies", config, movie =>
+    data.push({ id: movie.id, status: "IN_LIBRARY" })
+  );
+});
 
 const server = (req, param) => {
   return {

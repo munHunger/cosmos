@@ -1,5 +1,6 @@
 type Query {
   movie(filter: MovieFilter): [Movie]
+  search(filter: MovieFilter, query: String, year: Int): [Movie]
 }
 
 input MovieFilter {

@@ -10,16 +10,30 @@ const db = require("./tmdb/db");
 const transformer = require("./tmdb/transformer");
 const filter = require("./tmdb/filter");
 
+const tmdb = require("./tmdb/apiUtil");
+
 const server = (req, param) => {
-  console.log(param);
   return {
-    movie: input =>
-      db
-        .getMovies()
-        .filter(m => filter.movieFilter(input, m))
-        .map(m => {
-          return transformer.transform(m);
-        })
+    movie: async input => {
+      let eq = [((input.filter || {}).id || {}).eq || false]
+        .concat(((input.filter || {}).id || {}).in || [])
+        .filter(id => id);
+      return Promise.all(eq.map(id => tmdb.query(`3/movie/${id}`))).then(
+        external =>
+          external
+            .concat(db.getMovies())
+            .filter(m => filter.movieFilter(input, m))
+            .map(m => transformer.transform(m))
+      );
+    },
+    search: input =>
+      tmdb
+        .query(
+          `3/search/movie?query=${input.query}${
+            input.year ? `&year=${input.year}` : ""
+          }`
+        )
+        .then(data => data.results)
   };
 };
 
