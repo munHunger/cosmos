@@ -1,0 +1,17 @@
+{
+  "name": "streamer",
+  "version": "1.0.0",
+  "description": "The streaming endpoint for all video",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "author": "munHunger",
+  "license": "MIT",
+  "dependencies": {
+    "sd": "file:../serviceDiscovery/",
+    "express": "^4.16.4",
+    "graphql": "^14.2.1",
+    "nodemon": "^1.19.0"
+  }
+}
