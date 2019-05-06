@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="rating">
+  <div class="rating" *ngIf="movie.rating">
     {{ movie.rating.average }}
   </div>
   <div class="poster">

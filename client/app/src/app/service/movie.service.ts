@@ -17,7 +17,7 @@ export class MovieService {
     );
   }
   public library(): Observable<Movie[]> {
-    return this.http.get<Movie[]>("/api/wish").pipe(
+    return this.http.get<Movie[]>("/api/library").pipe(
       map((data: any) => data.movie),
       catchError(error => {
         return this.handleError(error);

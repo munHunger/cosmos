@@ -18,13 +18,14 @@ let data = [];
 const server = (req, param) => {
   return {
     movie: async () => {
-      return graphqlHelper.compositeQuery(
+      let res = await graphqlHelper.compositeQuery(
         "movie",
         param.query,
         services,
         data,
         data => data
       );
+      return res;
     },
     addToWishlist: input => {
       data.push({

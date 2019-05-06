@@ -14,8 +14,12 @@
           Movies
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p><button mat-button>Popular</button></p>
-      <p><button mat-button>My List</button></p>
+      <p>
+        <button mat-button [routerLink]="['grid', 'popular']">Popular</button>
+      </p>
+      <p>
+        <button mat-button [routerLink]="['grid', 'wishlist']">My List</button>
+      </p>
     </mat-expansion-panel>
   </mat-drawer>
   <mat-drawer-content>

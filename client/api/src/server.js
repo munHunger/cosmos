@@ -32,7 +32,7 @@ serviceDiscovery.waitFor("tmdb", tmdb => {
       }`
       ).then(data => res.status(200).json(data));
     });
-    app.get("/api/wish", (rew, res) =>
+    app.get("/api/library", (req, res) =>
       request(
         `http://${library.ip}:${library.port}/graphql`,
         `
@@ -42,9 +42,6 @@ serviceDiscovery.waitFor("tmdb", tmdb => {
           status
           title
           poster
-          rating {
-            average
-          }
           release(format: "year")
           genre
         }

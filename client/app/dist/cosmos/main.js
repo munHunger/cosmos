@@ -101,7 +101,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-icon-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p><button mat-button>Popular</button></p>\n      <p><button mat-button>My List</button></p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <router-outlet></router-outlet>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
+module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-icon-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p>\n        <button mat-button [routerLink]=\"['grid', 'popular']\">Popular</button>\n      </p>\n      <p>\n        <button mat-button [routerLink]=\"['grid', 'wishlist']\">My List</button>\n      </p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <router-outlet></router-outlet>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
 
 /***/ }),
 
@@ -164,7 +164,7 @@ var AppComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n  <mat-grid-tile *ngFor=\"let movie of popular\">\n    <movie [movie]=\"movie\"></movie\n  ></mat-grid-tile>\n</mat-grid-list>\n"
+module.exports = "<mat-grid-list cols=\"5\" rowHeight=\"3:5\">\n  <mat-grid-tile *ngFor=\"let movie of list\">\n    <movie [movie]=\"movie\"></movie\n  ></mat-grid-tile>\n</mat-grid-list>\n"
 
 /***/ }),
 
@@ -192,16 +192,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/movie.service */ "./src/app/service/movie.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
 var MovieGridComponent = /** @class */ (function () {
-    function MovieGridComponent(service) {
+    function MovieGridComponent(service, route) {
         var _this = this;
         this.service = service;
-        this.popular = [];
-        service.popular().subscribe(function (list) {
-            _this.popular = list;
+        this.route = route;
+        this.list = [];
+        this.route.paramMap.subscribe(function (params) {
+            var listName = params.get("list");
+            switch (listName) {
+                case "wishlist":
+                    service.library().subscribe(function (list) {
+                        _this.list = list;
+                    });
+                    break;
+                default:
+                case "popular":
+                    service.popular().subscribe(function (list) {
+                        _this.list = list;
+                    });
+                    break;
+            }
         });
     }
     MovieGridComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -210,7 +226,7 @@ var MovieGridComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./movieGrid.component.html */ "./src/app/component/movie/grid/movieGrid.component.html"),
             styles: [__webpack_require__(/*! ./movieGrid.component.sass */ "./src/app/component/movie/grid/movieGrid.component.sass")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"]])
     ], MovieGridComponent);
     return MovieGridComponent;
 }());
@@ -226,7 +242,7 @@ var MovieGridComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"rating\" *ngIf=\"movie.rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -358,7 +374,7 @@ var MovieService = /** @class */ (function () {
     };
     MovieService.prototype.library = function () {
         var _this = this;
-        return this.http.get("/api/wish").pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) { return data.movie; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
+        return this.http.get("/api/library").pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) { return data.movie; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
             return _this.handleError(error);
         }));
     };

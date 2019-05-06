@@ -87,6 +87,11 @@ ${parameters}
 }
 
 async function compositeQuery(type, query, services, data, transformer) {
+  query = query
+    .split("\n")
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+    .join("\n");
   let res = await resolveOthers(type, query, data.map(d => d.id), services);
   return data.map(data => ({
     ...Object.keys(getStructure()[type])
