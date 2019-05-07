@@ -242,7 +242,7 @@ var MovieGridComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"rating\" *ngIf=\"movie.rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"rating\" *ngIf=\"movie.rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\" (click)=\"play()\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -272,29 +272,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/movie.service */ "./src/app/service/movie.service.ts");
 /* harmony import */ var src_app_model_movie_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/model/movie.model */ "./src/app/model/movie.model.ts");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
 
 
 var MovieComponent = /** @class */ (function () {
-    function MovieComponent(service, snackBar) {
+    function MovieComponent(service, snackBar, router) {
         this.service = service;
         this.snackBar = snackBar;
+        this.router = router;
     }
     MovieComponent.prototype.wish = function () {
         var _this = this;
-        this.service
-            .addToWishlist(this.movie.id)
-            .subscribe(function () {
+        this.service.addToWishlist(this.movie.id).subscribe(function () {
             return _this.snackBar.open("Added " + _this.movie.title + " to wishlist", "", {
                 duration: 2000
             });
         });
     };
-    MovieComponent.prototype.select = function () {
-        console.log("an attempt was made");
-        this.snackBar.open("Hello! :)", "ok", { duration: 2000 });
+    MovieComponent.prototype.play = function () {
+        document.location.href = "http://localhost:3343/video";
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -306,7 +306,9 @@ var MovieComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./movie.component.html */ "./src/app/component/movie/movie.component.html"),
             styles: [__webpack_require__(/*! ./movie.component.sass */ "./src/app/component/movie/movie.component.sass")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSnackBar"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSnackBar"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]])
     ], MovieComponent);
     return MovieComponent;
 }());

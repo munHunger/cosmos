@@ -1,3 +1,4 @@
+const fs = require("fs");
 const serviceDiscovery = require("sd").start("client", 8080);
 
 const { request } = require("graphql-request");
@@ -66,7 +67,13 @@ serviceDiscovery.waitFor("tmdb", tmdb => {
     app.get("*", (req, res, next) => {
       res
         .status(200)
-        .sendFile(path.join(__dirname + "../../../app/dist/cosmos/" + req.url));
+        .sendFile(
+          fs.existsSync(
+            path.join(__dirname + "../../../app/dist/cosmos/" + req.url)
+          )
+            ? path.join(__dirname + "../../../app/dist/cosmos/" + req.url)
+            : path.join(__dirname + "../../../app/dist/cosmos/index.html")
+        );
     });
 
     app.listen(8080);

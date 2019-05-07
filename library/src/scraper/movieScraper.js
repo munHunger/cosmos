@@ -22,23 +22,26 @@ function promisify(fn) {
 const readdirAsync = promisify(fs.readdir);
 
 function scrapeMovies(rootDirectory, tmdb, callback) {
-  return readdirAsync(rootDirectory)
-    .then(file => file[0])
-    .then(file =>
+  return readdirAsync(rootDirectory).then(file =>
+    file.forEach(file => {
       request(
         `http://${tmdb.ip}:${tmdb.port}/graphql`,
         `
-    query{
-      search(query: "${file}"){
-        id
-        title
-        release(format: "year")
-      }
-    }`
+      query{
+        search(query: "${file}"){
+          id
+          title
+          release(format: "year")
+        }
+      }`
       )
         .then(data => data.search[0])
-        .then(data => callback.apply(this, [data]))
-    );
+        .then(data => {
+          if (data) callback.apply(this, [data]);
+          else console.log(`Could not find movie from ${file}`);
+        });
+    })
+  );
 }
 module.exports = {
   scrapeMovies

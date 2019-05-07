@@ -2,7 +2,9 @@ const fs = require("fs");
 const express = require("express");
 var app = express();
 app.get("/video", function(req, res) {
-  const path = "../movies/alike/Alike short film.mov";
+  //  const path = "../movies/alike/Alike short film.mov";
+  const path =
+    "../movies/Agent 327: Operation Barbershop/Agent 327 Operation Barbershop.mov";
   const stat = fs.statSync(path);
   const fileSize = stat.size;
   const range = req.headers.range;
