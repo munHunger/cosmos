@@ -46,6 +46,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_material_badge__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/badge */ "./node_modules/@angular/material/esm5/badge.es5.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _component_movie_searchDialog_searchDialog_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./component/movie/searchDialog/searchDialog.component */ "./src/app/component/movie/searchDialog/searchDialog.component.ts");
+
 
 
 
@@ -68,7 +70,12 @@ var AppModule = /** @class */ (function () {
     }
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
-            declarations: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"], _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_6__["MovieComponent"], _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__["MovieGridComponent"]],
+            declarations: [
+                _component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"],
+                _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_6__["MovieComponent"],
+                _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__["MovieGridComponent"],
+                _component_movie_searchDialog_searchDialog_component__WEBPACK_IMPORTED_MODULE_13__["SearchDialog"]
+            ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_12__["FormsModule"],
@@ -86,8 +93,10 @@ var AppModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatExpansionModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatFormFieldModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatDialogModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_9__["RouterModule"].forRoot(appRoutes)
             ],
+            entryComponents: [_component_movie_searchDialog_searchDialog_component__WEBPACK_IMPORTED_MODULE_13__["SearchDialog"]],
             providers: [_service_movie_service__WEBPACK_IMPORTED_MODULE_4__["MovieService"]],
             bootstrap: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
         })
@@ -134,20 +143,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/movie.service */ "./src/app/service/movie.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _movie_searchDialog_searchDialog_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../movie/searchDialog/searchDialog.component */ "./src/app/component/movie/searchDialog/searchDialog.component.ts");
+
+
 
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(service) {
+    function AppComponent(service, dialog) {
         this.service = service;
+        this.dialog = dialog;
         this.title = "cosmos";
         this.searchValue = "";
     }
     AppComponent.prototype.search = function () {
+        var _this = this;
         console.log("Searching for " + this.searchValue);
         this.service
             .search(this.searchValue)
-            .subscribe(function (result) { return console.log(result); });
+            .subscribe(function (result) { return _this.dialog.open(_movie_searchDialog_searchDialog_component__WEBPACK_IMPORTED_MODULE_4__["SearchDialog"], { data: result }); });
     };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -155,7 +170,7 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/component/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.sass */ "./src/app/component/app/app.component.sass")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_service_movie_service__WEBPACK_IMPORTED_MODULE_2__["MovieService"], _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialog"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -318,6 +333,68 @@ var MovieComponent = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]])
     ], MovieComponent);
     return MovieComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/component/movie/searchDialog/searchDialog.component.html":
+/*!**************************************************************************!*\
+  !*** ./src/app/component/movie/searchDialog/searchDialog.component.html ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"movie\" *ngFor=\"let movie of data\">\n  <img class=\"poster\" [src]=\"movie.poster\" />\n  <div class=\"data\">\n    <div class=\"header\">\n      <span class=\"title\">{{ movie.title }}</span>\n      <span class=\"release\">{{ movie.year }}</span>\n    </div>\n    <div class=\"genre\">\n      {{ movie.genre.join(\" \") }}\n    </div>\n  </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/component/movie/searchDialog/searchDialog.component.sass":
+/*!**************************************************************************!*\
+  !*** ./src/app/component/movie/searchDialog/searchDialog.component.sass ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".movie {\n  height: 150px;\n  margin: 5px; }\n\n.poster {\n  height: 100%;\n  display: block;\n  float: left; }\n\n.data {\n  display: block;\n  float: left; }\n\n.header {\n  display: block;\n  padding: 15px;\n  font-size: 18px;\n  padding-bottom: 3px; }\n\n.genre {\n  display: block;\n  float: left;\n  padding: 15px;\n  padding-top: 3px;\n  color: rgba(255, 255, 255, 0.7); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL3NlYXJjaERpYWxvZy9zZWFyY2hEaWFsb2cuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxhQUFhO0VBQ2IsV0FBVyxFQUFBOztBQUNmO0VBQ0ksWUFBWTtFQUNaLGNBQWM7RUFDZCxXQUFXLEVBQUE7O0FBRWY7RUFDSSxjQUFjO0VBQ2QsV0FBVyxFQUFBOztBQUVmO0VBQ0ksY0FBYztFQUNkLGFBQWE7RUFDYixlQUFlO0VBQ2YsbUJBQW1CLEVBQUE7O0FBRXZCO0VBQ0ksY0FBYztFQUNkLFdBQVc7RUFDWCxhQUFhO0VBQ2IsZ0JBQWdCO0VBQ2hCLCtCQUE0QixFQUFBIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50L21vdmllL3NlYXJjaERpYWxvZy9zZWFyY2hEaWFsb2cuY29tcG9uZW50LnNhc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubW92aWUge1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgbWFyZ2luOiA1cHg7IH1cbi5wb3N0ZXIge1xuICAgIGhlaWdodDogMTAwJTtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBmbG9hdDogbGVmdDsgfVxuXG4uZGF0YSB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgZmxvYXQ6IGxlZnQ7IH1cblxuLmhlYWRlciB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgcGFkZGluZzogMTVweDtcbiAgICBmb250LXNpemU6IDE4cHg7XG4gICAgcGFkZGluZy1ib3R0b206IDNweDsgfVxuXG4uZ2VucmUge1xuICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHBhZGRpbmc6IDE1cHg7XG4gICAgcGFkZGluZy10b3A6IDNweDtcbiAgICBjb2xvcjogcmdiYSgyNTUsMjU1LDI1NSwwLjcpOyB9XG4iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/component/movie/searchDialog/searchDialog.component.ts":
+/*!************************************************************************!*\
+  !*** ./src/app/component/movie/searchDialog/searchDialog.component.ts ***!
+  \************************************************************************/
+/*! exports provided: SearchDialog */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SearchDialog", function() { return SearchDialog; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+
+
+
+var SearchDialog = /** @class */ (function () {
+    function SearchDialog(dialogRef, data) {
+        this.dialogRef = dialogRef;
+        this.data = data;
+    }
+    SearchDialog.prototype.onNoClick = function () {
+        this.dialogRef.close();
+    };
+    SearchDialog = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: "search-dialog",
+            template: __webpack_require__(/*! ./searchDialog.component.html */ "./src/app/component/movie/searchDialog/searchDialog.component.html"),
+            styles: [__webpack_require__(/*! ./searchDialog.component.sass */ "./src/app/component/movie/searchDialog/searchDialog.component.sass")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Array])
+    ], SearchDialog);
+    return SearchDialog;
 }());
 
 

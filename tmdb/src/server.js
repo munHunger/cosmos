@@ -33,7 +33,11 @@ const server = (req, param) => {
             input.year ? `&year=${input.year}` : ""
           }`
         )
-        .then(data => data.results)
+        .then(data =>
+          data.results
+            .filter(m => filter.movieFilter(input, m))
+            .map(m => transformer.transform(m))
+        )
   };
 };
 

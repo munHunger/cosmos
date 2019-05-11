@@ -1,0 +1,12 @@
+<div class="movie" *ngFor="let movie of data">
+  <img class="poster" [src]="movie.poster" />
+  <div class="data">
+    <div class="header">
+      <span class="title">{{ movie.title }}</span>
+      <span class="release">{{ movie.year }}</span>
+    </div>
+    <div class="genre">
+      {{ movie.genre.join(" ") }}
+    </div>
+  </div>
+</div>

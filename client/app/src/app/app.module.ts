@@ -19,10 +19,12 @@ import {
   MatButtonModule,
   MatExpansionModule,
   MatInputModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatDialogModule
 } from "@angular/material";
 import { MatBadgeModule } from "@angular/material/badge";
 import { FormsModule } from "@angular/forms";
+import { SearchDialog } from "./component/movie/searchDialog/searchDialog.component";
 
 const appRoutes: Routes = [
   { path: "grid/:list", component: MovieGridComponent },
@@ -30,7 +32,12 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, MovieComponent, MovieGridComponent],
+  declarations: [
+    AppComponent,
+    MovieComponent,
+    MovieGridComponent,
+    SearchDialog
+  ],
   imports: [
     BrowserModule,
     FormsModule,
@@ -48,8 +55,10 @@ const appRoutes: Routes = [
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDialogModule,
     RouterModule.forRoot(appRoutes)
   ],
+  entryComponents: [SearchDialog],
   providers: [MovieService],
   bootstrap: [AppComponent]
 })
