@@ -24,7 +24,6 @@ const query = url => {
 };
 
 const movieMapper = tmdbMovie => {
-  console.log(tmdbMovie);
   return {
     id: tmdbMovie.id,
     title: tmdbMovie.title,

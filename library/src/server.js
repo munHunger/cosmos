@@ -16,19 +16,25 @@ let data = [];
 let services = undefined;
 sdClient.waitFor("tmdb", config => {
   services = { tmdb: config };
-  movieScraper.scrapeMovies("../movies", config, movie =>
-    data.push({ id: movie.id, status: "IN_LIBRARY" })
+  movieScraper.scrapeMovies("../movies", config, (movie, location) =>
+    data.push({
+      id: movie.id,
+      status: "IN_LIBRARY",
+      location
+    })
   );
 });
 
 const server = (req, param) => {
   return {
-    movie: async () => {
+    movie: async input => {
       let res = await graphqlHelper.compositeQuery(
         "movie",
         param.query,
         services,
         data,
+        graphqlHelper.filter.filter,
+        input,
         data => data
       );
       return res;

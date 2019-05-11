@@ -7,6 +7,19 @@ function queryParser(query) {
     .split("\n")
     .slice(1, -1)
     .slice(1, -1)
+    .reduce(
+      (acc, val) => {
+        if (
+          (acc[acc.length - 1].match(/{/g) || []).length !==
+          (acc[acc.length - 1].match(/}/g) || []).length
+        )
+          acc[acc.length - 1] += val;
+        else acc.push(val);
+        return acc;
+      },
+      [""]
+    )
+    .slice(1)
     .map(line => ({ name: line.match(/\w+/)[0], value: line }));
 }
 function merge(other) {
@@ -86,26 +99,36 @@ ${parameters}
   return undefined;
 }
 
-function compositeQuery(type, query, services, data, transformer) {
+function compositeQuery(
+  type,
+  query,
+  services,
+  data,
+  filter,
+  input,
+  transformer
+) {
   query = query
     .split("\n")
     .map(s => s.trim())
     .filter(s => s.length > 0)
     .join("\n");
   return resolveOthers(type, query, data.map(d => d.id), services).then(res =>
-    data.map(data => ({
-      ...Object.keys(getStructure()[type])
-        .filter(key => getStructure()[type][key] !== "this")
-        .map(key => ({
-          name: key,
-          value: async () => res.find(r => r.id === data.id)[key]
-        }))
-        .reduce((acc, val) => {
-          acc[val.name] = val.value;
-          return acc;
-        }, {}),
-      ...transformer(data)
-    }))
+    data
+      .filter(d => filter.apply(this, [input, d]))
+      .map(data => ({
+        ...Object.keys(getStructure()[type])
+          .filter(key => getStructure()[type][key] !== "this")
+          .map(key => ({
+            name: key,
+            value: async () => res.find(r => r.id === data.id)[key]
+          }))
+          .reduce((acc, val) => {
+            acc[val.name] = val.value;
+            return acc;
+          }, {}),
+        ...transformer(data)
+      }))
   );
 }
 
@@ -124,5 +147,6 @@ module.exports = {
   toJSON,
   getStructure,
   resolveOthers,
-  compositeQuery
+  compositeQuery,
+  filter: require("./filter")
 };

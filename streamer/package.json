@@ -12,6 +12,7 @@
     "sd": "file:../serviceDiscovery/",
     "express": "^4.16.4",
     "graphql": "^14.2.1",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "graphql-request": "^1.8.2"
   }
 }

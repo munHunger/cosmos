@@ -37,8 +37,16 @@ function scrapeMovies(rootDirectory, tmdb, callback) {
       )
         .then(data => data.search[0])
         .then(data => {
-          if (data) callback.apply(this, [data]);
-          else console.log(`Could not find movie from ${file}`);
+          if (data) {
+            readdirAsync(`${rootDirectory}/${file}`).then(content => {
+              let movie = content.find(f => f.indexOf(".mov") > -1);
+              if (movie)
+                callback.apply(this, [
+                  data,
+                  { folder: `${rootDirectory}/${file}`, video: movie }
+                ]);
+            });
+          } else console.log(`Could not find movie from ${file}`);
         });
     })
   );

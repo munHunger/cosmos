@@ -1,9 +1,18 @@
 type Query {
-  movie: [Movie]
+  movie(filter: [Filter]): [Movie]
 }
 
 type Mutation {
   addToWishlist(id: Int): String
+}
+
+input Filter {
+  field: String!
+  eq: String
+  lt: String
+  gt: String
+  in: [String]
+  contains: String
 }
 
 enum Status {
@@ -15,4 +24,10 @@ enum Status {
 type Movie {
   id: Int
   status: Status
+  location: Location
+}
+
+type Location {
+  folder: String
+  video: String
 }
