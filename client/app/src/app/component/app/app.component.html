@@ -4,6 +4,14 @@
       <mat-icon>menu</mat-icon>
     </button>
     <span>COSMOS</span>
+    <div class="search">
+      <span class="icon"><mat-icon>search</mat-icon></span>
+      <input
+        placeholder="search"
+        (keydown.enter)="search()"
+        [(ngModel)]="searchValue"
+      />
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>
 <mat-drawer-container class="example-container" hasBackdrop="false">

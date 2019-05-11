@@ -33,6 +33,21 @@ serviceDiscovery.waitFor("tmdb", tmdb => {
       }`
       ).then(data => res.status(200).json(data));
     });
+    app.get("/api/search", (req, res) =>
+      request(
+        `http://${tmdb.ip}:${tmdb.port}/graphql`,
+        `
+    query{
+      search(query: "${req.query.query}"){
+        id
+        title
+        poster
+        release(format: "year")
+        genre
+      }
+    }`
+      ).then(data => res.status(200).json(data))
+    );
     app.get("/api/library", (req, res) =>
       request(
         `http://${library.ip}:${library.port}/graphql`,

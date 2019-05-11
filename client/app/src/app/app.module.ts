@@ -17,9 +17,12 @@ import {
   MatSelectModule,
   MatIconModule,
   MatButtonModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatInputModule,
+  MatFormFieldModule
 } from "@angular/material";
 import { MatBadgeModule } from "@angular/material/badge";
+import { FormsModule } from "@angular/forms";
 
 const appRoutes: Routes = [
   { path: "grid/:list", component: MovieGridComponent },
@@ -30,6 +33,7 @@ const appRoutes: Routes = [
   declarations: [AppComponent, MovieComponent, MovieGridComponent],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatGridListModule,
@@ -42,6 +46,8 @@ const appRoutes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [MovieService],

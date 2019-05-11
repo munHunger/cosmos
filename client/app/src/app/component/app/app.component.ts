@@ -10,11 +10,14 @@ import { Movie } from "src/app/model/movie.model";
 export class AppComponent {
   title = "cosmos";
 
-  private popular: Movie[] = [];
+  private searchValue = "";
 
-  constructor(private service: MovieService) {
-    service.popular().subscribe(list => {
-      this.popular = list;
-    });
+  constructor(private service: MovieService) {}
+
+  private search() {
+    console.log("Searching for " + this.searchValue);
+    this.service
+      .search(this.searchValue)
+      .subscribe(result => console.log(result));
   }
 }

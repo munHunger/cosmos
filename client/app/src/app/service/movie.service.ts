@@ -31,6 +31,13 @@ export class MovieService {
       .pipe(catchError(error => this.handleError(error)));
   }
 
+  public search(query: string): Observable<Movie[]> {
+    return this.http.get<Movie[]>("/api/search?query=" + encodeURI(query)).pipe(
+      map((data: any) => data.search),
+      catchError(error => this.handleError(error))
+    );
+  }
+
   private handleError(error: Response | any) {
     let errMsg: string;
     errMsg = `${error.status} - ${error.statusText || ""}`;

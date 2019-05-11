@@ -45,6 +45,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_material_badge__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/badge */ "./node_modules/@angular/material/esm5/badge.es5.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+
 
 
 
@@ -69,6 +71,7 @@ var AppModule = /** @class */ (function () {
             declarations: [_component_app_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"], _component_movie_movie_component__WEBPACK_IMPORTED_MODULE_6__["MovieComponent"], _component_movie_grid_movieGrid_component__WEBPACK_IMPORTED_MODULE_5__["MovieGridComponent"]],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_12__["FormsModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClientModule"],
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_8__["BrowserAnimationsModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatGridListModule"],
@@ -81,6 +84,8 @@ var AppModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatIconModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatButtonModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatExpansionModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatFormFieldModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_10__["MatInputModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_9__["RouterModule"].forRoot(appRoutes)
             ],
             providers: [_service_movie_service__WEBPACK_IMPORTED_MODULE_4__["MovieService"]],
@@ -101,7 +106,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-icon-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p>\n        <button mat-button [routerLink]=\"['grid', 'popular']\">Popular</button>\n      </p>\n      <p>\n        <button mat-button [routerLink]=\"['grid', 'wishlist']\">My List</button>\n      </p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <router-outlet></router-outlet>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
+module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <button mat-icon-button (click)=\"drawer.toggle()\">\n      <mat-icon>menu</mat-icon>\n    </button>\n    <span>COSMOS</span>\n    <div class=\"search\">\n      <span class=\"icon\"><mat-icon>search</mat-icon></span>\n      <input\n        placeholder=\"search\"\n        (keydown.enter)=\"search()\"\n        [(ngModel)]=\"searchValue\"\n      />\n    </div>\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-drawer-container class=\"example-container\" hasBackdrop=\"false\">\n  <mat-drawer #drawer mode=\"side\">\n    <mat-expansion-panel>\n      <mat-expansion-panel-header>\n        <mat-panel-title>\n          Movies\n        </mat-panel-title>\n      </mat-expansion-panel-header>\n      <p>\n        <button mat-button [routerLink]=\"['grid', 'popular']\">Popular</button>\n      </p>\n      <p>\n        <button mat-button [routerLink]=\"['grid', 'wishlist']\">My List</button>\n      </p>\n    </mat-expansion-panel>\n  </mat-drawer>\n  <mat-drawer-content>\n    <router-outlet></router-outlet>\n  </mat-drawer-content>\n</mat-drawer-container>\n"
 
 /***/ }),
 
@@ -112,7 +117,7 @@ module.exports = "<mat-toolbar color=\"primary\">\n  <mat-toolbar-row>\n    <but
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n  width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L2FwcC9hcHAuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUM7RUFDRyxrQkFBa0I7RUFDbEIsU0FBUztFQUNULFFBQVE7RUFDUixXQUFXLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnQvYXBwL2FwcC5jb21wb25lbnQuc2FzcyIsInNvdXJjZXNDb250ZW50IjpbIiA6aG9zdCB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGxlZnQ6IDBweDtcbiAgICB0b3A6IDBweDtcbiAgICB3aWR0aDogMTAwJTsgfVxuIl19 */"
+module.exports = ":host {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n  width: 100%; }\n\n.search {\n  display: flex;\n  position: absolute;\n  right: 15px;\n  border: 2px solid rgba(255, 255, 255, 0.3);\n  padding: 5px;\n  border-radius: 20px;\n  color: rgba(255, 255, 255, 0.3); }\n\n.search .icon {\n  display: flex; }\n\n.search input {\n  border: none;\n  background: none;\n  color: rgba(255, 255, 255, 0.6); }\n\n.search input::-webkit-input-placeholder {\n  color: rgba(255, 255, 255, 0.3); }\n\n.search input::-moz-placeholder {\n  color: rgba(255, 255, 255, 0.3); }\n\n.search input::-ms-input-placeholder {\n  color: rgba(255, 255, 255, 0.3); }\n\n.search input::placeholder {\n  color: rgba(255, 255, 255, 0.3); }\n\n.search input::focus {\n  outline: none; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L2FwcC9hcHAuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUM7RUFDRyxrQkFBa0I7RUFDbEIsU0FBUztFQUNULFFBQVE7RUFDUixXQUFXLEVBQUE7O0FBRWY7RUFDSSxhQUFhO0VBQ2Isa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCwwQ0FBdUM7RUFDdkMsWUFBWTtFQUNaLG1CQUFtQjtFQUNuQiwrQkFBNEIsRUFBQTs7QUFFaEM7RUFDSSxhQUFhLEVBQUE7O0FBRWpCO0VBQ0ksWUFBWTtFQUNaLGdCQUFnQjtFQUNoQiwrQkFBNEIsRUFBQTs7QUFFaEM7RUFDSSwrQkFBNEIsRUFBQTs7QUFEaEM7RUFDSSwrQkFBNEIsRUFBQTs7QUFEaEM7RUFDSSwrQkFBNEIsRUFBQTs7QUFEaEM7RUFDSSwrQkFBNEIsRUFBQTs7QUFFaEM7RUFDSSxhQUFhLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnQvYXBwL2FwcC5jb21wb25lbnQuc2FzcyIsInNvdXJjZXNDb250ZW50IjpbIiA6aG9zdCB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGxlZnQ6IDBweDtcbiAgICB0b3A6IDBweDtcbiAgICB3aWR0aDogMTAwJTsgfVxuXG4uc2VhcmNoIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICByaWdodDogMTVweDtcbiAgICBib3JkZXI6IDJweCBzb2xpZCByZ2JhKDI1NSwyNTUsMjU1LDAuMyk7XG4gICAgcGFkZGluZzogNXB4O1xuICAgIGJvcmRlci1yYWRpdXM6IDIwcHg7XG4gICAgY29sb3I6IHJnYmEoMjU1LDI1NSwyNTUsMC4zKTsgfVxuXG4uc2VhcmNoIC5pY29uIHtcbiAgICBkaXNwbGF5OiBmbGV4OyB9XG5cbi5zZWFyY2ggaW5wdXQge1xuICAgIGJvcmRlcjogbm9uZTtcbiAgICBiYWNrZ3JvdW5kOiBub25lO1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuNik7IH1cblxuLnNlYXJjaCBpbnB1dDo6cGxhY2Vob2xkZXIge1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuMyk7IH1cblxuLnNlYXJjaCBpbnB1dDo6Zm9jdXMge1xuICAgIG91dGxpbmU6IG5vbmU7IH1cbiJdfQ== */"
 
 /***/ }),
 
@@ -134,14 +139,16 @@ __webpack_require__.r(__webpack_exports__);
 
 var AppComponent = /** @class */ (function () {
     function AppComponent(service) {
-        var _this = this;
         this.service = service;
         this.title = "cosmos";
-        this.popular = [];
-        service.popular().subscribe(function (list) {
-            _this.popular = list;
-        });
+        this.searchValue = "";
     }
+    AppComponent.prototype.search = function () {
+        console.log("Searching for " + this.searchValue);
+        this.service
+            .search(this.searchValue)
+            .subscribe(function (result) { return console.log(result); });
+    };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: "app-root",
@@ -385,6 +392,10 @@ var MovieService = /** @class */ (function () {
         return this.http
             .post("/api/wish", { id: id })
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) { return _this.handleError(error); }));
+    };
+    MovieService.prototype.search = function (query) {
+        var _this = this;
+        return this.http.get("/api/search?query=" + encodeURI(query)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) { return data.search; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) { return _this.handleError(error); }));
     };
     MovieService.prototype.handleError = function (error) {
         var errMsg;
