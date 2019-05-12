@@ -1,4 +1,4 @@
-<div class="movie" *ngFor="let movie of data">
+<div class="movie" *ngFor="let movie of data" (click)="select(movie)">
   <img class="poster" [src]="movie.poster" />
   <div class="data">
     <div class="header">

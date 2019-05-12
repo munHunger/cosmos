@@ -201,7 +201,7 @@ module.exports = "<div class=\"movie\" *ngIf=\"movie\">\n  <div\n    class=\"bac
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n  height: 100%; }\n\n.movie {\n  height: 100%; }\n\n.backdrop {\n  -webkit-filter: blur(50px);\n          filter: blur(50px);\n  background-image: \"https://image.tmdb.org/t/p/original/hGiydvFcbz7U8Ofc9tD3Vh7LKfA.jpg\";\n  width: 100%;\n  height: 100%;\n  background-position: center;\n  background-repeat: no-repeat;\n  background-size: cover; }\n\n.poster {\n  margin: 20px;\n  vertical-align: middle; }\n\n.content {\n  position: absolute;\n  top: 15px;\n  left: 15px; }\n\n.data {\n  max-width: 700px;\n  display: inline-block; }\n\n.title {\n  font-size: 42px;\n  font-weight: 800; }\n\n.overview {\n  font-size: 24px; }\n\n.genre, .subtitle {\n  margin-top: 5px;\n  color: rgba(255, 255, 255, 0.7); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL2RldGFpbHMvbW92aWVEZXRhaWxzLmNvbXBvbmVudC5zYXNzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFDO0VBQ0csWUFBWSxFQUFBOztBQUVoQjtFQUNJLFlBQVksRUFBQTs7QUFFaEI7RUFDSSwwQkFBa0I7VUFBbEIsa0JBQWtCO0VBQ2xCLHVGQUF1RjtFQUN2RixXQUFXO0VBQ1gsWUFBWTtFQUNaLDJCQUEyQjtFQUMzQiw0QkFBNEI7RUFDNUIsc0JBQXNCLEVBQUE7O0FBRTFCO0VBQ0ksWUFBWTtFQUNaLHNCQUFzQixFQUFBOztBQUUxQjtFQUNJLGtCQUFrQjtFQUNsQixTQUFTO0VBQ1QsVUFBVSxFQUFBOztBQUVkO0VBQ0ksZ0JBQWdCO0VBQ2hCLHFCQUFxQixFQUFBOztBQUV6QjtFQUNJLGVBQWU7RUFDZixnQkFBZ0IsRUFBQTs7QUFFcEI7RUFDSSxlQUFlLEVBQUE7O0FBRW5CO0VBQ0ksZUFBZTtFQUNmLCtCQUE0QixFQUFBIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50L21vdmllL2RldGFpbHMvbW92aWVEZXRhaWxzLmNvbXBvbmVudC5zYXNzIiwic291cmNlc0NvbnRlbnQiOlsiIDpob3N0IHtcbiAgICBoZWlnaHQ6IDEwMCU7IH1cblxuLm1vdmllIHtcbiAgICBoZWlnaHQ6IDEwMCU7IH1cblxuLmJhY2tkcm9wIHtcbiAgICBmaWx0ZXI6IGJsdXIoNTBweCk7XG4gICAgYmFja2dyb3VuZC1pbWFnZTogXCJodHRwczovL2ltYWdlLnRtZGIub3JnL3QvcC9vcmlnaW5hbC9oR2l5ZHZGY2J6N1U4T2ZjOXREM1ZoN0xLZkEuanBnXCI7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgaGVpZ2h0OiAxMDAlO1xuICAgIGJhY2tncm91bmQtcG9zaXRpb246IGNlbnRlcjtcbiAgICBiYWNrZ3JvdW5kLXJlcGVhdDogbm8tcmVwZWF0O1xuICAgIGJhY2tncm91bmQtc2l6ZTogY292ZXI7IH1cblxuLnBvc3RlciB7XG4gICAgbWFyZ2luOiAyMHB4O1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7IH1cblxuLmNvbnRlbnQge1xuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICB0b3A6IDE1cHg7XG4gICAgbGVmdDogMTVweDsgfVxuXG4uZGF0YSB7XG4gICAgbWF4LXdpZHRoOiA3MDBweDtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7IH1cblxuLnRpdGxlIHtcbiAgICBmb250LXNpemU6IDQycHg7XG4gICAgZm9udC13ZWlnaHQ6IDgwMDsgfVxuXG4ub3ZlcnZpZXcge1xuICAgIGZvbnQtc2l6ZTogMjRweDsgfVxuXG4uZ2VucmUsIC5zdWJ0aXRsZSB7XG4gICAgbWFyZ2luLXRvcDogNXB4O1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuNyk7IH1cbiJdfQ== */"
+module.exports = ":host {\n  height: 100%; }\n\n.movie {\n  height: 100%; }\n\n.backdrop {\n  -webkit-filter: blur(50px);\n          filter: blur(50px);\n  background-image: \"https://image.tmdb.org/t/p/original/hGiydvFcbz7U8Ofc9tD3Vh7LKfA.jpg\";\n  width: 100%;\n  height: 100%;\n  background-position: center;\n  background-repeat: no-repeat;\n  background-size: cover; }\n\n.poster {\n  margin: 20px;\n  vertical-align: middle; }\n\n.content {\n  position: absolute;\n  left: 50px;\n  top: 50px; }\n\n.data {\n  max-width: 700px;\n  display: inline-block; }\n\n.title {\n  font-size: 42px;\n  font-weight: 800; }\n\n.overview {\n  font-size: 24px; }\n\n.genre, .subtitle {\n  margin-top: 5px;\n  color: rgba(255, 255, 255, 0.7); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL2RldGFpbHMvbW92aWVEZXRhaWxzLmNvbXBvbmVudC5zYXNzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFDO0VBQ0csWUFBWSxFQUFBOztBQUVoQjtFQUNJLFlBQVksRUFBQTs7QUFFaEI7RUFDSSwwQkFBa0I7VUFBbEIsa0JBQWtCO0VBQ2xCLHVGQUF1RjtFQUN2RixXQUFXO0VBQ1gsWUFBWTtFQUNaLDJCQUEyQjtFQUMzQiw0QkFBNEI7RUFDNUIsc0JBQXNCLEVBQUE7O0FBRTFCO0VBQ0ksWUFBWTtFQUNaLHNCQUFzQixFQUFBOztBQUUxQjtFQUNJLGtCQUFrQjtFQUNsQixVQUFVO0VBQ1YsU0FBUyxFQUFBOztBQUViO0VBQ0ksZ0JBQWdCO0VBQ2hCLHFCQUFxQixFQUFBOztBQUV6QjtFQUNJLGVBQWU7RUFDZixnQkFBZ0IsRUFBQTs7QUFFcEI7RUFDSSxlQUFlLEVBQUE7O0FBRW5CO0VBQ0ksZUFBZTtFQUNmLCtCQUE0QixFQUFBIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50L21vdmllL2RldGFpbHMvbW92aWVEZXRhaWxzLmNvbXBvbmVudC5zYXNzIiwic291cmNlc0NvbnRlbnQiOlsiIDpob3N0IHtcbiAgICBoZWlnaHQ6IDEwMCU7IH1cblxuLm1vdmllIHtcbiAgICBoZWlnaHQ6IDEwMCU7IH1cblxuLmJhY2tkcm9wIHtcbiAgICBmaWx0ZXI6IGJsdXIoNTBweCk7XG4gICAgYmFja2dyb3VuZC1pbWFnZTogXCJodHRwczovL2ltYWdlLnRtZGIub3JnL3QvcC9vcmlnaW5hbC9oR2l5ZHZGY2J6N1U4T2ZjOXREM1ZoN0xLZkEuanBnXCI7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgaGVpZ2h0OiAxMDAlO1xuICAgIGJhY2tncm91bmQtcG9zaXRpb246IGNlbnRlcjtcbiAgICBiYWNrZ3JvdW5kLXJlcGVhdDogbm8tcmVwZWF0O1xuICAgIGJhY2tncm91bmQtc2l6ZTogY292ZXI7IH1cblxuLnBvc3RlciB7XG4gICAgbWFyZ2luOiAyMHB4O1xuICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7IH1cblxuLmNvbnRlbnQge1xuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICBsZWZ0OiA1MHB4O1xuICAgIHRvcDogNTBweDsgfVxuXG4uZGF0YSB7XG4gICAgbWF4LXdpZHRoOiA3MDBweDtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7IH1cblxuLnRpdGxlIHtcbiAgICBmb250LXNpemU6IDQycHg7XG4gICAgZm9udC13ZWlnaHQ6IDgwMDsgfVxuXG4ub3ZlcnZpZXcge1xuICAgIGZvbnQtc2l6ZTogMjRweDsgfVxuXG4uZ2VucmUsIC5zdWJ0aXRsZSB7XG4gICAgbWFyZ2luLXRvcDogNXB4O1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuNyk7IH1cbiJdfQ== */"
 
 /***/ }),
 
@@ -335,7 +335,7 @@ var MovieGridComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"rating\" *ngIf=\"movie.rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\" (click)=\"play()\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\">\n      <mat-icon>cloud-download</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"rating\" *ngIf=\"movie.rating\">\n    {{ movie.rating.average }}\n  </div>\n  <div class=\"poster\">\n    <img [src]=\"movie.poster\" />\n    <button mat-mini-fab color=\"accent\" (click)=\"wish()\">\n      <mat-icon>favorite</mat-icon>\n    </button>\n    <button mat-fab color=\"primary\" (click)=\"play()\">\n      <mat-icon>play_arrow</mat-icon>\n    </button>\n    <button mat-mini-fab color=\"accent\" (click)=\"info()\">\n      <mat-icon>info</mat-icon>\n    </button>\n  </div>\n  <div class=\"title\">\n    {{ movie.title }}\n  </div>\n  <div class=\"genre\">\n    {{ movie.genre.join(\" \") }}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -389,6 +389,9 @@ var MovieComponent = /** @class */ (function () {
     MovieComponent.prototype.play = function () {
         document.location.href = "http://localhost:3343/video?id=" + this.movie.id;
     };
+    MovieComponent.prototype.info = function () {
+        this.router.navigate(["movie", this.movie.id]);
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", src_app_model_movie_model__WEBPACK_IMPORTED_MODULE_3__["Movie"])
@@ -417,7 +420,7 @@ var MovieComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"movie\" *ngFor=\"let movie of data\">\n  <img class=\"poster\" [src]=\"movie.poster\" />\n  <div class=\"data\">\n    <div class=\"header\">\n      <span class=\"title\">{{ movie.title }}</span>\n      <span class=\"release\">{{ movie.year }}</span>\n    </div>\n    <div class=\"genre\">\n      {{ movie.genre.join(\" \") }}\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"movie\" *ngFor=\"let movie of data\" (click)=\"select(movie)\">\n  <img class=\"poster\" [src]=\"movie.poster\" />\n  <div class=\"data\">\n    <div class=\"header\">\n      <span class=\"title\">{{ movie.title }}</span>\n      <span class=\"release\">{{ movie.year }}</span>\n    </div>\n    <div class=\"genre\">\n      {{ movie.genre.join(\" \") }}\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -428,7 +431,7 @@ module.exports = "<div class=\"movie\" *ngFor=\"let movie of data\">\n  <img cla
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".movie {\n  height: 150px;\n  margin: 5px; }\n\n.poster {\n  height: 100%;\n  display: block;\n  float: left; }\n\n.data {\n  display: block;\n  float: left; }\n\n.header {\n  display: block;\n  padding: 15px;\n  font-size: 18px;\n  padding-bottom: 3px; }\n\n.genre {\n  display: block;\n  float: left;\n  padding: 15px;\n  padding-top: 3px;\n  color: rgba(255, 255, 255, 0.7); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL3NlYXJjaERpYWxvZy9zZWFyY2hEaWFsb2cuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxhQUFhO0VBQ2IsV0FBVyxFQUFBOztBQUNmO0VBQ0ksWUFBWTtFQUNaLGNBQWM7RUFDZCxXQUFXLEVBQUE7O0FBRWY7RUFDSSxjQUFjO0VBQ2QsV0FBVyxFQUFBOztBQUVmO0VBQ0ksY0FBYztFQUNkLGFBQWE7RUFDYixlQUFlO0VBQ2YsbUJBQW1CLEVBQUE7O0FBRXZCO0VBQ0ksY0FBYztFQUNkLFdBQVc7RUFDWCxhQUFhO0VBQ2IsZ0JBQWdCO0VBQ2hCLCtCQUE0QixFQUFBIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50L21vdmllL3NlYXJjaERpYWxvZy9zZWFyY2hEaWFsb2cuY29tcG9uZW50LnNhc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubW92aWUge1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgbWFyZ2luOiA1cHg7IH1cbi5wb3N0ZXIge1xuICAgIGhlaWdodDogMTAwJTtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBmbG9hdDogbGVmdDsgfVxuXG4uZGF0YSB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgZmxvYXQ6IGxlZnQ7IH1cblxuLmhlYWRlciB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgcGFkZGluZzogMTVweDtcbiAgICBmb250LXNpemU6IDE4cHg7XG4gICAgcGFkZGluZy1ib3R0b206IDNweDsgfVxuXG4uZ2VucmUge1xuICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHBhZGRpbmc6IDE1cHg7XG4gICAgcGFkZGluZy10b3A6IDNweDtcbiAgICBjb2xvcjogcmdiYSgyNTUsMjU1LDI1NSwwLjcpOyB9XG4iXX0= */"
+module.exports = ".movie {\n  height: 150px;\n  margin: 5px;\n  cursor: pointer; }\n\n.poster {\n  height: 100%;\n  display: block;\n  float: left; }\n\n.data {\n  display: block;\n  float: left; }\n\n.header {\n  display: block;\n  padding: 15px;\n  font-size: 18px;\n  padding-bottom: 3px; }\n\n.genre {\n  display: block;\n  float: left;\n  padding: 15px;\n  padding-top: 3px;\n  color: rgba(255, 255, 255, 0.7); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL211bmh1bmdlci9kZXZlbG9wL2Nvc21vcy9jbGllbnQvYXBwL3NyYy9hcHAvY29tcG9uZW50L21vdmllL3NlYXJjaERpYWxvZy9zZWFyY2hEaWFsb2cuY29tcG9uZW50LnNhc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxhQUFhO0VBQ2IsV0FBVztFQUNYLGVBQWUsRUFBQTs7QUFFbkI7RUFDSSxZQUFZO0VBQ1osY0FBYztFQUNkLFdBQVcsRUFBQTs7QUFFZjtFQUNJLGNBQWM7RUFDZCxXQUFXLEVBQUE7O0FBRWY7RUFDSSxjQUFjO0VBQ2QsYUFBYTtFQUNiLGVBQWU7RUFDZixtQkFBbUIsRUFBQTs7QUFFdkI7RUFDSSxjQUFjO0VBQ2QsV0FBVztFQUNYLGFBQWE7RUFDYixnQkFBZ0I7RUFDaEIsK0JBQTRCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnQvbW92aWUvc2VhcmNoRGlhbG9nL3NlYXJjaERpYWxvZy5jb21wb25lbnQuc2FzcyIsInNvdXJjZXNDb250ZW50IjpbIi5tb3ZpZSB7XG4gICAgaGVpZ2h0OiAxNTBweDtcbiAgICBtYXJnaW46IDVweDtcbiAgICBjdXJzb3I6IHBvaW50ZXI7IH1cblxuLnBvc3RlciB7XG4gICAgaGVpZ2h0OiAxMDAlO1xuICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIGZsb2F0OiBsZWZ0OyB9XG5cbi5kYXRhIHtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBmbG9hdDogbGVmdDsgfVxuXG4uaGVhZGVyIHtcbiAgICBkaXNwbGF5OiBibG9jaztcbiAgICBwYWRkaW5nOiAxNXB4O1xuICAgIGZvbnQtc2l6ZTogMThweDtcbiAgICBwYWRkaW5nLWJvdHRvbTogM3B4OyB9XG5cbi5nZW5yZSB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgcGFkZGluZzogMTVweDtcbiAgICBwYWRkaW5nLXRvcDogM3B4O1xuICAgIGNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuNyk7IH1cbiJdfQ== */"
 
 /***/ }),
 
@@ -445,16 +448,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
 var SearchDialog = /** @class */ (function () {
-    function SearchDialog(dialogRef, data) {
+    function SearchDialog(router, dialogRef, data) {
+        this.router = router;
         this.dialogRef = dialogRef;
         this.data = data;
     }
     SearchDialog.prototype.onNoClick = function () {
         this.dialogRef.close();
+    };
+    SearchDialog.prototype.select = function (movie) {
+        this.dialogRef.close();
+        this.router.navigate(["movie", movie.id]);
     };
     SearchDialog = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -462,8 +472,9 @@ var SearchDialog = /** @class */ (function () {
             template: __webpack_require__(/*! ./searchDialog.component.html */ "./src/app/component/movie/searchDialog/searchDialog.component.html"),
             styles: [__webpack_require__(/*! ./searchDialog.component.sass */ "./src/app/component/movie/searchDialog/searchDialog.component.sass")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Array])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Array])
     ], SearchDialog);
     return SearchDialog;
 }());

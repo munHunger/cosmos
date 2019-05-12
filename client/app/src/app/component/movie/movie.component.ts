@@ -29,4 +29,8 @@ export class MovieComponent {
   private play() {
     document.location.href = "http://localhost:3343/video?id=" + this.movie.id;
   }
+
+  private info() {
+    this.router.navigate(["movie", this.movie.id]);
+  }
 }
