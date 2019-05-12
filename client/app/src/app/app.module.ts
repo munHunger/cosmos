@@ -25,9 +25,11 @@ import {
 import { MatBadgeModule } from "@angular/material/badge";
 import { FormsModule } from "@angular/forms";
 import { SearchDialog } from "./component/movie/searchDialog/searchDialog.component";
+import { MovieDetailsComponent } from "./component/movie/details/movieDetails.component";
 
 const appRoutes: Routes = [
   { path: "grid/:list", component: MovieGridComponent },
+  { path: "movie/:id", component: MovieDetailsComponent },
   { path: "**", component: MovieGridComponent }
 ];
 
@@ -36,6 +38,7 @@ const appRoutes: Routes = [
     AppComponent,
     MovieComponent,
     MovieGridComponent,
+    MovieDetailsComponent,
     SearchDialog
   ],
   imports: [

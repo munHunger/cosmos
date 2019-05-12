@@ -6,7 +6,8 @@ const transform = movie => {
     poster: input =>
       `https://image.tmdb.org/t/p/w${input.width ? input.width : 500}${
         movie.poster
-      }`
+      }`,
+    backdrop: input => `https://image.tmdb.org/t/p/original${movie.backdrop}`
   };
 };
 module.exports = {

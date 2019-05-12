@@ -25,6 +25,13 @@ export class MovieService {
     );
   }
 
+  public getSingle(id: number): Observable<Movie> {
+    return this.http.get<Movie>("/api/movie?id=" + id).pipe(
+      map((data: any) => data.movie[0]),
+      catchError(error => this.handleError(error))
+    );
+  }
+
   public addToWishlist(id: number): Observable<any> {
     return this.http
       .post<any>("/api/wish", { id })

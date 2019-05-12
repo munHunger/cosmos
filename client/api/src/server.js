@@ -48,6 +48,26 @@ serviceDiscovery.waitFor("tmdb", tmdb => {
     }`
       ).then(data => res.status(200).json(data))
     );
+    app.get("/api/movie", (req, res) =>
+      request(
+        `http://${tmdb.ip}:${tmdb.port}/graphql`,
+        `
+    query{
+      movie(filter: {id: {eq:${req.query.id}}}){
+        id
+        title
+        poster
+        backdrop
+        overview
+        release(format: "year")
+        genre
+        rating {
+          average
+        }
+      }
+    }`
+      ).then(data => res.status(200).json(data))
+    );
     app.get("/api/library", (req, res) =>
       request(
         `http://${library.ip}:${library.port}/graphql`,
