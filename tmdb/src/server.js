@@ -4,7 +4,11 @@ var graphqlHTTP = require("express-graphql");
 var { buildSchema } = require("graphql");
 
 const serviceDiscovery = require("sd");
-serviceDiscovery.start("tmdb", 3341);
+serviceDiscovery.start(
+  "tmdb",
+  3341,
+  fs.readFileSync("assets/schema.graphql", "utf8")
+);
 
 const db = require("./tmdb/db");
 const transformer = require("./tmdb/transformer");

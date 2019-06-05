@@ -68,10 +68,12 @@ function startServer(port) {
 function loadSchema() {
   return buildSchema(
     mergeTypes(
-      [
-        fs.readFileSync("assets/schema.graphql", "utf8"),
-        fs.readFileSync("assets/other.graphql", "utf8")
-      ],
+      [fs.readFileSync("assets/schema.graphql", "utf8")].concat(
+        sdClient
+          .registeredClients()
+          .map(client => client.payload)
+          .filter(payload => payload)
+      ),
       { all: true }
     )
   );
