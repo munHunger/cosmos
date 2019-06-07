@@ -1,6 +1,12 @@
-let movies = [];
+let movies = [{ title: "gatsby" }];
 
 module.exports = {
-  addMovie: movie => movies.push(movie),
-  getMovies: () => movies
+  addMovie: movie => {
+    console.log("hello");
+    return movies.push(movie);
+  },
+  getMovies: () => {
+    console.log("world")
+    return movies;
+  }
 };

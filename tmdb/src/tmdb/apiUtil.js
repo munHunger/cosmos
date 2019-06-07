@@ -11,7 +11,8 @@ const query = url => {
     .get(
       `https://api.themoviedb.org/${url}${
         url.indexOf("?") > -1 ? "&" : "?"
-      }api_key=${auth.v3}`
+      }api_key=${auth.v3}`,
+      { proxy: false }
     )
     .then(res => {
       if (res.status === 200) {
