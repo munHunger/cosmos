@@ -7,6 +7,7 @@ const BroadcastChannel = require("broadcast-channel");
  * @property {String} name the announced name of a service
  * @property {number} port the port that the service listens to
  * @property {String} ip the ip of the client on the local network
+ * @property {any} payload extra info sent from a client
  */
 
 /**
@@ -56,11 +57,12 @@ module.exports = {
    * registers a client into the network.
    * @param {String} name the name to register into the cosmos network
    * @param {number} port the port that the client is listening to
+   * @param {any} payload the extra data to send to the network
    * @returns {Client}
    */
-  start: (name, port) => {
+  start: (name, port, payload) => {
     let client = {
-      config: { name, port, ip: ip.address() },
+      config: { name, port, ip: ip.address(), payload },
       channel: undefined,
       ping: () => client.channel.postMessage(client.config),
       /**
@@ -68,6 +70,7 @@ module.exports = {
        */
       others: [],
       query: name => client.others.find(client => client.name === name),
+      registeredClients: () => client.others,
       poll: () => client.channel.postMessage({ action: "poll" }),
       clear: () => (client.others = []),
       listeners: {},
