@@ -1,0 +1,12 @@
+{
+  "steps": [
+    {
+      "name": "install dependencies",
+      "script": "cd tmdb && npm install"
+    },
+    {
+      "name": "test",
+      "script": "cd tmdb && npm run test"
+    }
+  ]
+}
