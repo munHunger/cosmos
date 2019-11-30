@@ -1,0 +1,9 @@
+type Query {
+  ping: String
+}
+
+#type Mutation {
+#}
+
+#type Subscription {
+#}
